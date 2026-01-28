@@ -95,40 +95,4 @@ const submit = () => {
     </GuestLayout>
 </template>
 
-<style scoped>
-.form-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-.form-header h1 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: var(--ac-brown);
-}
-.form-header p {
-    color: var(--ac-text-secondary);
-    font-size: 0.9rem;
-}
-.form-group {
-    margin-bottom: 1rem;
-}
-.form-group .ac-input {
-    margin-top: 0.25rem;
-}
-.form-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1.25rem;
-}
-.form-link {
-    font-size: 0.8rem;
-    color: var(--ac-text-light);
-    text-decoration: underline;
-    transition: color 0.2s;
-}
-.form-link:hover {
-    color: var(--ac-green-dark);
-}
-</style>
+<style scoped src="@/../css/pages/auth/register.css"></style>

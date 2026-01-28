@@ -12,10 +12,4 @@ defineProps({
     </div>
 </template>
 
-<style scoped>
-.ac-input-error {
-    font-size: 0.8rem;
-    color: var(--ac-danger);
-    margin-top: 0.25rem;
-}
-</style>
+<style scoped src="@/../css/components/input-error.css"></style>

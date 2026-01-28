@@ -113,27 +113,4 @@ const maxWidthClass = computed(() => {
     </dialog>
 </template>
 
-<style scoped>
-.modal-overlay {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(59, 48, 34, 0.5);
-}
-.modal-content {
-    margin-bottom: 1.5rem;
-    transform: translateX(0);
-    overflow: hidden;
-    border-radius: 1rem;
-    background-color: var(--ac-bg-card);
-    border: 2px solid var(--ac-border);
-    box-shadow: 0 8px 24px var(--ac-shadow);
-    transition: all 0.3s;
-}
-@media (min-width: 640px) {
-    .modal-content {
-        margin-left: auto;
-        margin-right: auto;
-        width: 100%;
-    }
-}
-</style>
+<style scoped src="@/../css/components/modal.css"></style>

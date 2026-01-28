@@ -32,21 +32,4 @@ const proxyChecked = computed({
     />
 </template>
 
-<style scoped>
-.ac-checkbox {
-    border-radius: 0.25rem;
-    border: 2px solid var(--ac-input-border);
-    color: var(--ac-green);
-    width: 1rem;
-    height: 1rem;
-    cursor: pointer;
-}
-.ac-checkbox:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(109, 186, 109, 0.25);
-}
-.ac-checkbox:checked {
-    background-color: var(--ac-green);
-    border-color: var(--ac-green-dark);
-}
-</style>
+<style scoped src="@/../css/components/checkbox.css"></style>

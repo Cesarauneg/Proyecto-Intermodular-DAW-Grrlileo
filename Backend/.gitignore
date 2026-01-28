@@ -5,6 +5,11 @@
 .env.production
 .phpactor.json
 .phpunit.result.cache
+.idea
+*.iws
+*.iml
+*.ipr
+.vscode
 /.fleet
 /.idea
 /.nova

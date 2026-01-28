@@ -42,16 +42,4 @@ defineProps({
     </AuthenticatedLayout>
 </template>
 
-<style scoped>
-.profile-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--ac-text-primary);
-}
-.profile-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-width: 600px;
-}
-</style>
+<style scoped src="@/../css/pages/profile/edit.css"></style>

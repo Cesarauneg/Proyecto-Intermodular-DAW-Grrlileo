@@ -13,11 +13,4 @@ defineProps({
     </label>
 </template>
 
-<style scoped>
-.ac-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--ac-text-primary);
-}
-</style>
+<style scoped src="@/../css/components/input-label.css"></style>

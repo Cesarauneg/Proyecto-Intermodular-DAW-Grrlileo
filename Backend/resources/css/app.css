@@ -44,7 +44,11 @@
 
 /* === Base Styles === */
 body {
-    background-color: var(--ac-bg-primary);
+    background-image: url('/images/logos/fondo.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
     color: var(--ac-text-primary);
     font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
     margin: 0;

@@ -94,33 +94,4 @@ const updatePassword = () => {
     </section>
 </template>
 
-<style scoped>
-.section-header h2 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--ac-text-primary);
-}
-.section-header p {
-    margin-top: 0.25rem;
-    font-size: 0.85rem;
-    color: var(--ac-text-secondary);
-}
-.form-body {
-    margin-top: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-.form-group .ac-input {
-    margin-top: 0.25rem;
-}
-.form-actions-inline {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-.saved-text {
-    font-size: 0.85rem;
-    color: var(--ac-text-secondary);
-}
-</style>
+<style scoped src="@/../css/pages/profile/partials/update-password-form.css"></style>
