@@ -1,7 +1,25 @@
 <template>
-    <button
-        class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 active:bg-red-700 dark:focus:ring-offset-gray-800"
-    >
+    <button class="ac-btn-danger">
         <slot />
     </button>
 </template>
+
+<style scoped>
+.ac-btn-danger {
+    background-color: var(--ac-danger);
+    color: #fff;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 2px solid #c04040;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+.ac-btn-danger:hover {
+    background-color: #c04040;
+    transform: translateY(-1px);
+}
+</style>

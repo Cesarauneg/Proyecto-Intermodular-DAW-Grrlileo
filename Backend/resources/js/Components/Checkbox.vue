@@ -17,7 +17,6 @@ const proxyChecked = computed({
     get() {
         return props.checked;
     },
-
     set(val) {
         emit('update:checked', val);
     },
@@ -29,6 +28,25 @@ const proxyChecked = computed({
         type="checkbox"
         :value="value"
         v-model="proxyChecked"
-        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
+        class="ac-checkbox"
     />
 </template>
+
+<style scoped>
+.ac-checkbox {
+    border-radius: 0.25rem;
+    border: 2px solid var(--ac-input-border);
+    color: var(--ac-green);
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+.ac-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(109, 186, 109, 0.25);
+}
+.ac-checkbox:checked {
+    background-color: var(--ac-green);
+    border-color: var(--ac-green-dark);
+}
+</style>

@@ -35,73 +35,49 @@ const updatePassword = () => {
 
 <template>
     <section>
-        <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Update Password
-            </h2>
-
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Ensure your account is using a long, random password to stay
-                secure.
-            </p>
+        <header class="section-header">
+            <h2>Actualizar contraseña</h2>
+            <p>Usa una contraseña larga y segura para proteger tu cuenta.</p>
         </header>
 
-        <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
-            <div>
-                <InputLabel for="current_password" value="Current Password" />
-
+        <form @submit.prevent="updatePassword" class="form-body">
+            <div class="form-group">
+                <InputLabel for="current_password" value="Contraseña actual" />
                 <TextInput
                     id="current_password"
                     ref="currentPasswordInput"
                     v-model="form.current_password"
                     type="password"
-                    class="mt-1 block w-full"
                     autocomplete="current-password"
                 />
-
-                <InputError
-                    :message="form.errors.current_password"
-                    class="mt-2"
-                />
+                <InputError :message="form.errors.current_password" />
             </div>
 
-            <div>
-                <InputLabel for="password" value="New Password" />
-
+            <div class="form-group">
+                <InputLabel for="password" value="Nueva contraseña" />
                 <TextInput
                     id="password"
                     ref="passwordInput"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
                     autocomplete="new-password"
                 />
-
-                <InputError :message="form.errors.password" class="mt-2" />
+                <InputError :message="form.errors.password" />
             </div>
 
-            <div>
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
+            <div class="form-group">
+                <InputLabel for="password_confirmation" value="Confirmar contraseña" />
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
                     autocomplete="new-password"
                 />
-
-                <InputError
-                    :message="form.errors.password_confirmation"
-                    class="mt-2"
-                />
+                <InputError :message="form.errors.password_confirmation" />
             </div>
 
-            <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+            <div class="form-actions-inline">
+                <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
 
                 <Transition
                     enter-active-class="transition ease-in-out"
@@ -109,14 +85,42 @@ const updatePassword = () => {
                     leave-active-class="transition ease-in-out"
                     leave-to-class="opacity-0"
                 >
-                    <p
-                        v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600 dark:text-gray-400"
-                    >
-                        Saved.
+                    <p v-if="form.recentlySuccessful" class="saved-text">
+                        Guardado.
                     </p>
                 </Transition>
             </div>
         </form>
     </section>
 </template>
+
+<style scoped>
+.section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ac-text-primary);
+}
+.section-header p {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--ac-text-secondary);
+}
+.form-body {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.form-group .ac-input {
+    margin-top: 0.25rem;
+}
+.form-actions-inline {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.saved-text {
+    font-size: 0.85rem;
+    color: var(--ac-text-secondary);
+}
+</style>

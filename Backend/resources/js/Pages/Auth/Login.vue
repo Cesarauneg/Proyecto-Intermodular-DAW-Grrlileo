@@ -31,70 +31,118 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Log in" />
+        <Head title="Iniciar sesión" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+        <div class="form-header">
+            <h1>Bienvenido</h1>
+            <p>Por favor, identifícate</p>
+        </div>
+
+        <div v-if="status" class="form-status">
             {{ status }}
         </div>
 
         <form @submit.prevent="submit">
-            <div>
+            <div class="form-group">
                 <InputLabel for="email" value="Email" />
-
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
                     v-model="form.email"
                     required
                     autofocus
                     autocomplete="username"
                 />
-
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
+            <div class="form-group">
+                <InputLabel for="password" value="Contraseña" />
                 <TextInput
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
                     v-model="form.password"
                     required
                     autocomplete="current-password"
                 />
-
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError :message="form.errors.password" />
             </div>
 
-            <div class="mt-4 block">
-                <label class="flex items-center">
+            <div class="form-group">
+                <label class="remember-label">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400"
-                        >Remember me</span
-                    >
+                    <span>Recordarme</span>
                 </label>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
+            <div class="form-actions">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    class="form-link"
                 >
-                    Forgot your password?
+                    ¿Olvidaste la contraseña?
                 </Link>
 
                 <PrimaryButton
-                    class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Log in
+                    Iniciar sesión
                 </PrimaryButton>
             </div>
         </form>
     </GuestLayout>
 </template>
+
+<style scoped>
+.form-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.form-header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--ac-brown);
+}
+.form-header p {
+    color: var(--ac-text-secondary);
+    font-size: 0.9rem;
+}
+.form-status {
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ac-green-dark);
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group .ac-input {
+    margin-top: 0.25rem;
+}
+.remember-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--ac-text-secondary);
+    cursor: pointer;
+}
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+.form-link {
+    font-size: 0.8rem;
+    color: var(--ac-text-light);
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+.form-link:hover {
+    color: var(--ac-green-dark);
+}
+</style>

@@ -1,3 +1,110 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    /* === Animal Crossing Theme === */
+
+    /* Logo / Accent colors */
+    --ac-gold:        #f2ba52;
+    --ac-gold-bright: #fbbc0a;
+    --ac-brown:       #662028;
+
+    /* Primary palette (nature greens) */
+    --ac-green-light:  #a8d8a8;
+    --ac-green:        #6dba6d;
+    --ac-green-dark:   #3a7d44;
+
+    /* Secondary palette (sky blues) */
+    --ac-blue-light:   #b4dff7;
+    --ac-blue:         #6bbde3;
+    --ac-blue-dark:    #3a8bbf;
+
+    /* Backgrounds */
+    --ac-bg-primary:   #f5faf0;
+    --ac-bg-secondary: #eaf6e4;
+    --ac-bg-card:      #ffffff;
+
+    /* Text */
+    --ac-text-primary:   #3b3022;
+    --ac-text-secondary: #6b5e4f;
+    --ac-text-light:     #9b8e7f;
+
+    /* Forms */
+    --ac-input-bg:       #ffffff;
+    --ac-input-border:   #d4cfb8;
+    --ac-input-focus:    #6dba6d;
+    --ac-input-placeholder: #b0a890;
+
+    /* Misc */
+    --ac-border:       #d9e4d0;
+    --ac-shadow:       rgba(58, 125, 68, 0.12);
+    --ac-danger:       #d94f4f;
+}
+
+/* === Base Styles === */
+body {
+    background-color: var(--ac-bg-primary);
+    color: var(--ac-text-primary);
+    font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+}
+
+/* === Buttons === */
+.btn-primary {
+    background-color: var(--ac-green);
+    color: #fff;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 2px solid var(--ac-green-dark);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+.btn-primary:hover {
+    background-color: var(--ac-green-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: var(--ac-gold);
+    color: var(--ac-brown);
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 2px solid var(--ac-gold-bright);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+.btn-secondary:hover {
+    background-color: var(--ac-gold-bright);
+    transform: translateY(-1px);
+}
+
+/* === Cards === */
+.ac-card {
+    background-color: var(--ac-bg-card);
+    border: 2px solid var(--ac-border);
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px var(--ac-shadow);
+    padding: 1.5rem;
+}
+
+/* === Form Inputs === */
+.ac-input {
+    background-color: var(--ac-input-bg);
+    border: 2px solid var(--ac-input-border);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--ac-text-primary);
+    width: 100%;
+    transition: border-color 0.2s;
+}
+.ac-input:focus {
+    outline: none;
+    border-color: var(--ac-input-focus);
+    box-shadow: 0 0 0 3px rgba(109, 186, 109, 0.25);
+}
+.ac-input::placeholder {
+    color: var(--ac-input-placeholder);
+}

@@ -1,22 +1,45 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div
-        class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0 dark:bg-gray-900"
-    >
-        <div>
+    <div class="guest-layout">
+        <div class="guest-logo">
             <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
+                <img src="/images/logo.png" alt="ACpedia" class="guest-logo-img" />
             </Link>
         </div>
 
-        <div
-            class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg dark:bg-gray-800"
-        >
+        <div class="guest-card">
             <slot />
         </div>
     </div>
 </template>
+
+<style scoped>
+.guest-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ac-bg-secondary);
+    padding: 1.5rem;
+}
+.guest-logo {
+    margin-bottom: 1.5rem;
+}
+.guest-logo-img {
+    height: 80px;
+    width: auto;
+}
+.guest-card {
+    width: 100%;
+    max-width: 28rem;
+    background-color: var(--ac-bg-card);
+    border: 2px solid var(--ac-border);
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px var(--ac-shadow);
+    padding: 2rem;
+}
+</style>

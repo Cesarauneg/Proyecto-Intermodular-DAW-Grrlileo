@@ -8,8 +8,14 @@ defineProps({
 
 <template>
     <div v-show="message">
-        <p class="text-sm text-red-600 dark:text-red-400">
-            {{ message }}
-        </p>
+        <p class="ac-input-error">{{ message }}</p>
     </div>
 </template>
+
+<style scoped>
+.ac-input-error {
+    font-size: 0.8rem;
+    color: var(--ac-danger);
+    margin-top: 0.25rem;
+}
+</style>
