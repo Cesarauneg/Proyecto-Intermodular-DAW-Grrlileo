@@ -5,6 +5,7 @@ use App\Http\Controllers\FishController;
 use App\Http\Controllers\VillagerController;
 use App\Http\Controllers\ArtController;
 use App\Http\Controllers\FossilController;
+use App\Http\Controllers\Sea_CreatureController;
 
 //Rutas para listar y filtrar bichos.
 Route::get('/bugs', [BugController::class, 'index']);
@@ -27,3 +28,8 @@ Route::get('/art/filter', [ArtController::class, 'filter']);
 //Rutas para listar y filtrar fósiles.
 Route::get('/fossils', [FossilController::class, 'index']);
 Route::get('/fossils/filter', [FossilController::class, 'filter']);
+
+//Rutas para listar y filtrar criaturas marinas.
+Route::get('/sea_creatures', [Sea_CreatureController::class, 'index']);
+Route::get('/sea_creatures/filter', [Sea_CreatureController::class, 'filter']);
+Route::get('/sea_creatures/available', [Sea_CreatureController::class, 'available']);
