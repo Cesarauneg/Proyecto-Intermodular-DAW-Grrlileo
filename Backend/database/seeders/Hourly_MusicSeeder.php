@@ -27,7 +27,7 @@ class Hourly_MusicSeeder extends Seeder
                 'file_name' => $t['file-name'],
                 'hour' => $t['hour'] ?? 0,
                 'weather' => $t['weather'] ?? null,
-                'music_uri' => $t['music_uri'] ?? null,
+                'music_uri' => 'music/hourly/' . $t['file-name'] . '.mp3',
             ]);
         }
     }

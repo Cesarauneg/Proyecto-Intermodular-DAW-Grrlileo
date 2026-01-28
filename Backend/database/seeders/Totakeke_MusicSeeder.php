@@ -36,8 +36,8 @@ class Totakeke_MusicSeeder extends Seeder
                 'is_orderable' => $t['isOrderable'] ?? false,
 
                 // Rutas de música e imagen
-                'music_uri' => $t['music_uri'] ?? null,
-                'image' => $t['image_uri'] ?? null,
+                'music_uri' => 'music/kk/' . $t['file-name'] . '.mp3',
+                'image' => 'images/music/' . $t['file-name'] . '.png',
             ]);
         }
     }
