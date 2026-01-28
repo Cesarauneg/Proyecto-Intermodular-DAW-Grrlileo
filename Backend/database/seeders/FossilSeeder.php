@@ -12,8 +12,8 @@ class FossilSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Leer el JSON desde storage/app/data/fossils.json
-        $json = file_get_contents(storage_path('app/data/fossils.json'));
+        // 1. Leer el JSON desde database/seeders/data/fossils.json
+        $json = file_get_contents(database_path('seeders/data/fossils.json'));
         $fossils = json_decode($json, true);
 
         // 2. Validar que se haya leído correctamente

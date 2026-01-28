@@ -12,8 +12,8 @@ class Totakeke_MusicSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Leer el JSON desde storage/app/data/music.json
-        $json = file_get_contents(storage_path('app/data/music.json'));
+        // 1. Leer el JSON desde database/seeders/data/music.json
+        $json = file_get_contents(database_path('seeders/data/music.json'));
         $tracks = json_decode($json, true);
 
         if (!$tracks) {

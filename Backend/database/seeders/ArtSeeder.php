@@ -13,8 +13,8 @@ class ArtSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Leer el JSON desde storage/app/data/art.json
-        $json = file_get_contents(storage_path('app/data/art.json'));
+        // 1. Leer el JSON desde database/seeders/data/art.json
+        $json = file_get_contents(database_path('seeders/data/art.json'));
         $arts = json_decode($json, true);
 
         // 2. Validar que se haya leído correctamente

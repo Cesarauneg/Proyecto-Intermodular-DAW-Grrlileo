@@ -11,8 +11,8 @@ class VillagerSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Cargar el JSON desde storage/data/villagers.json
-        $json      = file_get_contents(storage_path('app/data/villagers.json'));
+        // 1. Cargar el JSON desde database/seeders/data/villagers.json
+        $json      = file_get_contents(database_path('seeders/data/villagers.json'));
         $villagers = json_decode($json, true);
 
         if (! $villagers) {

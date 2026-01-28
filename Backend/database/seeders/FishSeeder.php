@@ -14,7 +14,7 @@ class FishSeeder extends Seeder
     public function run(): void
     {
         // 1. Leer el JSON de fish
-        $json = file_get_contents(storage_path('app/data/fish.json')); 
+        $json = file_get_contents(database_path('seeders/data/fish.json')); 
         $fishes = json_decode($json, true);
 
         // Validar que se haya leído correctamente

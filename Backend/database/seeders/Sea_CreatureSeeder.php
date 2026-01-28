@@ -12,8 +12,8 @@ class Sea_CreatureSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1️⃣ Leer el JSON desde storage/app/data/sea.json
-        $json = file_get_contents(storage_path('app/data/sea.json'));
+        // 1️⃣ Leer el JSON desde database/seeders/data/sea.json
+        $json = file_get_contents(database_path('seeders/data/sea.json'));
         $creatures = json_decode($json, true);
 
         // 2️⃣ Validar que se haya leído correctamente

@@ -12,8 +12,8 @@ class Hourly_MusicSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Leer el JSON desde storage/app/data/hourly.json
-        $json = file_get_contents(storage_path('app/data/hourly.json'));
+        // 1. Leer el JSON desde database/seeders/data/hourly.json
+        $json = file_get_contents(database_path('seeders/data/hourly.json'));
         $tracks = json_decode($json, true);
 
         // 2. Validar lectura
