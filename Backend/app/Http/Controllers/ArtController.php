@@ -14,7 +14,7 @@ class ArtController extends Controller
         return response()->json(Art::all());
     }
 
-        //Filtrado dinámico por personalidad, especie, género y hobby (se pueden agregar mas)
+        // Filtrado dinámico por si tiene o no una falsificación
     public function filter(Request $request)
     {
         $query = Art::query();
