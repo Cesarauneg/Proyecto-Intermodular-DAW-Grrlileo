@@ -1,21 +1,21 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Bug;
 use Illuminate\Http\Request;
+use App\Models\Fish;
 
-class BugController extends Controller
+class FishController extends Controller
 {
-    //Devuelve todos los bugs
     public function index()
     {
-        return response()->json(Bug::all());
+        return response()->json([Fish::all()]);
     }
 
-    //Filtrado dinámico por rarity y location (se pueden agregar mas)
+        //Filtrado dinámico por rarity y location (se pueden agregar mas)
     public function filter(Request $request)
     {
-        $query = Bug::query();
+        $query = Fish::query();
 
         if ($request->has('rarity')) {
             $query->where('rarity', $request->rarity);
@@ -28,13 +28,14 @@ class BugController extends Controller
         return response()->json($query->get());
     }
 
-    //Bugs disponibles en este momento (hemisferio norte y sur)
+    //Peces disponibles en este momento (hemisferio norte y sur)
     public function available(Request $request)
     {
         $hemisphere = $request->get('hemisphere', 'north');
 
         return response()->json(
-            Bug::availableNow($hemisphere)->get()
+            Fish::availableNow($hemisphere)->get()
         );
     }
 }
+

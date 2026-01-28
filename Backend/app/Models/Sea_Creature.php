@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasAvailability;
+
 
 class Sea_Creature extends Model
 {
@@ -11,4 +13,7 @@ class Sea_Creature extends Model
 
     // Permitir asignación masiva
     protected $fillable = ['file_name', 'name_en', 'name_es', 'buy_price', 'sell_price', 'is_orderable', 'image_uri'];
+
+    use HasAvailability;
+
 }
