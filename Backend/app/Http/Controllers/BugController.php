@@ -25,6 +25,12 @@ class BugController extends Controller
             $query->where('location', $request->location);
         }
 
+        // Ordenar por precio
+        if ($request->has('price_order')) {
+            $order = strtolower($request->price_order) === 'desc' ? 'desc' : 'asc';
+            $query->orderBy('price', $order);
+        }
+
         return response()->json($query->get());
     }
 

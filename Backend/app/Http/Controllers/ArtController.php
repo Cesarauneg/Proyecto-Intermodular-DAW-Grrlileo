@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 
 use App\Models\Art;
 use Illuminate\Http\Request;
@@ -14,13 +12,18 @@ class ArtController extends Controller
         return response()->json(Art::all());
     }
 
-        // Filtrado dinámico por si tiene o no una falsificación
+    // Filtrado dinámico por si tiene o no una falsificación
     public function filter(Request $request)
     {
         $query = Art::query();
 
         if ($request->has('has_fake')) {
             $query->where('has_fake', $request->has_fake);
+        }
+        // Ordenar por precio
+        if ($request->has('price_order')) {
+            $order = strtolower($request->price_order) === 'desc' ? 'desc' : 'asc';
+            $query->orderBy('price', $order);
         }
 
         return response()->json($query->get());
