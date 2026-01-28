@@ -3,6 +3,7 @@ use App\Http\Controllers\BugController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FishController;
 use App\Http\Controllers\VillagerController;
+use App\Http\Controllers\ArtController;
 
 //Rutas para listar y filtrar bichos.
 Route::get('/bugs', [BugController::class, 'index']);
@@ -17,3 +18,7 @@ Route::get('/fish/available', [FishController::class, 'available']);
 //Rutas para listar y filtrar aldeanos.
 Route::get('/villagers', [VillagerController::class, 'index']);
 Route::get('/villagers/filter', [VillagerController::class, 'filter']);
+
+//Rutas para listar y filtrar obras de arte.
+Route::get('/art', [ArtController::class, 'index']);
+Route::get('/art/filter', [ArtController::class, 'filter']);
