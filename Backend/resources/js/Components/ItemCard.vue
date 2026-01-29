@@ -11,9 +11,9 @@
     </div>
 
     <div class="p-2 flex flex-col flex-grow">
-      <h2 class="text-m sm:text-m font-bold text-gray-800 line-clamp-2 leading-tight min-h-[2.5rem]">
-        {{ name_es }}
-      </h2>
+<h2 class="text-sm sm:text-base font-bold text-gray-800 line-clamp-2 leading-tight min-h-[2.5rem]">
+  {{ name_es.charAt(0).toUpperCase() + name_es.slice(1).toLowerCase() }}
+</h2>
     </div>
   </article>
 </template>
