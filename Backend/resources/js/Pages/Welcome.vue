@@ -87,19 +87,29 @@ const sectionComponents = {
                     </button>
 
                     <Transition name="dropdown">
-                        <div v-if="authMenuOpen" class="auth-dropdown" role="menu">
+                        <ul v-if="authMenuOpen" class="auth-dropdown" role="menu" aria-label="Menú de usuario">
                             <!-- Guest menu -->
                             <template v-if="!user">
-                                <Link v-if="canLogin" :href="route('login')" class="dropdown-item" role="menuitem">Login</Link>
-                                <Link v-if="canRegister" :href="route('register')" class="dropdown-item" role="menuitem">Registro</Link>
+                                <li v-if="canLogin" role="none">
+                                    <Link :href="route('login')" class="dropdown-item" role="menuitem">Login</Link>
+                                </li>
+                                <li v-if="canRegister" role="none">
+                                    <Link :href="route('register')" class="dropdown-item" role="menuitem">Registro</Link>
+                                </li>
                             </template>
                             <!-- Authenticated menu -->
                             <template v-else>
-                                <Link :href="route('profile.edit')" class="dropdown-item" role="menuitem">Perfil</Link>
-                                <Link href="#" class="dropdown-item" role="menuitem">Colecci&oacute;n</Link>
-                                <Link :href="route('logout')" method="post" as="button" class="dropdown-item dropdown-item--danger" role="menuitem">Cerrar sesi&oacute;n</Link>
+                                <li role="none">
+                                    <Link :href="route('profile.edit')" class="dropdown-item" role="menuitem">Perfil</Link>
+                                </li>
+                                <li role="none">
+                                    <Link href="#" class="dropdown-item" role="menuitem">Colección</Link>
+                                </li>
+                                <li role="none">
+                                    <Link :href="route('logout')" method="post" as="button" class="dropdown-item dropdown-item--danger" role="menuitem">Cerrar sesión</Link>
+                                </li>
                             </template>
-                        </div>
+                        </ul>
                     </Transition>
                 </div>
             </div>
@@ -123,30 +133,31 @@ const sectionComponents = {
         </nav>
 
         <!-- ========== CONTENT ========== -->
-        <main class="content-container">
+        <main class="content-container" aria-live="polite">
             <Transition name="fade" mode="out-in">
-                <div
+                <section
                     :key="activeTab"
                     role="tabpanel"
                     :id="`tabpanel-${activeTab}`"
                     :aria-labelledby="`tab-${activeTab}`"
+                    class="tabpanel"
                 >
                     <component :is="sectionComponents[activeTab]" />
-                </div>
+                </section>
             </Transition>
-
         </main>
 
         <!-- ========== MASCOT + PLAYER ========== -->
-        <div class="mascot-area">
+        <aside class="mascot-area" aria-label="Reproductor de música">
             <img
                 src="/images/logos/totakeke.gif"
-                alt="Totakeke"
+                alt="Totakeke tocando la guitarra"
                 class="mascot-gif"
                 :class="{ 'animate-dance': isDancing }"
+                role="img"
             />
             <AudioPlayer @update:isPlaying="handlePlayingChange" />
-        </div>
+        </aside>
 
         <!-- ========== FOOTER ========== -->
         <footer class="landing-footer">
