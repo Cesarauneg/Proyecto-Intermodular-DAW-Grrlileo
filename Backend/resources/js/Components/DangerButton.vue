@@ -1,5 +1,14 @@
+<script setup>
+defineProps({
+    type: {
+        type: String,
+        default: 'button',
+    },
+});
+</script>
+
 <template>
-    <button class="ac-btn-danger">
+    <button :type="type" class="ac-btn-danger">
         <slot />
     </button>
 </template>

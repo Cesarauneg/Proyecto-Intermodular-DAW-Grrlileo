@@ -3,11 +3,15 @@ defineProps({
     value: {
         type: String,
     },
+    for: {
+        type: String,
+        default: null,
+    },
 });
 </script>
 
 <template>
-    <label class="ac-label">
+    <label :for="$props.for" class="ac-label">
         <span v-if="value">{{ value }}</span>
         <span v-else><slot /></span>
     </label>

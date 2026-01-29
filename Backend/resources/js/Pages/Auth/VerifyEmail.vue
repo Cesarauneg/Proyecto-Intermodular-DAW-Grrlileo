@@ -23,38 +23,42 @@ const verificationLinkSent = computed(
 
 <template>
     <GuestLayout>
-        <Head title="Email Verification" />
+        <Head title="Verificar email" />
 
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Thanks for signing up! Before getting started, could you verify your
-            email address by clicking on the link we just emailed to you? If you
-            didn't receive the email, we will gladly send you another.
+        <div class="form-header">
+            <h1>Verificar email</h1>
+            <p>
+                Gracias por registrarte. Verifica tu email haciendo clic en el enlace que te enviamos.
+                Si no lo recibiste, te enviaremos otro.
+            </p>
         </div>
 
         <div
             class="mb-4 text-sm font-medium text-green-600 dark:text-green-400"
             v-if="verificationLinkSent"
+            role="status"
         >
-            A new verification link has been sent to the email address you
-            provided during registration.
+            Se ha enviado un nuevo enlace de verificación a tu email.
         </div>
 
         <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
+            <div class="form-actions" style="justify-content: space-between;">
                 <PrimaryButton
+                    type="submit"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Resend Verification Email
+                    Reenviar email
                 </PrimaryButton>
 
                 <Link
                     :href="route('logout')"
                     method="post"
                     as="button"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                    >Log Out</Link
+                    class="form-link"
                 >
+                    Cerrar sesión
+                </Link>
             </div>
         </form>
     </GuestLayout>

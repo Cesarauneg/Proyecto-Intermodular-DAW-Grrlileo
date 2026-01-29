@@ -4,15 +4,19 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div class="guest-layout">
-        <div class="guest-logo">
+        <header class="guest-logo">
             <Link href="/">
-                <img src="/images/logos/logo.png" alt="ACpedia" class="guest-logo-img" />
+                <img src="/images/logos/logo.png" alt="Canela`s Desk - Ir al inicio" class="guest-logo-img" />
             </Link>
-        </div>
+        </header>
 
-        <div class="guest-card">
+        <main class="guest-card">
             <slot />
-        </div>
+        </main>
+
+        <footer class="guest-footer">
+            <p>&copy; {{ new Date().getFullYear() }} Canela's Desk. Todos los derechos reservados.</p>
+        </footer>
     </div>
 </template>
 

@@ -20,7 +20,7 @@ defineProps({
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="profile-title">Perfil</h2>
+            <h1 class="profile-title">Perfil</h1>
         </template>
 
         <div class="profile-sections">

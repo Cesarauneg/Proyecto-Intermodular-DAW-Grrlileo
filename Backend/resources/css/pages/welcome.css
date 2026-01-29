@@ -93,11 +93,13 @@
 .section-nav {
     display: flex;
     justify-content: center;
-    gap: 0.25rem;
-    padding: 1rem 1rem 0;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
     max-width: 1100px;
-    margin: 0 auto;
-    width: 100%;
+    margin: 1rem auto 0;
+    width: calc(100% - 3rem);
+    background-color: rgba(216, 244, 202, 0.9);
+    border-radius: 9999px;
 }
 .nav-tab {
     background: none;
@@ -118,11 +120,34 @@
 
 /* ---- Content ---- */
 .content-container {
+    position: relative;
     flex: 1;
     max-width: 1100px;
-    width: 100%;
+    width: calc(100% - 3rem);
     margin: 1.5rem auto;
-    padding: 0 1.5rem;
+    padding: 1.5rem;
+    background-color: rgba(234, 246, 228, 0.9);
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px var(--ac-shadow);
+}
+.mascot-gif {
+    display: block;
+    width: 80px;
+    height: auto;
+    margin-left: auto;
+    margin-right: 1.5rem;
+}
+
+/* ---- Footer ---- */
+.landing-footer {
+    padding: 1.5rem;
+    text-align: center;
+    background-color: var(--ac-green-dark);
+    color: #fff;
+    font-size: 0.875rem;
+}
+.landing-footer p {
+    margin: 0;
 }
 
 /* Fade transition */

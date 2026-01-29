@@ -77,7 +77,7 @@ const updatePassword = () => {
             </div>
 
             <div class="form-actions-inline">
-                <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
+                <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
 
                 <Transition
                     enter-active-class="transition ease-in-out"

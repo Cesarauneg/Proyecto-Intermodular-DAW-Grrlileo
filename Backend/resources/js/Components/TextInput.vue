@@ -1,6 +1,13 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
+defineProps({
+    id: {
+        type: String,
+        default: null,
+    },
+});
+
 const model = defineModel({
     type: String,
     required: true,
@@ -19,6 +26,7 @@ defineExpose({ focus: () => input.value.focus() });
 
 <template>
     <input
+        :id="id"
         class="ac-input"
         v-model="model"
         ref="input"

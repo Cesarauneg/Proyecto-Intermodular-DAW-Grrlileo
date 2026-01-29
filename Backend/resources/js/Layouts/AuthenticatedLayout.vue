@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div class="auth-layout">
-        <nav class="auth-nav">
+        <nav class="auth-nav" aria-label="Navegación principal">
             <div class="auth-nav-inner">
                 <Link href="/" class="auth-nav-logo">
                     <img src="/images/logos/logo.png" alt="ACpedia" class="auth-nav-logo-img" />

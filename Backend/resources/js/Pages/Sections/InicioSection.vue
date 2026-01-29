@@ -2,12 +2,12 @@
 </script>
 
 <template>
-    <div class="inicio-section">
+    <section class="inicio-section" aria-labelledby="inicio-title">
         <div class="hero">
-            <h1>Bienvenido</h1>
+            <h1 id="inicio-title">Bienvenido</h1>
             <p>Explora el mundo de Animal Crossing.</p>
         </div>
-    </div>
+    </section>
 </template>
 
 <style scoped src="@/../css/pages/sections/inicio.css"></style>

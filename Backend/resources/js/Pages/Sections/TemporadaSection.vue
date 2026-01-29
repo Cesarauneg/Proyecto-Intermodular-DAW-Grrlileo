@@ -2,10 +2,10 @@
 </script>
 
 <template>
-    <div class="section-placeholder">
-        <h2>Temporada</h2>
+    <section class="section-placeholder" aria-labelledby="temporada-title">
+        <h2 id="temporada-title">Temporada</h2>
         <p>Consulta que criaturas y eventos estan disponibles este mes.</p>
-    </div>
+    </section>
 </template>
 
 <style scoped src="@/../css/pages/sections/temporada.css"></style>
