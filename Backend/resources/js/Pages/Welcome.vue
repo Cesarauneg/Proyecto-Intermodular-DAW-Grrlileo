@@ -5,6 +5,7 @@ import InicioSection from './Sections/InicioSection.vue';
 import CritterpediaSection from './Sections/CritterpediaSection.vue';
 import TemporadaSection from './Sections/TemporadaSection.vue';
 import VecinosSection from './Sections/VecinosSection.vue';
+import AudioPlayer from '@/Components/AudioPlayer.vue';
 
 defineProps({
     canLogin: Boolean,
@@ -38,6 +39,13 @@ const tabs = [
 ];
 
 const activeTab = ref('inicio');
+
+// Estado para la animación de Totakeke
+const isDancing = ref(false);
+
+function handlePlayingChange(playing) {
+    isDancing.value = playing;
+}
 
 const sectionComponents = {
     inicio: InicioSection,
@@ -126,10 +134,19 @@ const sectionComponents = {
                     <component :is="sectionComponents[activeTab]" />
                 </div>
             </Transition>
+
         </main>
 
-        <!-- ========== MASCOT ========== -->
-        <img src="/images/logos/totakeke.gif" alt="" class="mascot-gif" />
+        <!-- ========== MASCOT + PLAYER ========== -->
+        <div class="mascot-area">
+            <img
+                src="/images/logos/totakeke.gif"
+                alt="Totakeke"
+                class="mascot-gif"
+                :class="{ 'animate-dance': isDancing }"
+            />
+            <AudioPlayer @update:isPlaying="handlePlayingChange" />
+        </div>
 
         <!-- ========== FOOTER ========== -->
         <footer class="landing-footer">
