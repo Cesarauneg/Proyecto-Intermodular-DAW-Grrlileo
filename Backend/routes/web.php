@@ -18,6 +18,10 @@ Route::get('/catalogo', function () {
     return Inertia::render('Catalogo');
 })->name('catalogo'); // <-- Aquí es donde va
 
+Route::get('/bichos', function () {
+    return Inertia::render('BugPedia'); // <-- apunta al archivo Pages/BichosPage.vue
+})->name('bichos');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
