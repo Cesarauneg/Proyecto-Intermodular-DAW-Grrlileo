@@ -6,6 +6,7 @@
 .phpactor.json
 .phpunit.result.cache
 .idea
+laravel-idea.xml
 *.iws
 *.iml
 *.ipr

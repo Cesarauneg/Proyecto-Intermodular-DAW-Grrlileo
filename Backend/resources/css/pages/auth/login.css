@@ -1,0 +1,49 @@
+.form-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.form-header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--ac-brown);
+}
+.form-header p {
+    color: var(--ac-text-secondary);
+    font-size: 0.9rem;
+}
+.form-status {
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ac-green-dark);
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group .ac-input {
+    margin-top: 0.25rem;
+}
+.remember-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--ac-text-secondary);
+    cursor: pointer;
+}
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+.form-link {
+    font-size: 0.8rem;
+    color: var(--ac-text-light);
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+.form-link:hover {
+    color: var(--ac-green-dark);
+}
