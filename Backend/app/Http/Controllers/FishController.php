@@ -6,10 +6,18 @@ use Illuminate\Http\Request;
 
 class FishController extends Controller
 {
-    public function index()
-    {
-        return response()->json([Fish::all()]);
+public function index(Request $request)
+{
+    $query = Fish::query();
+
+    if ($request->filled('search')) {
+        $searchTerm = $request->search;
+        $query->where('name_es', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('location', 'LIKE', "%{$searchTerm}%");
     }
+
+    return response()->json($query->paginate($request->get('per_page', 12)));
+}
 
     //Filtrado dinámico por rarity y location (se pueden agregar mas)
     public function filter(Request $request)
