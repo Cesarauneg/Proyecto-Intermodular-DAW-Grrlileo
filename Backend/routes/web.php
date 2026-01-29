@@ -14,6 +14,10 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/catalogo', function () {
+    return Inertia::render('Catalogo');
+})->name('catalogo'); // <-- Aquí es donde va
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

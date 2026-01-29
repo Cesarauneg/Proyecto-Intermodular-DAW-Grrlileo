@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 
 class VillagerController extends Controller
 {
-    //Devuelve todos los aldeanos
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Villager::all());
+        $perPage = $request->get('per_page', 20);
+        return Villager::paginate($perPage);
     }
 
     //Filtrado dinámico por personalidad, especie, género y hobby (se pueden agregar mas)
@@ -35,5 +35,4 @@ class VillagerController extends Controller
 
         return response()->json($query->get());
     }
-
 }
