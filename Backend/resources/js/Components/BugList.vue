@@ -13,11 +13,13 @@
             selectedBug && selectedBug.id === bug.id ? 'border-blue-500' : 'border-transparent'
           ]"
         >
+          <!-- Miniatura -->
           <img
-            :src="bug.icon" <!-- icon para la miniatura -->
-            alt="miniatura"
+            :src="bug.icon"
+            :alt="bug.name"
             class="w-full h-16 object-contain mb-1"
           />
+          <!-- Nombre -->
           <p class="text-xs text-center truncate">{{ bug.name }}</p>
         </div>
       </div>
