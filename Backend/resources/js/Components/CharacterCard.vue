@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer">
+  <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer" @click="$emit('select', character)">
     <img :src="imagePath" class="w-full h-48 object-cover" />
     <div class="p-4">
       <h3 class="text-lg font-semibold text-gray-800">{{ character.name_es }}</h3>

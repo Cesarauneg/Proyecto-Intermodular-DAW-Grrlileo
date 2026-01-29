@@ -1,27 +1,32 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 py-6">
-    <h1 class="text-3xl font-bold mb-6 text-center">Catálogo</h1>
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-extrabold">Catálogo de Aldeanos</h1>
+        <p class="text-gray-500 mt-2">
+      Explora todos los personajes y descubre sus personalidades
+    </p>
+  </div>
 
+    <!-- GRID -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <CharacterCard
         v-for="char in characters"
         :key="char.id"
         :character="char"
+        @select="openModal"
       />
     </div>
 
-    <!-- Paginación -->
+    <!-- PAGINACIÓN -->
     <div class="flex justify-center mt-6 space-x-2">
-      <!-- Botón Anterior -->
       <button
         @click="prevPage"
         :disabled="page <= 1"
         class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
       >
-        &laquo; Anterior
+        « Anterior
       </button>
 
-      <!-- Números de página -->
       <button
         v-for="p in visiblePages"
         :key="p"
@@ -34,40 +39,54 @@
         {{ p }}
       </button>
 
-      <!-- Botón Siguiente -->
       <button
         @click="nextPage"
         :disabled="!hasMore"
         class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
       >
-        Siguiente &raquo;
+        Siguiente »
       </button>
     </div>
+
+    <!-- MODAL -->
+    <CharacterModal
+      v-if="selectedCharacter"
+      :character="selectedCharacter"
+      @close="selectedCharacter = null"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import axios from 'axios'
+
 import CharacterCard from '@/Components/CharacterCard.vue'
+import CharacterModal from '@/Components/CharacterModal.vue'
 
 const characters = ref([])
 const page = ref(1)
 const perPage = 20
+const totalPages = ref(1)
 const hasMore = ref(true)
-const totalPages = ref(1) // total de páginas, lo sacaremos del backend si quieres
+
+const selectedCharacter = ref(null)
+
+// Abrir modal
+const openModal = (character) => {
+  selectedCharacter.value = character
+}
 
 // Cargar personajes
 const loadCharacters = async () => {
   const res = await axios.get(`/api/villagers?page=${page.value}&per_page=${perPage}`)
 
-  // Respuesta de Laravel paginate:
-  characters.value = res.data.data       // personajes de la página
-  totalPages.value = res.data.last_page  // cantidad real de páginas
+  characters.value = res.data.data
+  totalPages.value = res.data.last_page
   hasMore.value = page.value < totalPages.value
 }
 
-// Funciones de paginación
+// Paginación
 const nextPage = () => {
   if (hasMore.value) page.value++
 }
@@ -80,17 +99,12 @@ const goToPage = (p) => {
   page.value = p
 }
 
-// Generar array de páginas visibles
 const visiblePages = computed(() => {
-  const pages = []
-  const range = 2 // mostrar 2 páginas a cada lado de la actual
+  const range = 2
   const start = Math.max(1, page.value - range)
-  const end = Math.min(totalPages.value, page.value + range) // nunca más que la última página
+  const end = Math.min(totalPages.value, page.value + range)
 
-  for (let i = start; i <= end; i++) {
-    pages.push(i)
-  }
-  return pages
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 })
 
 watch(page, loadCharacters)

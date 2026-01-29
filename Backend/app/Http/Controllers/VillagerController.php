@@ -6,11 +6,6 @@ use Illuminate\Http\Request;
 
 class VillagerController extends Controller
 {
-    //Devuelve todos los aldeanos
-    // public function index()
-    // {
-    //     return response()->json(Villager::all());
-    // }
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 20);
@@ -40,5 +35,4 @@ class VillagerController extends Controller
 
         return response()->json($query->get());
     }
-
 }
