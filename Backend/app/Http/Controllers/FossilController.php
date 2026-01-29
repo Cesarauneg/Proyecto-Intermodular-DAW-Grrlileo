@@ -9,7 +9,7 @@ class FossilController extends Controller
     // Devuelve todos los fósiles
     public function index()
     {
-        return response()->json([Fossil::all()]);
+        return response()->json(Fossil::all());
     }
 
     //Filtrado dinámico por part_of y ordenamiento por precio
