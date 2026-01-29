@@ -1,26 +1,28 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Art;
+use App\Models\Fossil;
 use Illuminate\Http\Request;
 
-class ArtController extends Controller
+class FossilController extends Controller
 {
-    // Devuelve todas las obras de arte
+    // Devuelve todos los fósiles
     public function index()
     {
-        return response()->json(Art::all());
+        return response()->json([Fossil::all()]);
     }
 
-    // Filtrado dinámico por si tiene o no una falsificación
+    //Filtrado dinámico por part_of y ordenamiento por precio
     public function filter(Request $request)
     {
-        $query = Art::query();
+        $query = Fossil::query();
 
-        if ($request->has('has_fake')) {
-            $query->where('has_fake', $request->has_fake);
+        if ($request->has('part_of')) {
+            $query->where('part_of', $request->part_of);
         }
+
         // Ordenar por precio
+        // Espera que el cliente envíe 'price_order=asc' o 'price_order=desc'
         if ($request->has('price_order')) {
             $order = strtolower($request->price_order) === 'desc' ? 'desc' : 'asc';
             $query->orderBy('price', $order);
@@ -28,4 +30,5 @@ class ArtController extends Controller
 
         return response()->json($query->get());
     }
+
 }
