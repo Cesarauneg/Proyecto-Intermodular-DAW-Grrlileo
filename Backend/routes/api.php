@@ -20,6 +20,7 @@ Route::get('/fish/available', [FishController::class, 'available']);
 //Rutas para listar y filtrar aldeanos.
 Route::get('/villagers', [VillagerController::class, 'index']);
 Route::get('/villagers/filter', [VillagerController::class, 'filter']);
+Route::get('/villagers/filters', [VillagerController::class, 'filters']);
 
 //Rutas para listar y filtrar obras de arte.
 Route::get('/art', [ArtController::class, 'index']);
