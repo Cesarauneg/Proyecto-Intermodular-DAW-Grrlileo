@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class BugsUserController extends Controller
+class BugUserController extends Controller
 {
     // Añadir un insecto a un usuario (al donarlo al museo)
     public function donate($bugId)

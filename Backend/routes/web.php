@@ -4,7 +4,8 @@ use App\Http\Controllers\FishUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\BugsUserController;
+use App\Http\Controllers\BugUserController;
+use App\Http\Controllers\FossilUserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -33,7 +34,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/fish/{fish}/donate', [FishUserController::class, 'donate']);
     Route::get('/user/fish', [FishUserController::class, 'index']);
-    Route::post('/bugs/{bug}/donate', [BugsUserController::class, 'donate']);
-    Route::get('/user/bugs', [BugsUserController::class, 'index']);
+    Route::post('/bugs/{bug}/donate', [BugUserController::class, 'donate']);
+    Route::get('/user/bugs', [BugUserController::class, 'index']);
+    Route::post('/fossils/{fossil}/donate', [FossilUserController::class, 'donate']);
+    Route::get('/user/fossils', [FossilUserController::class, 'index']);    
 });
 require __DIR__ . '/auth.php';
