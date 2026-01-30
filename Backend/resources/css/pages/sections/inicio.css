@@ -1,10 +1,16 @@
 .inicio-section {
     display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 500px;
+}
+
+/* ---- Contenedor principal ---- */
+.inicio-main {
+    display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 60vh;
     padding: 2rem;
-    overflow: hidden;
 }
 
 /* ---- Contenedor de contenido ---- */
@@ -161,6 +167,21 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* ---- Villager Marquee ---- */
+.villager-marquee-section {
+    width: 100%;
+    margin-top: auto;
+    padding-bottom: 1rem;
+}
+
+.marquee-title {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ac-brown, #5d4e37);
+    margin: 0 0 0.5rem 0;
 }
 
 /* ---- Responsive ---- */
