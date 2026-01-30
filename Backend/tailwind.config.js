@@ -15,6 +15,17 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            animation: {
+                'dance': 'dance 0.5s ease-in-out infinite',
+            },
+            keyframes: {
+                dance: {
+                    '0%, 100%': { transform: 'rotate(-3deg) translateY(0)' },
+                    '25%': { transform: 'rotate(3deg) translateY(-5px)' },
+                    '50%': { transform: 'rotate(-3deg) translateY(0)' },
+                    '75%': { transform: 'rotate(3deg) translateY(-5px)' },
+                },
+            },
         },
     },
 

@@ -22,92 +22,78 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Registro" />
+
+        <div class="form-header">
+            <h1>Crear cuenta</h1>
+            <p>Únete a la comunidad</p>
+        </div>
 
         <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
-
+            <div class="form-group">
+                <InputLabel for="name" value="Nombre" />
                 <TextInput
                     id="name"
                     type="text"
-                    class="mt-1 block w-full"
                     v-model="form.name"
                     required
                     autofocus
                     autocomplete="name"
                 />
-
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError :message="form.errors.name" />
             </div>
 
-            <div class="mt-4">
+            <div class="form-group">
                 <InputLabel for="email" value="Email" />
-
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
                     v-model="form.email"
                     required
                     autocomplete="username"
                 />
-
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
+            <div class="form-group">
+                <InputLabel for="password" value="Contraseña" />
                 <TextInput
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
                     v-model="form.password"
                     required
                     autocomplete="new-password"
                 />
-
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError :message="form.errors.password" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
+            <div class="form-group">
+                <InputLabel for="password_confirmation" value="Confirmar contraseña" />
                 <TextInput
                     id="password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
                     v-model="form.password_confirmation"
                     required
                     autocomplete="new-password"
                 />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
+                <InputError :message="form.errors.password_confirmation" />
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                >
-                    Already registered?
+            <div class="form-actions">
+                <Link :href="route('login')" class="form-link">
+                    ¿Ya tienes cuenta?
                 </Link>
 
                 <PrimaryButton
-                    class="ms-4"
+                    type="submit"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Register
+                    Registrarse
                 </PrimaryButton>
             </div>
         </form>
     </GuestLayout>
 </template>
+
+<style scoped src="@/../css/pages/auth/register.css"></style>
