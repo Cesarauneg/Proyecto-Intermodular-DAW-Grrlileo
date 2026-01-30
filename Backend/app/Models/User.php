@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Fish;
+use App\Models\Bug;
 
 class User extends Authenticatable
 {
@@ -55,6 +56,13 @@ class User extends Authenticatable
     public function fish()
     {
         return $this->belongsToMany(Fish::class)
+            ->withPivot('donated_to_museum')
+            ->withTimestamps();
+    }
+
+        public function bugs()
+    {
+        return $this->belongsToMany(Bug::class)
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }

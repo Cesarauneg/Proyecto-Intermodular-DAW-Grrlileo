@@ -1,15 +1,14 @@
 <?php
 
+use App\Http\Controllers\FishUserController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\FishUserController;
-
+use App\Http\Controllers\BugsUserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
+        'canLogin'    => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
 });
@@ -34,5 +33,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/fish/{fish}/donate', [FishUserController::class, 'donate']);
     Route::get('/user/fish', [FishUserController::class, 'index']);
+    Route::post('/bugs/{bug}/donate', [BugsUserController::class, 'donate']);
+    Route::get('/user/bugs', [BugsUserController::class, 'index']);
 });
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
