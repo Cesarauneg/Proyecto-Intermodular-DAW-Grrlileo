@@ -186,6 +186,10 @@
 
 /* ---- Responsive ---- */
 @media (max-width: 900px) {
+    .inicio-main {
+        padding-bottom: 280px;
+    }
+
     .welcome-container {
         flex-direction: column-reverse;
         gap: 0;
