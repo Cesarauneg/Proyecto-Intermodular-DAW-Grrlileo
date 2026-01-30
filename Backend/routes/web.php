@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\BugUserController;
 use App\Http\Controllers\FossilUserController;
 use App\Http\Controllers\ArtUserController;
+use App\Http\Controllers\SeaCreatureUserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -41,5 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/fossils', [FossilUserController::class, 'index']);
     Route::post('/art/{art}/donate', [ArtUserController::class, 'donate']);
     Route::get('/user/art', [ArtUserController::class, 'index']);    
+    Route::post('/sea_creatures/{sea_creature}/donate', [SeaCreatureUserController::class, 'donate']);
+    Route::get('/user/sea_creatures', [SeaCreatureUserController::class, 'index']);
 });
 require __DIR__ . '/auth.php';
