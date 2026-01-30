@@ -2,10 +2,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Bug;
-use App\Models\Fossil;
 use App\Models\Art;
+use App\Models\Bug;
 use App\Models\Fish;
+use App\Models\Fossil;
+use App\Models\Sea_Creature;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -68,7 +69,7 @@ class User extends Authenticatable
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
-    
+
     public function fossils()
     {
         return $this->belongsToMany(Fossil::class)
@@ -76,10 +77,21 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-        public function art()
+    public function art()
     {
         return $this->belongsToMany(Art::class)
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
+public function seaCreatures()
+{
+    return $this->belongsToMany(
+        Sea_Creature::class,
+        'sea_creature_user',      
+        'user_id',
+        'sea_creature_id'
+    )
+    ->withPivot('donated_to_museum')
+    ->withTimestamps();
+}
 }
