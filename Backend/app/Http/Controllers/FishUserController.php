@@ -1,9 +1,10 @@
 <?php
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
 use App\Models\Fish;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class FishUserController extends Controller
 {
@@ -15,27 +16,27 @@ class FishUserController extends Controller
         // Si no lo tiene aún → lo añadimos como donado
         if (! $user->fish()->where('fish_id', $fishId)->exists()) {
             $user->fish()->attach($fishId, [
-                'donated' => true,
+                'donated' => true
             ]);
         } else {
             // Si ya lo tiene → solo actualizar pivot
             $user->fish()->updateExistingPivot($fishId, [
-                'donated' => true,
+                'donated' => true
             ]);
         }
 
         return response()->json([
-            'ok'      => true,
-            'donated' => true,
+            'ok' => true,
+            'donated' => true
         ]);
     }
     // Listar los peces de un usuario
     public function index()
     {
         $user = Auth::user();
-        $fish = $user->fish()->get();
+        $fish = $user->fish()->get();   
 
         return response()->json($fish);
-    }
+    }   
 
 }
