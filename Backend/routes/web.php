@@ -33,6 +33,6 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/fish/{fish}/donate', [FishUserController::class, 'donate']);
-    Route::get('/me/fish', [FishUserController::class, 'index']);
+    Route::get('/user/fish', [FishUserController::class, 'index']);
 });
 require __DIR__.'/auth.php';
