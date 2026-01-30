@@ -9,27 +9,18 @@ use Illuminate\Support\Facades\Auth;
 class BugUserController extends Controller
 {
     // Añadir un insecto a un usuario (al donarlo al museo)
-    public function donate($bugId)
-    {
-        $user = Auth::user();
-
-        // Si no lo tiene aún → lo añadimos como donado
-        if (! $user->bugs()->where('bugs_id', $bugId)->exists()) {
-            $user->bugs()->attach($bugId, [
-                'donated' => true,
-            ]);
-        } else {
-            // Si ya lo tiene → solo actualizar pivot
-            $user->bugs()->updateExistingPivot($bugId, [
-                'donated' => true,
-            ]);
-        }
-
-        return response()->json([
-            'ok'      => true,
-            'donated' => true,
-        ]);
+public function donate($bugId)
+{
+    $user = auth()->user();
+    if (!$user) {
+        return response()->json(['error' => 'No autenticado'], 401);
     }
+
+    // Usamos el nombre exacto de tu modelo: donated_to_museum
+    $user->bugs()->toggle([$bugId => ['donated_to_museum' => true]]);
+
+    return response()->json(['success' => true], 200);
+}
     // Listar los peces de un usuario
     public function index()
     {

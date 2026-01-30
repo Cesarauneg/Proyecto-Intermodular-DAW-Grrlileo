@@ -39,81 +39,75 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { usePage } from '@inertiajs/vue3' 
 import { useFetch } from '@/Composables/useFetch.js'
+import axios from 'axios'
 import CritterList from '@/Components/CritterList.vue'
 import CritterDetail from '@/Components/CritterDetail.vue'
 import EmptyState from '@/Components/EmptyState.vue'
 
 const selectedBug = ref(null)
 const availableBugsIds = ref(new Set())
-const museumBugsIds = ref(new Set()) // IDs de los bichos en el museo del usuario
-
-// URL del icono del museo
+const museumBugsIds = ref(new Set()) 
 const museumIconUrl = '/icons/museum.png'
 
-// TODO: Cuando implementen la autenticación, reemplazar esto con la lógica real
-// Ejemplo con Inertia: const user = usePage().props.auth.user
-// Ejemplo con Pinia: const authStore = useAuthStore()
-const isAuthenticated = ref(false) // Cambiar a true para probar el botón del museo
+const page = usePage()
+// Cambiamos la forma de detectar auth para que sea más robusta
+const isAuthenticated = computed(() => {
+    return page.props.auth && page.props.auth.user !== null;
+})
 
-// Traemos los bichos
-const { data: bugs, loading, error } = useFetch('/api/bugs')
-
-// Traemos los bichos disponibles
+const { data: bugs } = useFetch('/api/bugs')
 const { data: availableBugsData } = useFetch('/api/bugs/available?hemisphere=north')
+const { data: userBugsData } = useFetch('/api/user/bugs')
 
-// Vigilar cuando se carguen los bichos disponibles
 watch(availableBugsData, (newData) => {
-  if (newData && Array.isArray(newData)) {
-    availableBugsIds.value = new Set(newData.map(bug => bug.id))
+  if (newData) availableBugsIds.value = new Set(newData.map(bug => bug.id))
+}, { immediate: true })
+
+watch(userBugsData, (newData) => {
+  if (Array.isArray(newData)) {
+    museumBugsIds.value = new Set(newData.map(bug => bug.id))
   }
 }, { immediate: true })
 
-// TODO: Cuando tu compañera implemente el endpoint del museo, descomentar esto
-// const { data: museumBugsData } = useFetch('/api/user/museum/bugs')
-// watch(museumBugsData, (newData) => {
-//   if (newData && Array.isArray(newData)) {
-//     museumBugsIds.value = new Set(newData.map(bug => bug.id))
-//   }
-// }, { immediate: true })
-
-// Función para seleccionar un bicho
 const selectBug = (bug) => {
   selectedBug.value = bug
 }
 
-// Computed para saber si el bicho seleccionado está disponible
 const bugAvailability = computed(() => {
-  if (!selectedBug.value) return false
-  return availableBugsIds.value.has(selectedBug.value.id)
+  return selectedBug.value ? availableBugsIds.value.has(selectedBug.value.id) : false
 })
 
-// Función para verificar si un bicho está en el museo
 const isInMuseum = (bugId) => {
   return museumBugsIds.value.has(bugId)
 }
 
-// Función para agregar/quitar del museo
-const toggleMuseum = (bugId) => {
-  // TODO: Cuando tu compañera implemente el endpoint, reemplazar esto
-  // if (isInMuseum(bugId)) {
-  //   await axios.delete(`/api/user/museum/bugs/${bugId}`)
-  //   museumBugsIds.value.delete(bugId)
-  // } else {
-  //   await axios.post(`/api/user/museum/bugs/${bugId}`)
-  //   museumBugsIds.value.add(bugId)
-  // }
+// --- FUNCIÓN DE DONAR CON DEBUG ---
+const toggleMuseum = async (bugId) => {
+  console.log("Intentando donar bicho ID:", bugId); // Si esto no sale en consola, el problema es el componente hijo
   
-  // Por ahora, solo cambia el estado local (para que puedas probarlo)
-  if (museumBugsIds.value.has(bugId)) {
-    museumBugsIds.value.delete(bugId)
-  } else {
-    museumBugsIds.value.add(bugId)
+  if (!isAuthenticated.value) {
+      console.error("No puedes donar: No estás autenticado");
+      return;
   }
-  
-  // Forzar actualización reactiva
-  museumBugsIds.value = new Set(museumBugsIds.value)
-  
-  console.log('Toggle museo para bicho:', bugId, 'En museo:', museumBugsIds.value.has(bugId))
+
+  try {
+    const response = await axios.post(`/bugs/${bugId}/donate`);
+    console.log("Respuesta del servidor:", response.data);
+
+    // Cambiamos el estado localmente
+    if (museumBugsIds.value.has(bugId)) {
+      museumBugsIds.value.delete(bugId);
+    } else {
+      museumBugsIds.value.add(bugId);
+    }
+    
+    // Forzamos actualización visual
+    museumBugsIds.value = new Set(museumBugsIds.value);
+    
+  } catch (err) {
+    console.error("Error Axios:", err.response ? err.response.data : err.message);
+  }
 }
 </script>
