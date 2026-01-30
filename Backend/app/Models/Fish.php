@@ -1,14 +1,16 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAvailability;
-
+use Illuminate\Database\Eloquent\Model;
 
 class Fish extends Model
 {
     //
-        use HasAvailability;
+    use HasAvailability;
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 
 }
