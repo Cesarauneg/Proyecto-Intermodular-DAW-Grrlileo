@@ -7,10 +7,15 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    // Obtener aldeanos que cumplen años hoy (formato: día/mes)
+    $today = now()->format('j/n'); // j = día sin cero, n = mes sin cero
+    $birthdayVillagers = Villager::where('birthday', $today)->get();
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'randomVillagers' => Villager::inRandomOrder()->limit(15)->get(),
+        'birthdayVillagers' => $birthdayVillagers,
     ]);
 });
 

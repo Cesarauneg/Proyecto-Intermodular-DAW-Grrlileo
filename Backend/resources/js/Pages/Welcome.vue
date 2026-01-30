@@ -15,6 +15,10 @@ defineProps({
         type: Array,
         default: () => []
     },
+    birthdayVillagers: {
+        type: Array,
+        default: () => []
+    },
 });
 
 const page = usePage();
@@ -156,6 +160,7 @@ const songs = [
                     <component
                         :is="sectionComponents[activeTab]"
                         :villagers="randomVillagers"
+                        :birthday-villagers="birthdayVillagers"
                     />
                 </section>
             </Transition>

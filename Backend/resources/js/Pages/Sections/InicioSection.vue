@@ -1,10 +1,14 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import confetti from 'canvas-confetti';
 import VillagerMarquee from '@/Components/VillagerMarquee.vue';
 
-defineProps({
+const props = defineProps({
     villagers: {
+        type: Array,
+        default: () => []
+    },
+    birthdayVillagers: {
         type: Array,
         default: () => []
     }
@@ -13,23 +17,50 @@ defineProps({
 const isVisible = ref(false);
 const isGiftOpen = ref(false);
 
+// Mensaje dinámico basado en los cumpleaños
+const birthdayMessage = computed(() => {
+    const villagers = props.birthdayVillagers;
+
+    if (!villagers || villagers.length === 0) {
+        return "Hoy es un día tranquilo en la isla. ¡Disfruta explorando!";
+    }
+
+    if (villagers.length === 1) {
+        return `¡Feliz cumpleaños, ${villagers[0].name_es}!  No olvides felicitarl@ y darle muchos mimos.`;
+    }
+
+    if (villagers.length === 2) {
+        return `¡Feliz cumpleaños, ${villagers[0].name_es} y ${villagers[1].name_es}!`;
+    }
+
+    // Más de 2 aldeanos
+    const names = villagers.slice(0, -1).map(v => v.name_es).join(', ');
+    const lastName = villagers[villagers.length - 1].name_es;
+    return `¡Feliz cumpleaños, ${names} y ${lastName}!`;
+});
+
+// Verificar si hay cumpleaños hoy
+const hasBirthdays = computed(() => {
+    return props.birthdayVillagers && props.birthdayVillagers.length > 0;
+});
+
 // Typewriter effect
-const fullMessage = "Hoy es el cumpleaños de Bongo! No olvides felicitarlo y darle muchos mimos.";
 const displayedText = ref('');
 const isTyping = ref(false);
 
 watch(isGiftOpen, (open) => {
     if (open) {
-        // Iniciar typewriter
+        // Iniciar typewriter con el mensaje dinámico
         displayedText.value = '';
         isTyping.value = true;
 
         setTimeout(() => {
             let i = 0;
+            const message = birthdayMessage.value;
             const tick = () => {
-                if (i < fullMessage.length && isGiftOpen.value) {
+                if (i < message.length && isGiftOpen.value) {
                     i++;
-                    displayedText.value = fullMessage.slice(0, i);
+                    displayedText.value = message.slice(0, i);
                     setTimeout(tick, 35);
                 } else {
                     isTyping.value = false;
@@ -93,33 +124,38 @@ onMounted(() => {
                     </div>
                 </div>
 
-                <!-- Regalo Sorpresa -->
+                <!-- Regalo Sorpresa (solo si hay cumpleaños) -->
                 <div
+                    v-if="hasBirthdays"
                     class="gift-container relative w-32 h-40 cursor-pointer mt-8 select-none"
                     :class="{ visible: isVisible }"
                     @click="toggleGift"
                 >
-                    <!-- Contenido Sorpresa (Fondo) -->
+                    <!-- Contenido Sorpresa (Frente) -->
                     <div
-                        class="absolute inset-x-0 bottom-0 flex justify-center transition-all duration-500 ease-out"
+                        class="absolute inset-x-0 bottom-0 flex justify-center items-end gap-1 transition-all duration-500 ease-out z-20"
                         :class="isGiftOpen ? '-translate-y-24 opacity-100' : 'translate-y-0 opacity-0'"
                     >
+                        <!-- Aldeanos que cumplen años -->
                         <img
-                            src="/images/perro-guitarra.png"
-                            alt="Sorpresa"
-                            class="w-24 h-24 object-contain drop-shadow-lg"
+                            v-for="villager in birthdayVillagers.slice(0, 3)"
+                            :key="villager.id"
+                            :src="'/' + villager.icon"
+                            :alt="`${villager.name_es} cumple años hoy`"
+                            class="object-contain drop-shadow-lg rounded-full bg-amber-100 border-2 border-amber-300"
+                            :class="birthdayVillagers.length === 1 ? 'w-20 h-20' : 'w-14 h-14 -mx-1'"
                         />
                     </div>
 
-                    <!-- Base de la Caja (Medio) -->
-                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-16 bg-red-500 rounded-sm shadow-lg">
+                    <!-- Base de la Caja -->
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-16 bg-red-500 rounded-sm shadow-lg z-0">
                         <!-- Cinta vertical -->
                         <div class="absolute left-1/2 -translate-x-1/2 w-4 h-full bg-yellow-400"></div>
                     </div>
 
-                    <!-- Tapa de la Caja (Frente) -->
+                    <!-- Tapa de la Caja -->
                     <div
-                        class="absolute bottom-14 left-1/2 -translate-x-1/2 transition-all duration-500 ease-out origin-bottom"
+                        class="absolute bottom-14 left-1/2 -translate-x-1/2 transition-all duration-500 ease-out origin-bottom z-10"
                         :class="isGiftOpen ? '-translate-y-16 -rotate-45' : 'translate-y-0 rotate-0'"
                     >
                         <!-- Tapa -->
