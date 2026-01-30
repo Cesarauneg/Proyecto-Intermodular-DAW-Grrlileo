@@ -2,11 +2,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Bug;
+use App\Models\Fish;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Fish;
-use App\Models\Bug;
 
 class User extends Authenticatable
 {
@@ -60,9 +60,16 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-        public function bugs()
+    public function bugs()
     {
         return $this->belongsToMany(Bug::class)
+            ->withPivot('donated_to_museum')
+            ->withTimestamps();
+    }
+    
+    public function fossils()
+    {
+        return $this->belongsToMany(Fossil::class)
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
