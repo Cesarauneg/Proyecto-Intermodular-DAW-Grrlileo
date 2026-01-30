@@ -1,21 +1,22 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted } from 'vue';
 
-const emit = defineEmits(['update:isPlaying']);
+const props = defineProps({
+    songs: {
+        type: Array,
+        required: true,
+        validator: (songs) => songs.length > 0 && songs.every(s => s.id && s.titulo && s.autor)
+    }
+});
 
-// Canciones hardcodeadas
-const songs = [
-    { id: 1, titulo: 'K.K. Salsa', autor: 'Totakeke' },
-    { id: 2, titulo: 'K.K. Bossa', autor: 'Totakeke' },
-    { id: 3, titulo: 'Bubblegum K.K. tu tut utut utu tut ut ututut chao', autor: 'Totakeke' },
-];
+const emit = defineEmits(['update:isPlaying']);
 
 const isPlaying = ref(false);
 const currentSongIndex = ref(0);
 const titleRef = ref(null);
 const isOverflowing = ref(false);
 
-const currentSong = computed(() => songs[currentSongIndex.value]);
+const currentSong = computed(() => props.songs[currentSongIndex.value]);
 
 function checkOverflow() {
     nextTick(() => {
@@ -34,12 +35,12 @@ function togglePlay() {
 }
 
 function nextSong() {
-    currentSongIndex.value = (currentSongIndex.value + 1) % songs.length;
+    currentSongIndex.value = (currentSongIndex.value + 1) % props.songs.length;
 }
 
 function prevSong() {
     currentSongIndex.value = currentSongIndex.value === 0
-        ? songs.length - 1
+        ? props.songs.length - 1
         : currentSongIndex.value - 1;
 }
 </script>
@@ -105,12 +106,12 @@ function prevSong() {
 <style scoped>
 /* ---- Audio Player Container ---- */
 .audio-player {
-    background: rgba(30, 30, 40, 0.85);
+    background: var(--ac-player-bg);
     backdrop-filter: blur(12px);
     border-radius: 16px;
     padding: 12px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--ac-player-border);
+    box-shadow: 0 4px 20px var(--ac-player-shadow);
     display: flex;
     align-items: center;
     gap: 16px;
@@ -128,7 +129,7 @@ function prevSong() {
 .song-title {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--ac-player-text);
     margin: 0;
     white-space: nowrap;
     display: inline-block;
@@ -150,7 +151,7 @@ function prevSong() {
 
 .song-artist {
     font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--ac-player-text-muted);
     margin: 2px 0 0 0;
 }
 
@@ -168,17 +169,17 @@ function prevSong() {
     height: 28px;
     padding: 4px;
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--ac-player-text-muted);
     transition: color 0.2s;
 }
 
 .control-btn:hover,
 .control-btn:focus-visible {
-    color: #fff;
+    color: var(--ac-player-text);
 }
 
 .control-btn:focus-visible {
-    outline: 2px solid var(--ac-gold-bright, #fbbc0a);
+    outline: 2px solid var(--ac-gold-bright);
     outline-offset: 2px;
     border-radius: 4px;
 }
@@ -189,43 +190,30 @@ function prevSong() {
 }
 
 .play-btn {
-    background: linear-gradient(135deg, #8bc34a, #689f38);
+    background: linear-gradient(135deg, var(--ac-player-btn-start), var(--ac-player-btn-end));
     border: none;
     border-radius: 50%;
     width: 36px;
     height: 36px;
     padding: 8px;
     cursor: pointer;
-    color: #fff;
+    color: var(--ac-player-text);
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px rgba(139, 195, 74, 0.4);
+    box-shadow: 0 2px 8px var(--ac-player-btn-shadow);
 }
 
 .play-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(139, 195, 74, 0.5);
+    box-shadow: 0 4px 12px var(--ac-player-btn-shadow);
 }
 
 .play-btn:focus-visible {
-    outline: 2px solid var(--ac-gold-bright, #fbbc0a);
+    outline: 2px solid var(--ac-gold-bright);
     outline-offset: 2px;
 }
 
 .play-btn svg {
     width: 100%;
     height: 100%;
-}
-
-/* ---- Accessibility ---- */
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
 }
 </style>

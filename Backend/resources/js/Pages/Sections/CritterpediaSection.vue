@@ -1,11 +1,11 @@
 <script setup>
+import PlaceholderSection from '@/Components/PlaceholderSection.vue';
 </script>
 
 <template>
-    <section class="section-placeholder" aria-labelledby="critterpedia-title">
-        <h2 id="critterpedia-title">Critterpedia</h2>
-        <p>Aqui podras consultar insectos, peces y criaturas marinas.</p>
-    </section>
+    <PlaceholderSection
+        id="critterpedia"
+        title="Critterpedia"
+        description="Aquí podrás consultar insectos, peces y criaturas marinas."
+    />
 </template>
-
-<style scoped src="@/../css/pages/sections/critterpedia.css"></style>

@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
+import { useClickOutside } from '@/composables/useClickOutside';
 import InicioSection from './Sections/InicioSection.vue';
 import CritterpediaSection from './Sections/CritterpediaSection.vue';
 import TemporadaSection from './Sections/TemporadaSection.vue';
@@ -18,18 +19,11 @@ const user = computed(() => page.props.auth?.user);
 const authMenuOpen = ref(false);
 const authMenuRef = ref(null);
 
+useClickOutside(authMenuRef, () => authMenuOpen.value = false);
+
 function toggleAuthMenu() {
     authMenuOpen.value = !authMenuOpen.value;
 }
-
-function closeAuthMenu(e) {
-    if (authMenuRef.value && !authMenuRef.value.contains(e.target)) {
-        authMenuOpen.value = false;
-    }
-}
-
-onMounted(() => document.addEventListener('click', closeAuthMenu));
-onBeforeUnmount(() => document.removeEventListener('click', closeAuthMenu));
 
 const tabs = [
     { key: 'inicio', label: 'Inicio' },
@@ -53,6 +47,13 @@ const sectionComponents = {
     temporada: TemporadaSection,
     vecinos: VecinosSection,
 };
+
+// Canciones del reproductor (en el futuro podrían venir del backend)
+const songs = [
+    { id: 1, titulo: 'K.K. Salsa', autor: 'Totakeke' },
+    { id: 2, titulo: 'K.K. Bossa', autor: 'Totakeke' },
+    { id: 3, titulo: 'Bubblegum K.K.', autor: 'Totakeke' },
+];
 </script>
 
 <template>
@@ -64,7 +65,13 @@ const sectionComponents = {
             <div class="header-inner">
                 <!-- Logo -->
                 <div class="logo">
-                    <img src="/images/logos/logo.png" alt="ACpedia" class="logo-img" />
+                    <img
+                        src="/images/logos/logo.png"
+                        alt="ACpedia"
+                        class="logo-img"
+                        width="98"
+                        height="55"
+                    />
                 </div>
 
                 <!-- Auth -->
@@ -79,7 +86,7 @@ const sectionComponents = {
                             Hola, {{ user.name }}
                         </template>
                         <template v-else>
-                            Identif&iacute;cate
+                            Identifícate
                         </template>
                         <svg class="chevron" :class="{ open: authMenuOpen }" width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
@@ -154,9 +161,11 @@ const sectionComponents = {
                 alt="Totakeke tocando la guitarra"
                 class="mascot-gif"
                 :class="{ 'animate-dance': isDancing }"
-                role="img"
+                width="80"
+                height="80"
+                loading="lazy"
             />
-            <AudioPlayer @update:isPlaying="handlePlayingChange" />
+            <AudioPlayer :songs="songs" @update:isPlaying="handlePlayingChange" />
         </aside>
 
         <!-- ========== FOOTER ========== -->

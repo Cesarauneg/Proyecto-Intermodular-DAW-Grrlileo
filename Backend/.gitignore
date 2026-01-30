@@ -6,6 +6,13 @@
 .phpactor.json
 .phpunit.result.cache
 .idea
+.idea/
+.vscode/
+*.suo
+*.ntvs
+*.njsproj
+*.sln
+*.sw?
 laravel-idea.xml
 *.iws
 *.iml

@@ -6,7 +6,13 @@ import { Link } from '@inertiajs/vue3';
     <div class="guest-layout">
         <header class="guest-logo">
             <Link href="/">
-                <img src="/images/logos/logo.png" alt="Canela`s Desk - Ir al inicio" class="guest-logo-img" />
+                <img
+                    src="/images/logos/logo.png"
+                    alt="Canela's Desk - Ir al inicio"
+                    class="guest-logo-img"
+                    width="120"
+                    height="67"
+                />
             </Link>
         </header>
 

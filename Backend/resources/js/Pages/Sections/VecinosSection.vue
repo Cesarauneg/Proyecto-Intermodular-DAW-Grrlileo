@@ -1,11 +1,11 @@
 <script setup>
+import PlaceholderSection from '@/Components/PlaceholderSection.vue';
 </script>
 
 <template>
-    <section class="section-placeholder" aria-labelledby="vecinos-title">
-        <h2 id="vecinos-title">Vecinos</h2>
-        <p>Descubre todos los vecinos y sus personalidades.</p>
-    </section>
+    <PlaceholderSection
+        id="vecinos"
+        title="Vecinos"
+        description="Descubre todos los vecinos y sus personalidades."
+    />
 </template>
-
-<style scoped src="@/../css/pages/sections/vecinos.css"></style>
