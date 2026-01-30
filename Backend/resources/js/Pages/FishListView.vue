@@ -31,53 +31,31 @@
       No se encontraron resultados.
     </div>
 
-    <div v-if="totalPages > 1" class="mt-10 flex flex-col items-center border-t pt-6 gap-4">
-      <div class="flex items-center space-x-2">
-        <button 
-          @click="changePage(filters.page - 1)" 
-          :disabled="filters.page <= 1"
-          class="px-4 py-2 bg-white border rounded-lg shadow-sm disabled:opacity-30 hover:bg-gray-50 transition-colors"
-        >
-          &laquo; Ant.
-        </button>
-
-        <div class="flex items-center px-4 py-2 bg-gray-50 rounded-lg border border-gray-100">
-          <span class="text-sm font-semibold text-blue-600">{{ filters.page }}</span>
-          <span class="text-sm text-gray-400 mx-2">/</span>
-          <span class="text-sm text-gray-600">{{ totalPages }}</span>
-        </div>
-
-        <button 
-          @click="changePage(filters.page + 1)" 
-          :disabled="filters.page >= totalPages"
-          class="px-4 py-2 bg-white border rounded-lg shadow-sm disabled:opacity-30 hover:bg-gray-50 transition-colors"
-        >
-          Sig. &raquo;
-        </button>
-      </div>
-      
-      <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
-        Total de páginas: {{ totalPages }}
-      </p>
-    </div>
-    
+    <Pagination 
+      :current-page="filters.page" 
+      :total-pages="totalPages" 
+      @change="changePage" 
+    />
   </div>
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, watch } from 'vue'
 import { useFetch } from '@/Composables/useFetch'
 import FishCard from '@/Components/FishCard.vue'
 import SearchBar from '@/Components/SearchBar.vue'
+import Pagination from '@/Components/Pagination.vue'
 
+// 1. Configuración de Filtros y Estado
 const filters = reactive({
   search: '',
   location: '',
   rarity: '',
   page: 1,
-  per_page: 8
+  per_page: 18
 })
 
+// 2. Construcción de la URL (Reactiva)
 const url = computed(() => {
   const hasFilters = filters.search || filters.location || filters.rarity;
   const endpoint = hasFilters ? '/api/fish/filter' : '/api/fish';
@@ -94,18 +72,21 @@ const url = computed(() => {
   return `${endpoint}?${params.toString()}`;
 })
 
+// 3. Fetch de datos usando el Composable con Debounce
 const { data: pagination, loading } = useFetch(url, { debounce: 500 })
 
+// 4. Propiedades Computadas para el Template
 const fishes = computed(() => pagination.value?.data || [])
 const totalPages = computed(() => pagination.value?.last_page || 1)
 
-// Funciones de navegación
+// 5. Funciones de Navegación
 const resetPage = () => { 
   filters.page = 1 
 }
 
 const changePage = (p) => {
   filters.page = p
+  // Hacemos scroll arriba al cambiar de página
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 </script>

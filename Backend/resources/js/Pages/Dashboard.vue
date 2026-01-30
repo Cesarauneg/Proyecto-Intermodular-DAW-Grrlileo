@@ -8,11 +8,11 @@ import { Head } from '@inertiajs/vue3';
 
     <AuthenticatedLayout>
         <template #header>
-            <h2
+            <h1
                 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
             >
                 Dashboard
-            </h2>
+            </h1>
         </template>
 
         <div class="py-12">
