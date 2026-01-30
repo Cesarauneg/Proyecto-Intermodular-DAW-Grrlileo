@@ -16,7 +16,8 @@ public function index(Request $request)
               ->orWhere('location', 'LIKE', "%{$searchTerm}%");
     }
 
-    return response()->json($query->paginate($request->get('per_page', 8)));
+    // return response()->json($query->paginate($request->get('per_page', 8)));
+    return response()->json($query->get());
 }
 
     //Filtrado dinámico por rarity y location (se pueden agregar mas)
@@ -49,7 +50,8 @@ public function index(Request $request)
         $query->orderBy('price', $order);
     }
 
-    return response()->json($query->paginate($request->get('per_page', 8)));
+    // return response()->json($query->paginate($request->get('per_page', 8)));
+    return response()->json($query->get());
 }
 
     //Peces disponibles en este momento (hemisferio norte y sur)

@@ -17,7 +17,7 @@ Route::get('/', function () {
 });
 
 Route::get('/critterpedia/fish', function () {
-    return Inertia::render('FishListView');
+    return Inertia::render('FishPedia');
 })->name('fish.list');
 Route::get('/catalogo', function () {
     return Inertia::render('Catalogo');
