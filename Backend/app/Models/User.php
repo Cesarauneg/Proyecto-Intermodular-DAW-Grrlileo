@@ -3,6 +3,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Bug;
+use App\Models\Fossil;
+use App\Models\Art;
 use App\Models\Fish;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -70,6 +72,13 @@ class User extends Authenticatable
     public function fossils()
     {
         return $this->belongsToMany(Fossil::class)
+            ->withPivot('donated_to_museum')
+            ->withTimestamps();
+    }
+
+        public function art()
+    {
+        return $this->belongsToMany(Art::class)
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
