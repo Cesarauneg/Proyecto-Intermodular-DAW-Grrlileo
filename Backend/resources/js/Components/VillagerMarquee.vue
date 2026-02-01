@@ -8,18 +8,24 @@ defineProps({
 </script>
 
 <template>
-    <div v-if="villagers && villagers.length > 0" class="marquee-container">
-        <div class="marquee-track">
+    <section
+        v-if="villagers && villagers.length > 0"
+        class="marquee-container"
+        aria-label="Carrusel de aldeanos"
+        aria-roledescription="carrusel"
+    >
+        <div class="marquee-track" aria-live="off">
             <!-- Primera copia de la lista -->
-            <div
+            <article
                 v-for="villager in villagers"
                 :key="'a-' + villager.id"
                 class="villager-card"
+                :aria-label="`${villager.name_es}, ${villager.species}`"
             >
                 <div class="card-image-wrapper">
                     <img
                         :src="villager.image"
-                        :alt="`Aldeano ${villager.name_es}`"
+                        :alt="villager.name_es"
                         class="card-image"
                         loading="lazy"
                     />
@@ -28,18 +34,19 @@ defineProps({
                     <h3 class="card-name">{{ villager.name_es }}</h3>
                     <p class="card-species">{{ villager.species }}</p>
                 </div>
-            </div>
+            </article>
 
-            <!-- Segunda copia para loop infinito -->
-            <div
+            <!-- Segunda copia para loop infinito (decorativa) -->
+            <article
                 v-for="villager in villagers"
                 :key="'b-' + villager.id"
                 class="villager-card"
+                aria-hidden="true"
             >
                 <div class="card-image-wrapper">
                     <img
                         :src="villager.image"
-                        :alt="`Aldeano ${villager.name_es}`"
+                        alt=""
                         class="card-image"
                         loading="lazy"
                     />
@@ -48,9 +55,9 @@ defineProps({
                     <h3 class="card-name">{{ villager.name_es }}</h3>
                     <p class="card-species">{{ villager.species }}</p>
                 </div>
-            </div>
+            </article>
         </div>
-    </div>
+    </section>
 </template>
 
 <style scoped>
@@ -70,8 +77,15 @@ defineProps({
     animation: marquee 30s linear infinite;
 }
 
-.marquee-container:hover .marquee-track {
+.marquee-container:hover .marquee-track,
+.marquee-container:focus-within .marquee-track {
     animation-play-state: paused;
+}
+
+/* Focus visible para navegación por teclado */
+.marquee-container:focus-visible {
+    outline: 3px solid var(--ac-gold-bright, #fbbc0a);
+    outline-offset: 4px;
 }
 
 .villager-card {

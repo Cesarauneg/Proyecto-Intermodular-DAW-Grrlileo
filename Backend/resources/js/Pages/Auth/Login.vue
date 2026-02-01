@@ -69,10 +69,10 @@ const submit = () => {
             </div>
 
             <div class="form-group">
-                <label class="remember-label">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span>Recordarme</span>
-                </label>
+                <div class="remember-label">
+                    <Checkbox id="remember" name="remember" v-model:checked="form.remember" />
+                    <label for="remember">Recordarme</label>
+                </div>
             </div>
 
             <div class="form-actions">

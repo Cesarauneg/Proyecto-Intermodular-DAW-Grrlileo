@@ -77,8 +77,8 @@ const songs = [
                         src="/images/logos/logo.png"
                         alt="ACpedia"
                         class="logo-img"
-                        width="98"
-                        height="55"
+                        width="160"
+                        height="90"
                     />
                 </div>
 

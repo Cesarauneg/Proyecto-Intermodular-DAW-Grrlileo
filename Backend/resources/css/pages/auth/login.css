@@ -29,6 +29,8 @@
     gap: 0.5rem;
     font-size: 0.875rem;
     color: var(--ac-text-secondary);
+}
+.remember-label label {
     cursor: pointer;
 }
 .form-actions {
@@ -46,4 +48,9 @@
 }
 .form-link:hover {
     color: var(--ac-green-dark);
+}
+.form-link:focus-visible {
+    outline: 2px solid var(--ac-green);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
