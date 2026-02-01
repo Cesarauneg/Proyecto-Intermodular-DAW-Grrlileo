@@ -24,10 +24,14 @@
     --ac-bg-primary:   #f5faf0;
     --ac-bg-secondary: #eaf6e4;
     --ac-bg-card:      #ffffff;
+    --ac-cream-light:  #faf8ef;
+
+    /* Brown variants */
+    --ac-brown-dark:   #5c4a1f;
 
     /* Text */
     --ac-text-primary:   #3b3022;
-    --ac-text-secondary: #6b5e4f;
+    --ac-text-secondary: #662028;
     --ac-text-light:     #9b8e7f;
 
     /* Forms */

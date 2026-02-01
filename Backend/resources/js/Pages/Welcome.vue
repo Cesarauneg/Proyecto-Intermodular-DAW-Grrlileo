@@ -11,6 +11,14 @@ import AudioPlayer from '@/Components/AudioPlayer.vue';
 defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
+    randomVillagers: {
+        type: Array,
+        default: () => []
+    },
+    birthdayVillagers: {
+        type: Array,
+        default: () => []
+    },
 });
 
 const page = usePage();
@@ -149,7 +157,11 @@ const songs = [
                     :aria-labelledby="`tab-${activeTab}`"
                     class="tabpanel"
                 >
-                    <component :is="sectionComponents[activeTab]" />
+                    <component
+                        :is="sectionComponents[activeTab]"
+                        :villagers="randomVillagers"
+                        :birthday-villagers="birthdayVillagers"
+                    />
                 </section>
             </Transition>
         </main>

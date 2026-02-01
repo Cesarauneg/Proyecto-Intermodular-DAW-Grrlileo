@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\FishUserController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Villager;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\BugUserController;
@@ -10,9 +12,15 @@ use App\Http\Controllers\ArtUserController;
 use App\Http\Controllers\SeaCreatureUserController;
 
 Route::get('/', function () {
+    // Obtener aldeanos que cumplen años hoy (formato: día/mes)
+    $today = now()->format('j/n'); // j = día sin cero, n = mes sin cero
+    $birthdayVillagers = Villager::where('birthday', $today)->get();
+
     return Inertia::render('Welcome', [
         'canLogin'    => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'randomVillagers' => Villager::inRandomOrder()->limit(15)->get(),
+        'birthdayVillagers' => $birthdayVillagers,
     ]);
 });
 
