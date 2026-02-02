@@ -4,8 +4,8 @@ import PlaceholderSection from '@/Components/PlaceholderSection.vue';
 
 <template>
     <PlaceholderSection
-        id="critterpedia"
-        title="Critterpedia"
-        description="Aquí podrás consultar insectos, peces y criaturas marinas."
+        id="peces"
+        title="Peces"
+        description="Aquí podrás consultar todos los peces disponibles."
     />
 </template>
