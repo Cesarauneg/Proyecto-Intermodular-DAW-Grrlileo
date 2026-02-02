@@ -27,6 +27,15 @@ Route::get('/', function () {
 Route::get('/fish', function () {
     return Inertia::render('FishPedia');
 })->name('fish.list');
+
+Route::get('/fossils', function () {
+    return Inertia::render('FossilPedia');
+})->name('fossil.list');
+
+Route::get('/fossils2', function () {
+    return Inertia::render('FossilGallery');
+})->name('fossil2.list');
+
 Route::get('/catalogo', function () {
     return Inertia::render('Catalogo');
 })->name('catalogo');

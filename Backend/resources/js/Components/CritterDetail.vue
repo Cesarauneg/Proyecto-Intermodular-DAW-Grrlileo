@@ -4,32 +4,25 @@
       
       <!-- Header con nombre y botón de museo -->
       <div class="bg-gradient-to-r from-green-400 to-blue-400 p-4 sm:p-6 text-center relative">
-  <div v-if="showMuseumButton" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-50">
-      <MuseumButton
-          :is-in-museum="isInMuseum"
-          :museum-icon="museumIconUrl"
-          @toggle="$emit('toggleMuseum')"
-      />
-  </div>
+        <!-- Botón de museo (solo para usuarios autenticados) -->
+        <div v-if="showMuseumButton" class="absolute top-4 right-4 sm:top-6 sm:right-6">
+          <MuseumButton
+            :is-in-museum="isInMuseum"
+            :museum-icon="museumIconUrl"
+            @toggle="$emit('toggleMuseum')"
+          />
+        </div>
 
-  <h1 
-    :class="[
-      'text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg mb-2',
-      showMuseumButton ? 'pr-16 sm:pr-20' : 'pr-0'
-    ]"
-  >
-        {{ capitalize(critter.name_es) }}
-  </h1>
-  
-  <p 
-    :class="[
-      'text-white/90 text-sm sm:text-base lg:text-lg italic',
-      showMuseumButton ? 'pr-16 sm:pr-20' : 'pr-0'
-    ]"
-  >
-    {{ critter.name }}
-  </p>
-</div>
+        <h1 :class="[
+          'text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg mb-2',
+          showMuseumButton ? 'pr-16 sm:pr-20' : ''
+        ]">
+          {{ displayName }}
+        </h1>
+        <p v-if="critter.name_en || critter.name" class="text-white/90 text-sm sm:text-base lg:text-lg italic">
+          {{ critter.name_en || critter.name }}
+        </p>
+      </div>
 
       <!-- Contenedor principal - RESPONSIVE -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
@@ -40,7 +33,7 @@
             <div class="absolute inset-0 bg-green-200 rounded-full blur-2xl opacity-50"></div>
             <img
               :src="critter.image"
-              :alt="critter.name_es"
+              :alt="displayName"
               class="relative w-full h-48 sm:h-64 lg:h-96 object-contain drop-shadow-2xl transform hover:scale-110 transition-transform duration-300"
             />
           </div>
@@ -49,7 +42,7 @@
         <!-- Columna derecha: Información -->
         <div class="flex flex-col justify-center space-y-3 sm:space-y-4">
           
-          <!-- Tarjeta de Precio -->
+          <!-- Tarjeta de Precio (siempre se muestra) -->
           <InfoCard color-classes="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-400">
             <div class="flex items-center justify-between">
               <span class="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-800">💰 Precio</span>
@@ -58,11 +51,14 @@
             <p class="text-xs sm:text-sm text-yellow-700 mt-1">bayas</p>
           </InfoCard>
 
-          <!-- Tarjeta de Disponibilidad -->
-          <InfoCard :color-classes="isAvailable 
-            ? 'bg-gradient-to-r from-green-100 to-emerald-200 border-green-400' 
-            : 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-400'
-          ">
+          <!-- Tarjeta de Disponibilidad (solo si showAvailability es true) -->
+          <InfoCard 
+            v-if="showAvailability"
+            :color-classes="isAvailable 
+              ? 'bg-gradient-to-r from-green-100 to-emerald-200 border-green-400' 
+              : 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-400'
+            "
+          >
             <div class="flex items-center justify-between">
               <span :class="[
                 'text-lg sm:text-xl lg:text-2xl font-bold',
@@ -85,20 +81,33 @@
             </p>
           </InfoCard>
 
-          <!-- Tarjeta de Ubicación -->
-          <InfoCard color-classes="bg-gradient-to-r from-blue-100 to-cyan-200 border-blue-400">
+          <!-- Tarjeta de Ubicación (solo si existe location) -->
+          <InfoCard v-if="critter.location" color-classes="bg-gradient-to-r from-blue-100 to-cyan-200 border-blue-400">
             <div class="flex items-center justify-between">
               <span class="text-base sm:text-lg lg:text-xl font-bold text-blue-800">📍 Ubicación</span>
               <span class="text-sm sm:text-base lg:text-lg font-bold text-blue-900 text-right">{{ critter.location }}</span>
             </div>
           </InfoCard>
 
-          <!-- Tarjeta de Rareza y Estación -->
-          <InfoCard color-classes="bg-gradient-to-r from-purple-100 to-pink-200 border-purple-400">
+          <!-- Tarjeta de Part Of (solo si existe part_of - para fósiles) -->
+          <InfoCard v-if="critter.part_of" color-classes="bg-gradient-to-r from-amber-100 to-yellow-200 border-amber-400">
+            <div class="flex items-center justify-between">
+              <span class="text-base sm:text-lg lg:text-xl font-bold text-amber-800">🦴 Parte de</span>
+              <span class="text-sm sm:text-base lg:text-lg font-bold text-amber-900 text-right">{{ capitalize(critter.part_of) }}</span>
+            </div>
+          </InfoCard>
+
+          <!-- Tarjeta de Rareza y Estación (solo si existen) -->
+          <InfoCard v-if="critter.rarity || critter.season" color-classes="bg-gradient-to-r from-purple-100 to-pink-200 border-purple-400">
             <div class="space-y-2 sm:space-y-3">
-              <div class="flex items-center justify-between">
+              <div v-if="critter.rarity" class="flex items-center justify-between">
                 <span class="text-base sm:text-lg lg:text-xl font-bold text-purple-800">✨ Rareza</span>
                 <span class="text-sm sm:text-base lg:text-lg font-semibold text-purple-900">{{ critter.rarity }}</span>
+              </div>
+              <div v-if="critter.rarity && critter.season" class="h-px bg-purple-300"></div>
+              <div v-if="critter.season" class="flex items-center justify-between">
+                <span class="text-base sm:text-lg lg:text-xl font-bold text-purple-800">🌸 Estación</span>
+                <span class="text-sm sm:text-base lg:text-lg font-semibold text-purple-900">{{ critter.season }}</span>
               </div>
             </div>
           </InfoCard>
@@ -106,7 +115,7 @@
         </div>
       </div>
 
-      <!-- Frase de captura al final -->
+      <!-- Frase de captura al final (solo si existe) -->
       <div v-if="critter.catch_phrase_en" class="bg-gradient-to-r from-amber-50 to-orange-50 border-t-4 border-orange-300 p-4 sm:p-6">
         <div class="flex items-start gap-3">
           <span class="text-3xl sm:text-4xl">💬</span>
@@ -124,11 +133,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import InfoCard from './InfoCard.vue'
 import MuseumButton from './MuseumButton.vue'
-import { capitalize } from '@/Utils/formatters.js' 
+import { capitalize } from '@/Utils/formatters.js'
 
-defineProps({
+const props = defineProps({
   critter: {
     type: Object,
     required: true
@@ -148,8 +158,17 @@ defineProps({
   showMuseumButton: {
     type: Boolean,
     default: false
+  },
+  showAvailability: {
+    type: Boolean,
+    default: true  // Por defecto se muestra (bichos y peces)
   }
 })
 
 defineEmits(['toggleMuseum'])
+
+// Computed para obtener el nombre a mostrar
+const displayName = computed(() => {
+  return capitalize(props.critter.name_es || props.critter.name_en || props.critter.name || 'Sin nombre')
+})
 </script>
