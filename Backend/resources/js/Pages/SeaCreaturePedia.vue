@@ -8,57 +8,63 @@ import CritterList from '@/Components/CritterList.vue'
 import CritterDetail from '@/Components/CritterDetail.vue'
 import EmptyState from '@/Components/EmptyState.vue'
 
-// ESTADO Y MUSEO 
-const { isInMuseum, toggleDonation } = useMuseum('/user/bugs')
+// --- ESTADO Y MUSEO ---
+// Importante: El endpoint coincide con lo que espera tu API
+const { isInMuseum, toggleDonation } = useMuseum('/user/sea_creatures')
 const museumIconUrl = '/icons/museum.png'
 
-const selectedBug = ref(null)
-const availableBugsIds = ref(new Set())
+const selectedCreature = ref(null)
+const availableCreaturesIds = ref(new Set())
 
-// AUTH 
+// --- AUTH ---
 const page = usePage()
 const isAuthenticated = computed(() => page.props.auth?.user !== null)
 
-// FETCH DE DATOS 
-const { data: bugs } = useFetch('/api/sea_creatures')
-const { data: availableBugsData } = useFetch('/api/sea_creatures/available?hemisphere=north')
+// --- FETCH DE DATOS ---
+const { data: seaCreatures } = useFetch('/api/sea_creatures')
+const { data: availableData } = useFetch('/api/sea_creatures/available?hemisphere=north')
 
-// WATCHERS 
-watch(availableBugsData, (newData) => {
-  if (newData) availableBugsIds.value = new Set(newData.map(bug => bug.id))
+// --- WATCHERS ---
+watch(availableData, (newData) => {
+  if (newData) availableCreaturesIds.value = new Set(newData.map(item => item.id))
 }, { immediate: true })
 
-// MÉTODOS 
-const selectBug = (bug) => { selectedBug.value = bug }
+// --- MÉTODOS ---
+const selectCreature = (creature) => { 
+  selectedCreature.value = creature 
+}
 
-const bugAvailability = computed(() => {
-  return selectedBug.value ? availableBugsIds.value.has(selectedBug.value.id) : false
+const isAvailable = computed(() => {
+  return selectedCreature.value ? availableCreaturesIds.value.has(selectedCreature.value.id) : false
 })
 
 const handleToggle = (id) => {
   if (!isAuthenticated.value) return
-  toggleDonation(id, 'bugs') 
+  toggleDonation(id, 'sea_creatures') 
 }
 </script>
 
 <template>
-  <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-green-50 to-blue-50">
+  <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-indigo-50 to-blue-100">
+    
     <CritterList
-      :items="bugs || []"
-      :selected-item="selectedBug"
-      :available-ids="availableBugsIds"
-      @select="selectBug"
+      title="Criaturas Marinas"
+      icon="🤿"
+      :items="seaCreatures || []"
+      :selected-item="selectedCreature"
+      :available-ids="availableCreaturesIds"
+      @select="selectCreature"
     />
 
     <div class="flex-1 flex items-center justify-center p-4 overflow-y-auto">
       <CritterDetail
-        v-if="selectedBug"
-        :critter="selectedBug"
-        :is-available="bugAvailability"
-        :is-in-museum="isInMuseum(selectedBug.id)"
+        v-if="selectedCreature"
+        :critter="selectedCreature"
+        :is-available="isAvailable"
+        :is-in-museum="isInMuseum(selectedCreature.id)"
         :museum-icon-url="museumIconUrl"
         :show-museum-button="isAuthenticated"
-        @toggle-museum="handleToggle(selectedBug.id)"
+        @toggle-museum="handleToggle(selectedCreature.id)"
       />
       <EmptyState v-else icon="🪸" title="Selecciona una criatura marina" />
     </div>

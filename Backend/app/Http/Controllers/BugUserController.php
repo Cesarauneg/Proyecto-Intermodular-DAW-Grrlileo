@@ -16,7 +16,6 @@ public function donate($bugId)
         return response()->json(['error' => 'No autenticado'], 401);
     }
 
-    // Usamos el nombre exacto de tu modelo: donated_to_museum
     $user->bugs()->toggle([$bugId => ['donated_to_museum' => true]]);
 
     return response()->json(['success' => true], 200);
