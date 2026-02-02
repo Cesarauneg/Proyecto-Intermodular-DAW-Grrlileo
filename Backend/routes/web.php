@@ -24,15 +24,15 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/critterpedia/fish', function () {
-    return Inertia::render('FishListView');
+Route::get('/fish', function () {
+    return Inertia::render('FishPedia');
 })->name('fish.list');
 Route::get('/catalogo', function () {
     return Inertia::render('Catalogo');
-})->name('catalogo'); // <-- Aquí es donde va
+})->name('catalogo'); 
 
-Route::get('/bichos', function () {
-    return Inertia::render('BugPedia'); // <-- apunta al archivo Pages/BichosPage.vue
+Route::get('/bugs', function () {
+    return Inertia::render('BugPedia'); 
 })->name('bichos');
 
 Route::get('/dashboard', function () {
