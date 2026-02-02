@@ -24,6 +24,10 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/art', function () {
+    return Inertia::render('ArtPedia');
+})->name('art.list');
+
 Route::get('/fish', function () {
     return Inertia::render('FishPedia');
 })->name('fish.list');

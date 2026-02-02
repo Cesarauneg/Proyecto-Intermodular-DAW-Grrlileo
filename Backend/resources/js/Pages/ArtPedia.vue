@@ -1,20 +1,19 @@
 <template>
-  <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-amber-50 to-yellow-50">
+  <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-red-50 to-purple-50">
     
-    <!-- Lista de fósiles (30% en desktop) -->
+    <!-- Lista de obras (30% en desktop) -->
     <CritterList
       title="Todos los fósiles"
-      icon="🦴"
       :items="fossils || []"
       :selected-item="selectedFossil"
       :available-ids="new Set()"
       @select="selectFossil"
     />
 
-    <!-- Detalles del fósil (70% en desktop) -->
+    <!-- Detalles de la obra (70% en desktop) -->
     <div class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
       
-      <!-- Detalles cuando hay un fósil seleccionado -->
+      <!-- Detalles cuando hay una obra seleccionada -->
         <CritterDetail
           v-if="selectedFossil"
           :critter="selectedFossil"
@@ -29,8 +28,8 @@
       <!-- Estado vacío cuando no hay nada seleccionado -->
       <EmptyState
         v-else
-        icon="🦴"
-        title="Selecciona un fósil"
+        icon="🎨"
+        title="Selecciona una obra"
         subtitle="para ver su información"
       />
 
@@ -39,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed } from 'vue' 
 import { usePage } from '@inertiajs/vue3' 
 import { useFetch } from '@/Composables/useFetch.js'
 import { useMuseum } from '@/Composables/useMuseum.js'
@@ -59,7 +58,7 @@ const page = usePage()
 const isAuthenticated = computed(() => page.props.auth?.user !== null)
 
 // FETCH DE DATOS 
-const { data: fossils } = useFetch('/api/fossils')
+const { data: fossils } = useFetch('/api/art')
 
 // MÉTODOS 
 const selectFossil = (fossil) => {
