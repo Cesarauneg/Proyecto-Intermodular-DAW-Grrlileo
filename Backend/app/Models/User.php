@@ -65,7 +65,7 @@ class User extends Authenticatable
 
     public function bugs()
     {
-        return $this->belongsToMany(Bug::class)
+        return $this->belongsToMany(Bug::class, 'bug_user') 
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
@@ -83,15 +83,15 @@ class User extends Authenticatable
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
-public function seaCreatures()
-{
-    return $this->belongsToMany(
-        Sea_Creature::class,
-        'sea_creature_user',      
-        'user_id',
-        'sea_creature_id'
-    )
-    ->withPivot('donated_to_museum')
-    ->withTimestamps();
-}
+    public function seaCreatures()
+    {
+        return $this->belongsToMany(
+            Sea_Creature::class,
+            'sea_creature_user',
+            'user_id',
+            'sea_creature_id'
+        )
+            ->withPivot('donated_to_museum')
+            ->withTimestamps();
+    }
 }

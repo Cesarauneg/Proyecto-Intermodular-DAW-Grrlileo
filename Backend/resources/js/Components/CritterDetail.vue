@@ -18,7 +18,7 @@
       showMuseumButton ? 'pr-16 sm:pr-20' : 'pr-0'
     ]"
   >
-    {{ critter.name_es.charAt(0).toUpperCase() + critter.name_es.slice(1).toLowerCase() }}
+        {{ capitalize(critter.name_es) }}
   </h1>
   
   <p 
@@ -126,6 +126,7 @@
 <script setup>
 import InfoCard from './InfoCard.vue'
 import MuseumButton from './MuseumButton.vue'
+import { capitalize } from '@/Utils/formatters.js' 
 
 defineProps({
   critter: {

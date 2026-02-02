@@ -12,7 +12,7 @@
 
     <div class="p-2 flex flex-col flex-grow">
 <h2 class="text-sm sm:text-base font-bold text-gray-800 line-clamp-2 leading-tight min-h-[2.5rem]">
-  {{ name_es.charAt(0).toUpperCase() + name_es.slice(1).toLowerCase() }}
+  {{ capitalize(name_es) }}
 </h2>
     </div>
   </article>
@@ -20,6 +20,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { capitalize } from '@/Utils/formatters.js'
 
 const props = defineProps({
   image: String,
