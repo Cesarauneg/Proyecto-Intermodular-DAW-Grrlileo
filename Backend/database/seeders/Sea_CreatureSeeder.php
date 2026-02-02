@@ -47,7 +47,7 @@ class Sea_CreatureSeeder extends Seeder
 
                 // Imágenes locales
                 'image' => 'images/sea_creatures/' . $c['file-name'] . '.png',
-                'icon' => 'images/sea_creatures/icons/' . $c['file-name'] . '.png',
+                'icon' => 'icons/sea_creatures/' . $c['file-name'] . '.png',
             ]);
         }
     }

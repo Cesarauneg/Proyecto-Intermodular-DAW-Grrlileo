@@ -97,6 +97,13 @@
             </div>
           </InfoCard>
 
+          <InfoCard v-if="critter.speed" color-classes="bg-gradient-to-r from-blue-100 to-cyan-200 border-blue-400">
+            <div class="flex items-center justify-between">
+              <span class="text-base sm:text-lg lg:text-xl font-bold text-amber-800">⚡ Velocidad</span>
+              <span class="text-sm sm:text-base lg:text-lg font-bold text-amber-900 text-right">{{ capitalize(critter.speed) }}</span>
+            </div>
+          </InfoCard>
+
           <!-- Tarjeta de Rareza y Estación (solo si existen) -->
           <InfoCard v-if="critter.rarity || critter.season" color-classes="bg-gradient-to-r from-purple-100 to-pink-200 border-purple-400">
             <div class="space-y-2 sm:space-y-3">
@@ -161,7 +168,7 @@ const props = defineProps({
   },
   showAvailability: {
     type: Boolean,
-    default: true  // Por defecto se muestra (bichos y peces)
+    default: true 
   }
 })
 
