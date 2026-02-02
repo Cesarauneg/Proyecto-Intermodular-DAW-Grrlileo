@@ -97,10 +97,11 @@
             </div>
           </InfoCard>
 
+          <!-- Tarjeta de velocidad -->
           <InfoCard v-if="critter.speed" color-classes="bg-gradient-to-r from-blue-100 to-cyan-200 border-blue-400">
             <div class="flex items-center justify-between">
-              <span class="text-base sm:text-lg lg:text-xl font-bold text-amber-800">⚡ Velocidad</span>
-              <span class="text-sm sm:text-base lg:text-lg font-bold text-amber-900 text-right">{{ capitalize(critter.speed) }}</span>
+              <span class="text-base sm:text-lg lg:text-xl font-bold text-blue-800">⚡ Velocidad</span>
+              <span class="text-sm sm:text-base lg:text-lg font-bold text-blue-900 text-right">{{ capitalize(critter.speed) }}</span>
             </div>
           </InfoCard>
 
