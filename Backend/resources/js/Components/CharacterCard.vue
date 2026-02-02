@@ -9,26 +9,12 @@
     @keydown.space.prevent="$emit('select', character)"
   >
     <!-- Botón favorito (solo usuarios logueados) -->
-    <button
-      v-if="isAuthenticated"
-      type="button"
-      class="ac-card__favorite"
-      :class="{ 'ac-card__favorite--active': isFavorite }"
-      :aria-label="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
-      :aria-pressed="isFavorite"
-      @click.stop="toggleFavorite"
-      @keydown.enter.stop="toggleFavorite"
-      @keydown.space.stop.prevent="toggleFavorite"
-    >
-      <svg
-        class="ac-card__favorite-icon"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-      </svg>
-    </button>
+    <div v-if="isAuthenticated" class="absolute top-2 right-2 z-10">
+      <FavoriteButton 
+        :active="isFavorite(character.id)" 
+        @toggle="toggleFavorite(character.id)" 
+      />
+    </div>
 
     <!-- Marco exterior -->
     <div class="ac-card__frame">
@@ -70,6 +56,9 @@
  */
 
 import { ref } from 'vue'
+import { useFavorites } from '@/Composables/useFavorites'
+import FavoriteButton from '@/Components/FavoriteButton.vue'
+
 
 /**
  * @typedef {Object} Villager
@@ -99,13 +88,8 @@ defineEmits(['select'])
 /** Ruta de la imagen del personaje */
 const imagePath = `${props.character.image}`
 
-/** Estado local del favorito (temporal, no persiste) */
-const isFavorite = ref(false)
+const { isFavorite, toggleFavorite } = useFavorites()
 
-/** Alterna el estado de favorito */
-const toggleFavorite = () => {
-  isFavorite.value = !isFavorite.value
-}
 </script>
 
 <style src="@/../css/components/character-card.css"></style>
