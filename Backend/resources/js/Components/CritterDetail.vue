@@ -43,12 +43,30 @@
         <div class="flex flex-col justify-center space-y-3 sm:space-y-4">
           
           <!-- Tarjeta de Precio (siempre se muestra) -->
-          <InfoCard color-classes="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-400">
+          <InfoCard v-if="critter.price" color-classes="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-400">
             <div class="flex items-center justify-between">
               <span class="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-800">💰 Precio</span>
               <span class="text-2xl sm:text-2xl lg:text-3xl font-black text-yellow-900">{{ critter.price }}</span>
             </div>
             <p class="text-xs sm:text-sm text-yellow-700 mt-1">bayas</p>
+          </InfoCard>
+
+          <!-- Tarjeta de Precio Compra (siempre se muestra) -->
+          <InfoCard v-if="critter.buy_price" color-classes="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-400">
+            <div class="flex items-center justify-between">
+              <span class="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-800">💰 Precio Compra</span>
+              <span class="text-sm sm:text-base lg:text-lg font-bold text-blue-900 text-right">{{ critter.buy_price }}</span>
+            </div>
+            <p class="text-xs sm:text-sm text-yellow-700 mt-1">bayas</p>
+          </InfoCard>
+
+          <!-- Tarjeta de Precio Venta (siempre se muestra) -->
+          <InfoCard v-if="critter.sell_price" color-classes="bg-gradient-to-r from-blue-100 to-cyan-200 border-blue-400">
+            <div class="flex items-center justify-between">
+              <span class="text-base sm:text-lg lg:text-xl font-bold text-blue-800">💰 Precio Venta</span>
+              <span class="text-sm sm:text-base lg:text-lg font-bold text-blue-900 text-right">{{ critter.sell_price }}</span>
+            </div>
+            <p class="text-xs sm:text-sm mt-1 text-blue-700">bayas</p>
           </InfoCard>
 
           <!-- Tarjeta de Disponibilidad (solo si showAvailability es true) -->
@@ -80,6 +98,31 @@
               {{ isAvailable ? 'Puedes atraparlo ahora' : 'No está en temporada' }}
             </p>
           </InfoCard>
+
+          <!-- Tarjeta de Falsificaciones (solo si showAvailability es true) -->
+          <InfoCard
+            v-if="'has_fake' in critter"
+            :color-classes="critter.has_fake
+            ? 'bg-gradient-to-r from-red-100 to-orange-200 border-red-400'
+            : 'bg-gradient-to-r from-green-100 to-emerald-200 border-green-400'
+            "
+          >
+            <div class="flex items-center justify-between">
+              <span class="text-lg sm:text-xl lg:text-2xl font-bold">
+                {{ critter.has_fake ? '❌ Falsificación' : '✅ Autenticidad' }}
+              </span>
+              <span class="text-xl sm:text-xl lg:text-2xl font-bold">
+                {{ critter.has_fake ? 'Tiene falsificación' : 'No tiene falsificación' }}
+              </span>
+            </div>
+            <p class="text-xs sm:text-sm mt-1">
+              {{ critter.has_fake
+                ? 'Cuidado, puede ser una copia'
+                : 'Esta obra es auténtica'
+              }}
+            </p>
+          </InfoCard>
+
 
           <!-- Tarjeta de Ubicación (solo si existe location) -->
           <InfoCard v-if="critter.location" color-classes="bg-gradient-to-r from-blue-100 to-cyan-200 border-blue-400">
@@ -179,4 +222,5 @@ defineEmits(['toggleMuseum'])
 const displayName = computed(() => {
   return capitalize(props.critter.name_es || props.critter.name_en || props.critter.name || 'Sin nombre')
 })
+
 </script>
