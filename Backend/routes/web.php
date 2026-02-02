@@ -3,6 +3,9 @@
 use App\Http\Controllers\FishUserController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Villager;
+use App\Models\Fish;
+use App\Models\Bug;
+use App\Models\Sea_Creature;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,6 +24,9 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'randomVillagers' => Villager::inRandomOrder()->limit(15)->get(),
         'birthdayVillagers' => $birthdayVillagers,
+        'fish' => Fish::all(),
+        'bugs' => Bug::all(),
+        'seaCreatures' => Sea_Creature::all(),
     ]);
 });
 

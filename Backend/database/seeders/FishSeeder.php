@@ -32,9 +32,9 @@ class FishSeeder extends Seeder
                 'rarity' => $f['availability']['rarity'] ?? null,
 
                 // Disponibilidad
-                'month_array_northern' => json_encode($f['availability']['month-array-northern'] ?? []),
-                'month_array_southern' => json_encode($f['availability']['month-array-southern'] ?? []),
-                'time_array' => json_encode($f['availability']['time-array'] ?? []),
+                'month_array_northern' => $f['availability']['month-array-northern'] ?? [],
+                'month_array_southern' => $f['availability']['month-array-southern'] ?? [],
+                'time_array' => $f['availability']['time-array'] ?? [],
                 'is_all_day' => $f['availability']['isAllDay'] ?? false,
                 'is_all_year' => $f['availability']['isAllYear'] ?? false,
 

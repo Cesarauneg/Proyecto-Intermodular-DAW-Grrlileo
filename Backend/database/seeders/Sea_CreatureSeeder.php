@@ -30,9 +30,9 @@ class Sea_CreatureSeeder extends Seeder
                 'shadow' => $c['shadow'] ?? null,
 
                 // Disponibilidad
-                'month_array_northern' => json_encode($c['availability']['month-array-northern'] ?? null),
-                'month_array_southern' => json_encode($c['availability']['month-array-southern'] ?? null),
-                'time_array' => json_encode($c['availability']['time-array'] ?? null),
+                'month_array_northern' => $c['availability']['month-array-northern'] ?? [],
+                'month_array_southern' => $c['availability']['month-array-southern'] ?? [],
+                'time_array' => $c['availability']['time-array'] ?? [],
                 'is_all_day' => $c['availability']['isAllDay'] ?? false,
                 'is_all_year' => $c['availability']['isAllYear'] ?? false,
 
@@ -46,8 +46,8 @@ class Sea_CreatureSeeder extends Seeder
                 'museum_phrase_en' => $c['museum-phrase'] ?? null,
 
                 // Imágenes locales
-                'image' => 'images/sea_creatures/' . $c['file-name'] . '.png',
-                'icon' => 'images/sea_creatures/icons/' . $c['file-name'] . '.png',
+                'image' => 'images/sea/' . $c['file-name'] . '.png',
+                'icon' => 'icons/sea/' . $c['file-name'] . '.png',
             ]);
         }
     }

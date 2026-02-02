@@ -9,7 +9,7 @@ import TemporadaSection from './Sections/TemporadaSection.vue';
 import VecinosSection from './Sections/VecinosSection.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
 
-defineProps({
+const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
     randomVillagers: {
@@ -17,6 +17,18 @@ defineProps({
         default: () => []
     },
     birthdayVillagers: {
+        type: Array,
+        default: () => []
+    },
+    fish: {
+        type: Array,
+        default: () => []
+    },
+    bugs: {
+        type: Array,
+        default: () => []
+    },
+    seaCreatures: {
         type: Array,
         default: () => []
     },
@@ -162,8 +174,11 @@ const songs = [
                 >
                     <component
                         :is="sectionComponents[activeTab]"
-                        :villagers="randomVillagers"
-                        :birthday-villagers="birthdayVillagers"
+                        :villagers="props.randomVillagers"
+                        :birthday-villagers="props.birthdayVillagers"
+                        :fish="props.fish"
+                        :bugs="props.bugs"
+                        :sea-creatures="props.seaCreatures"
                     />
                 </section>
             </Transition>
