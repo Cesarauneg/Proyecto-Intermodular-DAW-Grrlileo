@@ -22,11 +22,12 @@
     />
     
     <!-- Nombre -->
-    <p class="text-xs text-center truncate font-medium">{{ item.name_es.charAt(0).toUpperCase() + item.name_es.slice(1).toLowerCase() }}</p>
+    <p class="text-xs text-center truncate font-medium">{{ capitalize(item.name_es) }}</p>
   </div>
 </template>
 
 <script setup>
+import { capitalize } from '@/Utils/formatters.js' 
 defineProps({
   item: {
     type: Object,
