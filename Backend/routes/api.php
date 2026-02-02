@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\BugController;
+use App\Http\Controllers\HourlyMusicController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FishController;
 use App\Http\Controllers\VillagerController;
@@ -34,3 +35,8 @@ Route::get('/fossils/filter', [FossilController::class, 'filter']);
 Route::get('/sea_creatures', [Sea_CreatureController::class, 'index']);
 Route::get('/sea_creatures/filter', [Sea_CreatureController::class, 'filter']);
 Route::get('/sea_creatures/available', [Sea_CreatureController::class, 'available']);
+
+//Rutas para música por hora.
+Route::get('/hourly-music', [HourlyMusicController::class, 'index']);
+Route::get('/hourly-music/hour/{hour}', [HourlyMusicController::class, 'getByHour']);
+Route::get('/hourly-music/current-hour', [HourlyMusicController::class, 'getCurrentHour']);

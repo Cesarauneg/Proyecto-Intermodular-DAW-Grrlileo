@@ -166,11 +166,45 @@
     width: fit-content;
 }
 
+/* Figure semántico para Totakeke */
+.mascot-figure {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .mascot-gif {
     display: block;
     width: 80px;
     height: auto;
-    transition: transform 0.3s;
+    transition: transform 0.3s, filter 0.3s;
+}
+
+/* Animación cuando está reproduciendo */
+.mascot-gif.is-dancing {
+    animation: dance 0.5s ease-in-out infinite alternate;
+}
+
+/* Estado pausado - ligeramente desaturado */
+.mascot-gif.is-paused {
+    filter: grayscale(30%);
+}
+
+@keyframes dance {
+    0% { transform: translateY(0) rotate(-2deg); }
+    100% { transform: translateY(-4px) rotate(2deg); }
+}
+
+/* Indicador de hora actual */
+.hour-indicator {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--ac-green-dark);
+    background: rgba(255, 255, 255, 0.7);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-variant-numeric: tabular-nums;
 }
 
 /* ---- Villager Marquee Section ---- */

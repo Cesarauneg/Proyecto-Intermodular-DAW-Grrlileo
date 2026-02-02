@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FishUserController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Hourly_Music;
 use App\Models\Villager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -16,13 +17,45 @@ Route::get('/', function () {
     $today = now()->format('j/n'); // j = día sin cero, n = mes sin cero
     $birthdayVillagers = Villager::where('birthday', $today)->get();
 
+    // Obtener música agrupada por hora
+    // según su hora local
+    $hourlyMusic = Hourly_Music::all()
+        ->groupBy('hour')
+        ->map(fn($songs) => $songs->map(fn($song) => [
+            'id' => $song->id,
+            'titulo' => formatMusicTitle($song->file_name, $song->weather),
+            'autor' => 'Totakeke',
+            'weather' => $song->weather,
+            'src' => asset($song->music_uri),
+        ])->values());
+
     return Inertia::render('Welcome', [
         'canLogin'    => Route::has('login'),
         'canRegister' => Route::has('register'),
         'randomVillagers' => Villager::inRandomOrder()->limit(15)->get(),
         'birthdayVillagers' => $birthdayVillagers,
+        'hourlyMusic' => $hourlyMusic,
     ]);
 });
+
+/**
+ * Formatea el título de la música horaria.
+ * Convierte "BGM_24Hour_00_Rainy" en "00:00 - Lluvioso"
+ */
+function formatMusicTitle(string $fileName, ?string $weather): string
+{
+    preg_match('/BGM_24Hour_(\d{2})/', $fileName, $matches);
+    $hour = $matches[1] ?? '00';
+
+    $weatherTranslations = [
+        'Sunny' => 'Soleado',
+        'Rainy' => 'Lluvioso',
+        'Snowy' => 'Nevado',
+    ];
+
+    $weatherEs = $weatherTranslations[$weather] ?? $weather;
+    return "{$hour}:00 - {$weatherEs}";
+}
 
 Route::get('/critterpedia/fish', function () {
     return Inertia::render('FishListView');
@@ -53,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/fossils/{fossil}/donate', [FossilUserController::class, 'donate']);
     Route::get('/user/fossils', [FossilUserController::class, 'index']);
     Route::post('/art/{art}/donate', [ArtUserController::class, 'donate']);
-    Route::get('/user/art', [ArtUserController::class, 'index']);    
+    Route::get('/user/art', [ArtUserController::class, 'index']);
     Route::post('/sea_creatures/{sea_creature}/donate', [SeaCreatureUserController::class, 'donate']);
     Route::get('/user/sea_creatures', [SeaCreatureUserController::class, 'index']);
 });
