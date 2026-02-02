@@ -22,11 +22,13 @@ public function donate($bugId)
     return response()->json(['success' => true], 200);
 }
     // Listar los peces de un usuario
-    public function index()
-    {
-        $user = Auth::user();
-        $bugs = $user->bugs()->get();
+public function index()
+{
+    $user = auth()->user();
+    // Es importante que esto devuelva solo los bichos que TIENEN donated_to_museum = true
+    $bugs = $user->bugs()->wherePivot('donated_to_museum', true)->get();
 
-        return response()->json($bugs);
-    }
+    return response()->json($bugs);
 }
+}
+
