@@ -1,31 +1,27 @@
 <template>
   <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-red-50 to-purple-50">
     
-    <!-- Lista de obras (30% en desktop) -->
     <CritterList
-      title="Todos los fósiles"
-      :items="fossils || []"
-      :selected-item="selectedFossil"
+      title="Todas las obras"
+      :items="arts || []"
+      :selected-item="selectedArt"
       :available-ids="new Set()"
-      @select="selectFossil"
+      @select="selectArt"
     />
 
-    <!-- Detalles de la obra (70% en desktop) -->
     <div class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
       
-      <!-- Detalles cuando hay una obra seleccionada -->
-        <CritterDetail
-          v-if="selectedFossil"
-          :critter="selectedFossil"
+      <CritterDetail
+          v-if="selectedArt"
+          :critter="selectedArt"
           :is-available="false"
-          :is-in-museum="isInMuseum(selectedFossil.id)"
+          :is-in-museum="isInMuseum(selectedArt.id)"
           :museum-icon-url="museumIconUrl"
           :show-museum-button="isAuthenticated"
           :show-availability="false"
-          @toggle-museum="handleToggle(selectedFossil.id)"
+          @toggle-museum="handleToggle(selectedArt.id)"
         />
 
-      <!-- Estado vacío cuando no hay nada seleccionado -->
       <EmptyState
         v-else
         icon="🎨"
@@ -48,25 +44,25 @@ import CritterDetail from '@/Components/CritterDetail.vue'
 import EmptyState from '@/Components/EmptyState.vue'
 
 // ESTADO Y MUSEO
-const { isInMuseum, toggleDonation } = useMuseum('/user/fossils')
+const { isInMuseum, toggleDonation } = useMuseum('/user/art')
 const museumIconUrl = '/icons/museum.png'
 
-const selectedFossil = ref(null)
+const selectedArt = ref(null)
 
 // AUTH 
 const page = usePage()
 const isAuthenticated = computed(() => page.props.auth?.user !== null)
 
 // FETCH DE DATOS 
-const { data: fossils } = useFetch('/api/art')
+const { data: arts } = useFetch('/api/art')
 
 // MÉTODOS 
-const selectFossil = (fossil) => {
-  selectedFossil.value = fossil
+const selectArt = (art) => {
+  selectedArt.value = art
 }
 
 const handleToggle = (id) => {
   if (!isAuthenticated.value) return
-  toggleDonation(id, 'fossils') 
+  toggleDonation(id, 'art') 
 }
 </script>
