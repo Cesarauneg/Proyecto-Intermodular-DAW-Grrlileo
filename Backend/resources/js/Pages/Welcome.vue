@@ -3,7 +3,8 @@ import { ref, computed } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { useClickOutside } from '@/composables/useClickOutside';
 import InicioSection from './Sections/InicioSection.vue';
-import CritterpediaSection from './Sections/CritterpediaSection.vue';
+import PecesSection from './Sections/PecesSection.vue';
+import BichosSection from './Sections/BichosSection.vue';
 import TemporadaSection from './Sections/TemporadaSection.vue';
 import VecinosSection from './Sections/VecinosSection.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
@@ -35,7 +36,8 @@ function toggleAuthMenu() {
 
 const tabs = [
     { key: 'inicio', label: 'Inicio' },
-    { key: 'critterpedia', label: 'Critterpedia' },
+    { key: 'peces', label: 'Peces' },
+    { key: 'bichos', label: 'Bichos' },
     { key: 'temporada', label: 'Temporada' },
     { key: 'vecinos', label: 'Vecinos' },
 ];
@@ -51,7 +53,8 @@ function handlePlayingChange(playing) {
 
 const sectionComponents = {
     inicio: InicioSection,
-    critterpedia: CritterpediaSection,
+    peces: PecesSection,
+    bichos: BichosSection,
     temporada: TemporadaSection,
     vecinos: VecinosSection,
 };
