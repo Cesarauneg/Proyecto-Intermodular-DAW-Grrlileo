@@ -9,27 +9,17 @@ use Illuminate\Http\Request;
 class FishUserController extends Controller
 {
     // Añadir un pez a un usuario (al donarlo al museo)
-    public function donate($fishId)
-    {
-        $user = Auth::user();
-
-        // Si no lo tiene aún → lo añadimos como donado
-        if (! $user->fish()->where('fish_id', $fishId)->exists()) {
-            $user->fish()->attach($fishId, [
-                'donated' => true
-            ]);
-        } else {
-            // Si ya lo tiene → solo actualizar pivot
-            $user->fish()->updateExistingPivot($fishId, [
-                'donated' => true
-            ]);
-        }
-
-        return response()->json([
-            'ok' => true,
-            'donated' => true
-        ]);
+public function donate($fishId)
+{
+    $user = auth()->user();
+    if (!$user) {
+        return response()->json(['error' => 'No autenticado'], 401);
     }
+
+    $user->fish()->toggle([$fishId => ['donated_to_museum' => true]]);
+
+    return response()->json(['success' => true], 200);
+}
     // Listar los peces de un usuario
     public function index()
     {
