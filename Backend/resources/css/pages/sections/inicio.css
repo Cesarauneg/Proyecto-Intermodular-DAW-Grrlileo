@@ -108,6 +108,13 @@
 
 /* ---- Regalo ---- */
 .gift-container {
+    /* Reset button styles */
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    /* Estilos propios */
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.5s ease-out 0.8s, transform 0.5s ease-out 0.8s;
@@ -116,6 +123,16 @@
 .gift-container.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+.gift-container:focus-visible {
+    outline: 3px solid var(--ac-gold-bright, #fbbc0a);
+    outline-offset: 4px;
+    border-radius: 8px;
+}
+
+.gift-container:hover {
+    transform: scale(1.05);
 }
 
 /* ---- Cursor Typewriter ---- */

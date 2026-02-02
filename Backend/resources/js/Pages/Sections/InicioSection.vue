@@ -105,7 +105,7 @@ onMounted(() => {
                     <!-- Diálogo de bienvenida -->
                     <div class="dialog-box">
                         <h1 id="inicio-title">Bienvenido a Canela's Desk</h1>
-                        <p>Aqui puedes crear tus propios museos de:</p>
+                        <p>Aqui puedes crear tus propias colecciones de:</p>
                         <img
                             src="/images/Inicio/AClogo.png"
                             alt="Animal Crossing Logo"
@@ -125,10 +125,13 @@ onMounted(() => {
                 </div>
 
                 <!-- Regalo Sorpresa (solo si hay cumpleaños) -->
-                <div
+                <button
                     v-if="hasBirthdays"
+                    type="button"
                     class="gift-container relative w-32 h-40 cursor-pointer mt-8 select-none"
                     :class="{ visible: isVisible }"
+                    :aria-expanded="isGiftOpen"
+                    :aria-label="isGiftOpen ? 'Cerrar regalo de cumpleaños' : 'Abrir regalo de cumpleaños'"
                     @click="toggleGift"
                 >
                     <!-- Contenido Sorpresa (Frente) -->
@@ -176,13 +179,14 @@ onMounted(() => {
                     </div>
 
                     <!-- Texto indicativo -->
-                    <p
+                    <span
                         class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-amber-700 font-medium whitespace-nowrap transition-opacity duration-300"
                         :class="isGiftOpen ? 'opacity-0' : 'opacity-100'"
+                        aria-hidden="true"
                     >
                         Haz clic para abrir
-                    </p>
-                </div>
+                    </span>
+                </button>
 
                 <!-- Mensaje de Felicitación (Typewriter) -->
                 <transition
@@ -208,9 +212,9 @@ onMounted(() => {
             </div>
         </div>
 
-        <!-- Carrusel de Aldeanos (siempre abajo) -->
+        <!-- Carrusel de Aldeanos -->
         <div v-if="villagers && villagers.length > 0" class="villager-marquee-section">
-            <h2 class="marquee-title">Conoce a nuestros vecinos</h2>
+            <h2 class="marquee-title">Conoce a tus vecinos</h2>
             <VillagerMarquee :villagers="villagers" />
         </div>
     </section>

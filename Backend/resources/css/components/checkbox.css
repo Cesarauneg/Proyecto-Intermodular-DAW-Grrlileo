@@ -8,7 +8,10 @@
 }
 .ac-checkbox:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(109, 186, 109, 0.25);
+}
+.ac-checkbox:focus-visible {
+    box-shadow: 0 0 0 3px rgba(109, 186, 109, 0.4);
+    border-color: var(--ac-green);
 }
 .ac-checkbox:checked {
     background-color: var(--ac-green);
