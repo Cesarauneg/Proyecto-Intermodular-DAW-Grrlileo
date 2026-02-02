@@ -4,7 +4,6 @@
     <!-- Lista de peces -->
     <CritterList
       title="Todos los peces"
-      icon="🐟"
       :items="fish || []"
       :selected-item="selectedFish"
       :available-ids="availableFishIds"
