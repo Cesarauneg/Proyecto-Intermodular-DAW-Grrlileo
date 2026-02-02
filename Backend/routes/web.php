@@ -28,6 +28,10 @@ Route::get('/fish', function () {
     return Inertia::render('FishPedia');
 })->name('fish.list');
 
+Route::get('/sea_creatures', function () {
+    return Inertia::render('SeaCreaturePedia');
+})->name('sea_creature.list');
+
 Route::get('/fossils', function () {
     return Inertia::render('FossilPedia');
 })->name('fossil.list');
