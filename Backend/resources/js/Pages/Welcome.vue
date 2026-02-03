@@ -1,30 +1,15 @@
 <script setup>
-/**
- * Welcome.vue - Página principal de Canela`s Desk
- *
- * Integra el sistema de música horaria:
- * - Recibe `hourlyMusic` desde Inertia (datos de tabla `hourly_music`)
- * - Usa composable `useHourlyMusic` para gestionar reproducción
- * - Sincroniza animación de Totakeke con estado de reproducción
- *
- * Estructura de hourlyMusic (desde backend):
- * {
- *   0: [{ id, titulo, autor, weather, src }, ...], // 3 canciones para las 00:00
- *   1: [{ id, titulo, autor, weather, src }, ...], // 3 canciones para las 01:00
- *   ...
- *   23: [...]
- * }
- */
 import { ref, computed } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { useClickOutside } from '@/Composables/useClickOutside';
 import { useHourlyMusic } from '@/Composables/useHourlyMusic';
 import InicioSection from './Sections/InicioSection.vue';
-import PecesSection from './Sections/PecesSection.vue';
-import BichosSection from './Sections/BichosSection.vue';
+import CritterpediaSection from './Sections/CritterpediaSection.vue';
 import TemporadaSection from './Sections/TemporadaSection.vue';
 import VecinosSection from './Sections/VecinosSection.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
+import { useClickOutside } from '@/Composables/useClickOutside';
+
 
 const props = defineProps({
   canLogin: Boolean,
@@ -75,21 +60,19 @@ function toggleAuthMenu() {
 
 // ========== TABS NAVIGATION ==========
 const tabs = [
-  { key: 'inicio', label: 'Inicio' },
-  { key: 'peces', label: 'Peces' },
-  { key: 'bichos', label: 'Bichos' },
-  { key: 'temporada', label: 'Temporada' },
-  { key: 'vecinos', label: 'Vecinos' },
+    { key: 'inicio', label: 'Inicio' },
+    { key: 'critterpedia', label: 'Critterpedia' },
+    { key: 'temporada', label: 'Temporada' },
+    { key: 'vecinos', label: 'Vecinos' },
 ];
 
 const activeTab = ref('inicio');
 
 const sectionComponents = {
-  inicio: InicioSection,
-  peces: PecesSection,
-  bichos: BichosSection,
-  temporada: TemporadaSection,
-  vecinos: VecinosSection,
+    inicio: InicioSection,
+    critterpedia: CritterpediaSection,
+    temporada: TemporadaSection,
+    vecinos: VecinosSection,
 };
 
 // ========== HOURLY MUSIC ==========
