@@ -17,16 +17,20 @@
           v-for="tab in timeTabs"
           :key="tab.key"
           role="tab"
+          :id="`tab-${tab.key}`"
           :aria-selected="activeTimeTab === tab.key"
+          :aria-controls="`panel-${tab.key}`"
+          :tabindex="activeTimeTab === tab.key ? 0 : -1"
           :class="[
             'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200',
-            activeTimeTab === tab.key
-              ? 'bg-white text-green-700 shadow-md'
-              : 'text-green-600 hover:text-green-800 hover:bg-green-50'
+            'focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2',
+            timeTabClasses(tab.key)
           ]"
           @click="activeTimeTab = tab.key"
+          @keydown.left.prevent="navigateTab(-1)"
+          @keydown.right.prevent="navigateTab(1)"
         >
-          <span class="mr-1">{{ tab.icon }}</span>
+          <span class="mr-1" aria-hidden="true">{{ tab.icon }}</span>
           {{ tab.label }}
           <span
             v-if="getCountForTab(tab.key) > 0"
@@ -34,6 +38,7 @@
               'ml-2 px-2 py-0.5 rounded-full text-xs',
               tab.key === 'leaving' ? 'bg-red-100 text-red-600' : 'bg-green-200 text-green-700'
             ]"
+            :aria-label="`${getCountForTab(tab.key)} criaturas`"
           >
             {{ getCountForTab(tab.key) }}
           </span>
@@ -42,73 +47,98 @@
     </nav>
 
     <!-- Filtros por tipo de criatura -->
-    <div class="flex justify-center gap-2 mb-8 flex-wrap">
+    <fieldset class="flex justify-center gap-2 mb-8 flex-wrap border-0">
+      <legend class="sr-only">Filtrar por tipo de criatura</legend>
       <button
         v-for="filter in typeFilters"
         :key="filter.key"
+        :aria-pressed="activeTypeFilter === filter.key"
         :class="[
-          'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2',
-          activeTypeFilter === filter.key
-            ? 'bg-green-600 text-white border-green-600 shadow-md'
-            : 'bg-white text-green-700 border-green-300 hover:border-green-500 hover:bg-green-50'
+          'px-4 py-2 rounded-[20px] text-sm font-semibold transition-all duration-200 border-3',
+          'focus:outline-none focus:ring-2 focus:ring-[#8b6914] focus:ring-offset-2',
+          filterButtonClasses(filter.key)
         ]"
         @click="activeTypeFilter = filter.key"
       >
-        <span class="mr-1">{{ filter.icon }}</span>
+        <span class="mr-1" aria-hidden="true">{{ filter.icon }}</span>
         {{ filter.label }}
       </button>
-    </div>
+    </fieldset>
 
     <!-- Mensaje informativo para "Ultima Oportunidad" -->
-    <div
+    <aside
       v-if="activeTimeTab === 'leaving' && filteredCritters.length > 0"
       class="max-w-2xl mx-auto mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl text-center"
+      role="alert"
     >
       <p class="text-red-700 font-medium">
-        <span class="text-lg">⚠️</span>
+        <span class="text-lg" aria-hidden="true">⚠️</span>
         Estas criaturas no estaran disponibles a partir del proximo mes. ¡Atrapalas antes de que se vayan!
       </p>
-    </div>
+    </aside>
 
-    <!-- Grid de criaturas -->
+    <!-- Panel de contenido -->
     <div
-      v-if="filteredCritters.length > 0"
-      class="grid gap-6"
-      style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"
+      :id="`panel-${activeTimeTab}`"
+      role="tabpanel"
+      :aria-labelledby="`tab-${activeTimeTab}`"
     >
-      <CritterCard
-        v-for="critter in filteredCritters"
-        :key="`${critter.type}-${critter.id}`"
-        :critter="critter"
-        :type="critter.type"
-        :urgent="activeTimeTab === 'leaving'"
-      />
-    </div>
+      <!-- Grid de criaturas -->
+      <ul
+        v-if="filteredCritters.length > 0"
+        class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]"
+        role="list"
+        aria-label="Lista de criaturas"
+      >
+        <li
+          v-for="critter in filteredCritters"
+          :key="`${critter.type}-${critter.id}`"
+        >
+          <CritterCard
+            :critter="critter"
+            :type="critter.type"
+            :urgent="activeTimeTab === 'leaving'"
+          />
+        </li>
+      </ul>
 
-    <!-- Estado vacio -->
-    <div
-      v-else
-      class="text-center py-16"
-    >
-      <div class="text-6xl mb-4">
-        {{ activeTimeTab === 'leaving' ? '🎉' : '🔍' }}
+      <!-- Estado vacio -->
+      <div
+        v-else
+        class="text-center py-16"
+        role="status"
+        aria-live="polite"
+      >
+        <div class="text-6xl mb-4" aria-hidden="true">
+          {{ activeTimeTab === 'leaving' ? '🎉' : '🔍' }}
+        </div>
+        <p class="text-gray-500 text-lg">
+          {{ emptyMessage }}
+        </p>
       </div>
-      <p class="text-gray-500 text-lg">
-        {{ emptyMessage }}
-      </p>
     </div>
 
     <!-- Resumen de temporada -->
     <aside
       v-if="filteredCritters.length > 0"
       class="mt-8 p-4 bg-green-50 rounded-xl border border-green-200"
+      aria-label="Resumen de temporada"
     >
-      <h4 class="font-semibold text-green-800 mb-2">Resumen de {{ monthName }}</h4>
-      <div class="flex flex-wrap gap-4 text-sm text-green-700">
-        <span>🟢 Disponibles ahora: {{ availableNow.length }}</span>
-        <span>🔴 Se van este mes: {{ leavingThisMonth.length }}</span>
-        <span>🆕 Recien llegados: {{ newArrivals.length }}</span>
-      </div>
+      <h3 class="font-semibold text-green-800 mb-2">Resumen de {{ monthName }}</h3>
+      <dl class="flex flex-wrap gap-4 text-sm text-green-700">
+        <div class="flex items-center gap-1">
+          <dt class="sr-only">Disponibles ahora:</dt>
+          <dd><span aria-hidden="true">🟢</span> Disponibles ahora: {{ availableNow.length }}</dd>
+        </div>
+        <div class="flex items-center gap-1">
+          <dt class="sr-only">Se van este mes:</dt>
+          <dd><span aria-hidden="true">🔴</span> Se van este mes: {{ leavingThisMonth.length }}</dd>
+        </div>
+        <div class="flex items-center gap-1">
+          <dt class="sr-only">Recien llegados:</dt>
+          <dd><span aria-hidden="true">🆕</span> Recien llegados: {{ newArrivals.length }}</dd>
+        </div>
+      </dl>
     </aside>
   </section>
 </template>
@@ -117,20 +147,42 @@
 /**
  * @fileoverview Seccion de Temporada para la Critterpedia.
  * Muestra criaturas filtradas por disponibilidad temporal.
+ *
+ * @description Este componente recibe datos de criaturas desde el controlador
+ * Laravel y las muestra filtradas por disponibilidad mensual y horaria.
  */
 
 import { ref, computed } from 'vue'
 import CritterCard from '@/Components/CritterCard.vue'
 
+/**
+ * @typedef {Object} Critter
+ * @property {number} id - ID único de la criatura
+ * @property {string} name_es - Nombre en español
+ * @property {string} icon - URL del icono
+ * @property {number} price - Precio en bayas
+ * @property {string} location - Ubicación donde encontrarla
+ * @property {number[]} month_array_northern - Meses disponibles (hemisferio norte)
+ * @property {number[]} time_array - Horas disponibles
+ * @property {boolean} is_all_day - Si está disponible todo el día
+ */
+
+/**
+ * Props recibidas desde el controlador Laravel (WelcomeController)
+ * @see App\Http\Controllers\WelcomeController::index()
+ */
 const props = defineProps({
+  /** @type {Critter[]} Lista de peces desde Fish::all() */
   fish: {
     type: Array,
     default: () => []
   },
+  /** @type {Critter[]} Lista de bichos desde Bug::all() */
   bugs: {
     type: Array,
     default: () => []
   },
+  /** @type {Critter[]} Lista de criaturas marinas desde SeaCreature::all() */
   seaCreatures: {
     type: Array,
     default: () => []
@@ -167,7 +219,40 @@ const typeFilters = [
 ]
 
 /**
+ * Navega entre tabs con las flechas del teclado
+ * @param {number} direction - Dirección de navegación (-1 izquierda, 1 derecha)
+ */
+const navigateTab = (direction) => {
+  const currentIndex = timeTabs.findIndex(tab => tab.key === activeTimeTab.value)
+  const newIndex = (currentIndex + direction + timeTabs.length) % timeTabs.length
+  activeTimeTab.value = timeTabs[newIndex].key
+}
+
+/**
+ * Genera las clases CSS para los tabs de tiempo
+ * @param {string} tabKey - Clave del tab
+ * @returns {string} Clases de Tailwind
+ */
+const timeTabClasses = (tabKey) => {
+  return activeTimeTab.value === tabKey
+    ? 'bg-white text-green-700 shadow-md'
+    : 'text-green-600 hover:text-green-800 hover:bg-green-50'
+}
+
+/**
+ * Genera las clases CSS para los botones de filtro de tipo
+ * @param {string} filterKey - Clave del filtro
+ * @returns {string} Clases de Tailwind
+ */
+const filterButtonClasses = (filterKey) => {
+  return activeTypeFilter.value === filterKey
+    ? 'bg-[#8b6914] text-white border-[#8b6914] shadow-[0_4px_0_#5c4a1f]'
+    : 'bg-[#faf8ef] text-[#8b6914] border-[#8b6914] hover:bg-[#f0ebe0] shadow-[0_4px_0_#5c4a1f]'
+}
+
+/**
  * Combina peces, bichos y criaturas marinas en un array unificado con tipo
+ * @returns {Array<Critter & {type: string}>}
  */
 const allCritters = computed(() => {
   const fishWithType = props.fish.map(f => ({ ...f, type: 'fish' }))
@@ -178,6 +263,8 @@ const allCritters = computed(() => {
 
 /**
  * Verifica si una criatura esta disponible en el mes y hora actual
+ * @param {Critter} critter - Criatura a verificar
+ * @returns {boolean}
  */
 const isAvailableNow = (critter) => {
   const monthArray = critter.month_array_northern || []
@@ -193,7 +280,9 @@ const isAvailableNow = (critter) => {
 }
 
 /**
- * Verifica si la criatura se va este mes
+ * Verifica si la criatura se va este mes (disponible ahora pero no el próximo mes)
+ * @param {Critter} critter - Criatura a verificar
+ * @returns {boolean}
  */
 const isLeavingThisMonth = (critter) => {
   const monthArray = critter.month_array_northern || []
@@ -202,7 +291,9 @@ const isLeavingThisMonth = (critter) => {
 }
 
 /**
- * Verifica si la criatura es nueva este mes
+ * Verifica si la criatura es nueva este mes (no disponible el mes pasado)
+ * @param {Critter} critter - Criatura a verificar
+ * @returns {boolean}
  */
 const isNewThisMonth = (critter) => {
   const monthArray = critter.month_array_northern || []
@@ -210,12 +301,19 @@ const isNewThisMonth = (critter) => {
   return monthArray.includes(currentMonth) && !monthArray.includes(prevMonth)
 }
 
+/** Criaturas disponibles en el momento actual */
 const availableNow = computed(() => allCritters.value.filter(isAvailableNow))
+
+/** Criaturas que se van este mes */
 const leavingThisMonth = computed(() => allCritters.value.filter(isLeavingThisMonth))
+
+/** Criaturas nuevas este mes */
 const newArrivals = computed(() => allCritters.value.filter(isNewThisMonth))
 
 /**
- * Filtra por tipo de criatura
+ * Filtra criaturas por tipo
+ * @param {Critter[]} critters - Lista de criaturas
+ * @returns {Critter[]}
  */
 const filterByType = (critters) => {
   if (activeTypeFilter.value === 'all') return critters
@@ -226,7 +324,7 @@ const filterByType = (critters) => {
 }
 
 /**
- * Lista final de criaturas filtradas
+ * Lista final de criaturas filtradas por tiempo y tipo
  */
 const filteredCritters = computed(() => {
   let result = []
@@ -244,6 +342,11 @@ const filteredCritters = computed(() => {
   return filterByType(result)
 })
 
+/**
+ * Obtiene el contador para cada tab
+ * @param {string} tabKey - Clave del tab
+ * @returns {number}
+ */
 const getCountForTab = (tabKey) => {
   switch (tabKey) {
     case 'available': return availableNow.value.length
@@ -253,6 +356,9 @@ const getCountForTab = (tabKey) => {
   }
 }
 
+/**
+ * Mensaje a mostrar cuando no hay criaturas
+ */
 const emptyMessage = computed(() => {
   switch (activeTimeTab.value) {
     case 'available':
