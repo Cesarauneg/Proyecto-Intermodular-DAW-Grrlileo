@@ -7,6 +7,7 @@ use App\Http\Controllers\FossilUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeaCreatureUserController;
 use App\Http\Controllers\VillagerUserController;
+use App\Http\Controllers\DashboardController;
 use App\Models\Villager;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,13 +53,12 @@ Route::get('/bugs', function () {
     return Inertia::render('BugPedia');
 })->name('bichos');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 Route::get('/collection', function() {
     return Inertia::render('Collection');
 })->name('collection');
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
