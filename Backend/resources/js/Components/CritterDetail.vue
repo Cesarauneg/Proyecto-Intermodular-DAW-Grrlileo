@@ -167,13 +167,16 @@
       </div>
 
       <!-- Frase de captura al final (solo si existe) -->
-      <div v-if="critter.catch_phrase_en" class="bg-gradient-to-r from-amber-50 to-orange-50 border-t-4 border-orange-300 p-4 sm:p-6">
+      <div v-if="critter.catch_phrase_en || critter.museum_phrase_en" 
+      class="bg-gradient-to-r from-amber-50 to-orange-50 border-t-4 border-orange-300 p-4 sm:p-6">
         <div class="flex items-start gap-3">
-          <span class="text-3xl sm:text-4xl">💬</span>
+          <span class="text-3xl sm:text-4xl">{{ isMuseumMode ? '🏛️' : '💬' }}</span>
           <div class="flex-1">
-            <p class="text-xs sm:text-sm font-semibold text-orange-800 mb-1">FRASE DE CAPTURA</p>
+            <p class="text-xs sm:text-sm font-semibold text-orange-800 mb-1">
+              {{ isMuseumMode ? 'DESCRIPCIÓN DEL MUSEO' : 'FRASE DE CAPTURA' }}
+            </p>
             <p class="text-base sm:text-lg lg:text-xl italic text-gray-700 leading-relaxed">
-              "{{ critter.catch_phrase_en }}"
+              "{{ isMuseumMode ? (critter.museum_phrase_en || 'Sin descripción') : critter.catch_phrase_en }}"
             </p>
           </div>
         </div>
@@ -213,6 +216,10 @@ const props = defineProps({
   showAvailability: {
     type: Boolean,
     default: true 
+  },
+  isMuseumMode: {
+    type: Boolean,
+    default: false
   }
 })
 
