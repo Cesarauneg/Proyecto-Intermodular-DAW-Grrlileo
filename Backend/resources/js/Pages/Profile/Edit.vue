@@ -1,23 +1,24 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import DeleteUserForm from './Partials/DeleteUserForm.vue';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import { Head } from '@inertiajs/vue3';
+    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import DeleteUserForm from './Partials/DeleteUserForm.vue';
+    import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
+    import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
+    import {
+        Head
+    } from '@inertiajs/vue3';
 
-defineProps({
-    mustVerifyEmail: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
+const props = defineProps({
+    mustVerifyEmail: Boolean,
+    status: String,
+    villagers: {
+        type: Array,
+        default: () => []
     },
 });
 </script>
 
 <template>
     <Head title="Perfil" />
-
     <AuthenticatedLayout>
         <template #header>
             <h1 class="profile-title">Perfil</h1>
@@ -25,10 +26,8 @@ defineProps({
 
         <div class="profile-sections">
             <div class="ac-card">
-                <UpdateProfileInformationForm
-                    :must-verify-email="mustVerifyEmail"
-                    :status="status"
-                />
+                <UpdateProfileInformationForm :must-verify-email="mustVerifyEmail" :status="status"
+                    :villagers="villagers" class="max-w-xl" />
             </div>
 
             <div class="ac-card">
