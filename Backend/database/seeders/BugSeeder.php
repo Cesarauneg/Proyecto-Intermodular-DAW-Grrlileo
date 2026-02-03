@@ -31,9 +31,9 @@ class BugSeeder extends Seeder
                 'rarity' => $b['availability']['rarity'] ?? null,
 
                 // Disponibilidad
-                'month_array_northern' => json_encode($b['availability']['month-array-northern'] ?? []),
-                'month_array_southern' => json_encode($b['availability']['month-array-southern'] ?? []),
-                'time_array' => json_encode($b['availability']['time-array'] ?? []),
+                'month_array_northern' => $b['availability']['month-array-northern'] ?? [],
+                'month_array_southern' => $b['availability']['month-array-southern'] ?? [],
+                'time_array' => $b['availability']['time-array'] ?? [],
                 'is_all_day' => $b['availability']['isAllDay'] ?? false,
                 'is_all_year' => $b['availability']['isAllYear'] ?? false,
 

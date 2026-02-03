@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-4xl w-full">
     <div class="bg-white/90 backdrop-blur rounded-3xl shadow-2xl overflow-hidden border-4 border-green-300">
-      
+
       <!-- Header con nombre y botón de museo -->
       <div class="bg-gradient-to-r from-green-400 to-blue-400 p-4 sm:p-6 text-center relative">
         <!-- Botón de museo (solo para usuarios autenticados) -->
@@ -26,7 +26,7 @@
 
       <!-- Contenedor principal - RESPONSIVE -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
-        
+
         <!-- Columna izquierda: Imagen -->
         <div class="flex items-center justify-center">
           <div class="relative w-full">
@@ -41,7 +41,7 @@
 
         <!-- Columna derecha: Información -->
         <div class="flex flex-col justify-center space-y-3 sm:space-y-4">
-          
+
           <!-- Tarjeta de Precio (siempre se muestra) -->
           <InfoCard v-if="critter.price" color-classes="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-400">
             <div class="flex items-center justify-between">
@@ -51,7 +51,7 @@
             <p class="text-xs sm:text-sm text-yellow-700 mt-1">bayas</p>
           </InfoCard>
 
-          <!-- Tarjeta de Precio Compra (siempre se muestra) -->
+          <!-- Tarjeta de Precio Compra -->
           <InfoCard v-if="critter.buy_price" color-classes="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-400">
             <div class="flex items-center justify-between">
               <span class="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-800">💰 Precio Compra</span>
@@ -60,7 +60,7 @@
             <p class="text-xs sm:text-sm text-yellow-700 mt-1">bayas</p>
           </InfoCard>
 
-          <!-- Tarjeta de Precio Venta (siempre se muestra) -->
+          <!-- Tarjeta de Precio Venta -->
           <InfoCard v-if="critter.sell_price" color-classes="bg-gradient-to-r from-blue-100 to-cyan-200 border-blue-400">
             <div class="flex items-center justify-between">
               <span class="text-base sm:text-lg lg:text-xl font-bold text-blue-800">💰 Precio Venta</span>
@@ -70,12 +70,11 @@
           </InfoCard>
 
           <!-- Tarjeta de Disponibilidad (solo si showAvailability es true) -->
-          <InfoCard 
+          <InfoCard
             v-if="showAvailability"
-            :color-classes="isAvailable 
-              ? 'bg-gradient-to-r from-green-100 to-emerald-200 border-green-400' 
-              : 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-400'
-            "
+            :color-classes="isAvailable
+              ? 'bg-gradient-to-r from-green-100 to-emerald-200 border-green-400'
+              : 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-400'"
           >
             <div class="flex items-center justify-between">
               <span :class="[
@@ -99,13 +98,12 @@
             </p>
           </InfoCard>
 
-          <!-- Tarjeta de Falsificaciones (solo si showAvailability es true) -->
+          <!-- Tarjeta de Falsificaciones -->
           <InfoCard
             v-if="'has_fake' in critter"
             :color-classes="critter.has_fake
-            ? 'bg-gradient-to-r from-red-100 to-orange-200 border-red-400'
-            : 'bg-gradient-to-r from-green-100 to-emerald-200 border-green-400'
-            "
+              ? 'bg-gradient-to-r from-red-100 to-orange-200 border-red-400'
+              : 'bg-gradient-to-r from-green-100 to-emerald-200 border-green-400'"
           >
             <div class="flex items-center justify-between">
               <span class="text-lg sm:text-xl lg:text-2xl font-bold">
@@ -122,7 +120,6 @@
               }}
             </p>
           </InfoCard>
-
 
           <!-- Tarjeta de Ubicación (solo si existe location) -->
           <InfoCard v-if="critter.location" color-classes="bg-gradient-to-r from-blue-100 to-cyan-200 border-blue-400">
@@ -167,8 +164,8 @@
       </div>
 
       <!-- Frase de captura al final (solo si existe) -->
-      <div v-if="critter.catch_phrase_en || critter.museum_phrase_en" 
-      class="bg-gradient-to-r from-amber-50 to-orange-50 border-t-4 border-orange-300 p-4 sm:p-6">
+      <div v-if="critter.catch_phrase_en || critter.museum_phrase_en"
+        class="bg-gradient-to-r from-amber-50 to-orange-50 border-t-4 border-orange-300 p-4 sm:p-6">
         <div class="flex items-start gap-3">
           <span class="text-3xl sm:text-4xl">{{ isMuseumMode ? '🏛️' : '💬' }}</span>
           <div class="flex-1">
@@ -215,7 +212,7 @@ const props = defineProps({
   },
   showAvailability: {
     type: Boolean,
-    default: true 
+    default: true
   },
   isMuseumMode: {
     type: Boolean,
@@ -229,5 +226,4 @@ defineEmits(['toggleMuseum'])
 const displayName = computed(() => {
   return capitalize(props.critter.name_es || props.critter.name_en || props.critter.name || 'Sin nombre')
 })
-
 </script>
