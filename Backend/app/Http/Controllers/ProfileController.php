@@ -8,8 +8,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Log; 
 
 class ProfileController extends Controller
 {
@@ -18,9 +20,20 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $path = public_path('images/villagers');
+        
+        $villagers = [];
+        if (is_dir($path)) {
+            $files = scandir($path);
+            $villagers = array_values(array_filter($files, function($file) {
+                return str_ends_with(strtolower($file), '.png') || str_ends_with(strtolower($file), '.jpg');
+            }));
+        }
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'villagers' => $villagers, 
         ]);
     }
 
@@ -29,15 +42,25 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        try {
+            $user = $request->user();
+            
+            $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+            $user->fill($validated);
+
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
+            
+            $user->save();
+
+
+            return Redirect::route('profile.edit');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            dd($e->getMessage()); 
         }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
     }
 
     /**

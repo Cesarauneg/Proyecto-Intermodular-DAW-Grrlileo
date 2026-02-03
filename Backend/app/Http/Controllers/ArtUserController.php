@@ -9,27 +9,17 @@ use Illuminate\Support\Facades\Auth;
 class ArtUserController extends Controller
 {
    // Añadir un arte a un usuario (al donarlo al museo)
-    public function donate($artId)
-    {
-        $user = Auth::user();
-
-        // Si no lo tiene aún → lo añadimos como donado
-        if (! $user->art()->where('art_id', $artId)->exists()) {
-            $user->art()->attach($artId, [
-                'donated' => true
-            ]);
-        } else {
-            // Si ya lo tiene → solo actualizar pivot
-            $user->art()->updateExistingPivot($artId, [
-                'donated' => true
-            ]);
-        }
-
-        return response()->json([
-            'ok' => true,
-            'donated' => true
-        ]);
+public function donate($artId)
+{
+    $user = auth()->user();
+    if (!$user) {
+        return response()->json(['error' => 'No autenticado'], 401);
     }
+
+    $user->art()->toggle([$artId => ['donated_to_museum' => true]]);
+
+    return response()->json(['success' => true], 200);
+}
     // Listar las obras de arte de un usuario
     public function index()
     {

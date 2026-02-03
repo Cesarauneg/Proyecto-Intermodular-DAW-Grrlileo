@@ -127,13 +127,15 @@ const songs = [
                                     <Link :href="route('register')" class="dropdown-item" role="menuitem">Registro</Link>
                                 </li>
                             </template>
-                            <!-- Authenticated menu -->
                             <template v-else>
+                                <li role="none">
+                                    <Link :href="route('dashboard')" class="dropdown-item" role="menuitem">Dashboard</Link>
+                                </li>
                                 <li role="none">
                                     <Link :href="route('profile.edit')" class="dropdown-item" role="menuitem">Perfil</Link>
                                 </li>
                                 <li role="none">
-                                    <Link href="#" class="dropdown-item" role="menuitem">Colección</Link>
+                                    <Link :href="route('catalogo')" class="dropdown-item" role="menuitem">Colección</Link>
                                 </li>
                                 <li role="none">
                                     <Link :href="route('logout')" method="post" as="button" class="dropdown-item dropdown-item--danger" role="menuitem">Cerrar sesión</Link>

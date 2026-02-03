@@ -46,8 +46,8 @@ class Sea_CreatureSeeder extends Seeder
                 'museum_phrase_en' => $c['museum-phrase'] ?? null,
 
                 // Imágenes locales
-                'image' => 'images/sea/' . $c['file-name'] . '.png',
-                'icon' => 'icons/sea/' . $c['file-name'] . '.png',
+                'image' => 'images/sea_creatures/' . $c['file-name'] . '.png',
+                'icon' => 'icons/sea_creatures/' . $c['file-name'] . '.png',
             ]);
         }
     }
