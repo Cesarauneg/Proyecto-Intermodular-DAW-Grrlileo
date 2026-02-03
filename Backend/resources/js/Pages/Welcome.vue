@@ -188,6 +188,31 @@ function handlePageInteraction() {
         {{ tab.label }}
       </button>
     </nav>
+        <!-- ========== NAV TABS ========== -->
+        <div class="section-nav-wrapper" ref="mobileNavRef">
+            <!-- Mobile Nav Trigger -->
+            <button class="mobile-nav-trigger" @click="isMobileNavOpen = !isMobileNavOpen">
+                Menú
+            </button>
+
+            <!-- Nav -->
+            <nav class="section-nav" :class="{ 'is-open': isMobileNavOpen }" role="tablist" aria-label="Secciones del sitio">
+                <button
+                    v-for="tab in tabs"
+                    :key="tab.key"
+                    class="nav-tab"
+                    :class="{ active: activeTab === tab.key }"
+                    @click="selectTab(tab.key)"
+                    role="tab"
+                    :aria-selected="activeTab === tab.key"
+                    :aria-controls="`tabpanel-${tab.key}`"
+                    :id="`tab-${tab.key}`"
+                >
+                    {{ tab.label }}
+                </button>
+            </nav>
+        </div>
+
 
     <!-- ========== CONTENT ========== -->
     <main class="content-container" aria-live="polite">
