@@ -36,6 +36,7 @@ const { isInMuseum, toggleDonation } = useMuseum('/user/fossils')
 const museumIconUrl = '/icons/museum.png'
 
 const selectedFossil = ref(null)
+const drawerOpen = ref(false)
 
 // AUTH
 const page = usePage()
@@ -77,7 +78,12 @@ watch([() => props.searchQuery, () => props.filterMuseum], () => {
   }
 })
 
-const selectFossil = (fossil) => { selectedFossil.value = fossil }
+const selectFossil = (fossil) => {
+  selectedFossil.value = fossil
+  drawerOpen.value = false
+}
+const openDrawer = () => { drawerOpen.value = true }
+const closeDrawer = () => { drawerOpen.value = false }
 
 const handleToggle = (id) => {
   if (!isAuthenticated.value) return
@@ -87,10 +93,12 @@ const handleToggle = (id) => {
 
 <template>
   <article
-    class="flex flex-col lg:flex-row h-full bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl overflow-hidden"
+    class="relative flex flex-col lg:flex-row h-full bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl overflow-hidden"
     aria-label="Catálogo de fósiles"
   >
+    <!-- Lista: visible en desktop siempre, en móvil solo cuando no hay selección -->
     <CritterList
+      :class="selectedFossil ? 'hidden lg:flex' : 'flex'"
       title="Todos los fósiles"
       :items="filteredFossils"
       :selected-item="selectedFossil"
@@ -98,7 +106,28 @@ const handleToggle = (id) => {
       @select="selectFossil"
     />
 
-    <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
+    <!-- Drawer móvil (dentro del contenedor) -->
+    <Transition name="drawer">
+      <div v-if="drawerOpen" class="lg:hidden absolute inset-0 z-20 flex">
+        <div class="absolute inset-0 bg-black/50" @click="closeDrawer"></div>
+        <div class="relative w-4/5 max-w-xs h-full bg-white shadow-2xl overflow-hidden">
+          <CritterList
+            title="Todos los fósiles"
+            :items="filteredFossils"
+            :selected-item="selectedFossil"
+            :available-ids="new Set()"
+            class="h-full"
+            @select="selectFossil"
+          />
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Detalle -->
+    <main :class="[
+      'flex-1 flex items-center justify-center p-4',
+      selectedFossil ? 'flex' : 'hidden lg:flex'
+    ]">
       <CritterDetail
         v-if="selectedFossil"
         :critter="selectedFossil"
@@ -108,14 +137,28 @@ const handleToggle = (id) => {
         :show-museum-button="isAuthenticated"
         :show-availability="false"
         @toggle-museum="handleToggle(selectedFossil.id)"
+        @back="openDrawer"
       />
-
-      <EmptyState
-        v-else
-        icon="🦴"
-        title="Selecciona un fósil"
-        subtitle="para ver su información"
-      />
+      <EmptyState v-else icon="🦴" title="Selecciona un fósil" />
     </main>
   </article>
 </template>
+
+<style scoped>
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: opacity 0.3s ease;
+}
+.drawer-enter-active > div:last-child,
+.drawer-leave-active > div:last-child {
+  transition: transform 0.3s ease;
+}
+.drawer-enter-from,
+.drawer-leave-to {
+  opacity: 0;
+}
+.drawer-enter-from > div:last-child,
+.drawer-leave-to > div:last-child {
+  transform: translateX(-100%);
+}
+</style>

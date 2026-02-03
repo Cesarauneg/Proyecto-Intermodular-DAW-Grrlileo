@@ -13,7 +13,7 @@
     <!-- Scroll solo en la lista -->
     <nav class="flex-1 overflow-y-auto px-1" :aria-labelledby="listId">
       <ul
-        class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-3 gap-3"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-3"
         role="listbox"
         :aria-label="`Selecciona un elemento de ${title}`"
       >

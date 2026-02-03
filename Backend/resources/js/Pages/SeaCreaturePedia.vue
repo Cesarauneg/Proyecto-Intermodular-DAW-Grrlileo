@@ -41,6 +41,7 @@ const museumIconUrl = '/icons/museum.png'
 
 const selectedCreature = ref(null)
 const availableCreaturesIds = ref(new Set())
+const drawerOpen = ref(false)
 
 // AUTH
 const page = usePage()
@@ -116,7 +117,12 @@ watch([
   }
 })
 
-const selectCreature = (creature) => { selectedCreature.value = creature }
+const selectCreature = (creature) => {
+  selectedCreature.value = creature
+  drawerOpen.value = false
+}
+const openDrawer = () => { drawerOpen.value = true }
+const closeDrawer = () => { drawerOpen.value = false }
 
 const isAvailable = computed(() => {
   return selectedCreature.value ? availableCreaturesIds.value.has(selectedCreature.value.id) : false
@@ -130,10 +136,12 @@ const handleToggle = (id) => {
 
 <template>
   <article
-    class="flex flex-col lg:flex-row h-full bg-gradient-to-br from-indigo-50 to-blue-100 rounded-xl overflow-hidden"
+    class="relative flex flex-col lg:flex-row h-full bg-gradient-to-br from-indigo-50 to-blue-100 rounded-xl overflow-hidden"
     aria-label="Catálogo de criaturas marinas"
   >
+    <!-- Lista: visible en desktop siempre, en móvil solo cuando no hay selección -->
     <CritterList
+      :class="selectedCreature ? 'hidden lg:flex' : 'flex'"
       title="Criaturas Marinas"
       :items="filteredCreatures"
       :selected-item="selectedCreature"
@@ -141,7 +149,28 @@ const handleToggle = (id) => {
       @select="selectCreature"
     />
 
-    <main class="flex-1 flex items-center justify-center p-4 overflow-y-auto">
+    <!-- Drawer móvil (dentro del contenedor) -->
+    <Transition name="drawer">
+      <div v-if="drawerOpen" class="lg:hidden absolute inset-0 z-20 flex">
+        <div class="absolute inset-0 bg-black/50" @click="closeDrawer"></div>
+        <div class="relative w-4/5 max-w-xs h-full bg-white shadow-2xl overflow-hidden">
+          <CritterList
+            title="Criaturas Marinas"
+            :items="filteredCreatures"
+            :selected-item="selectedCreature"
+            :available-ids="availableCreaturesIds"
+            class="h-full"
+            @select="selectCreature"
+          />
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Detalle -->
+    <main :class="[
+      'flex-1 flex items-center justify-center p-4',
+      selectedCreature ? 'flex' : 'hidden lg:flex'
+    ]">
       <CritterDetail
         v-if="selectedCreature"
         :critter="selectedCreature"
@@ -150,8 +179,28 @@ const handleToggle = (id) => {
         :museum-icon-url="museumIconUrl"
         :show-museum-button="isAuthenticated"
         @toggle-museum="handleToggle(selectedCreature.id)"
+        @back="openDrawer"
       />
       <EmptyState v-else icon="🪸" title="Selecciona una criatura marina" />
     </main>
   </article>
 </template>
+
+<style scoped>
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: opacity 0.3s ease;
+}
+.drawer-enter-active > div:last-child,
+.drawer-leave-active > div:last-child {
+  transition: transform 0.3s ease;
+}
+.drawer-enter-from,
+.drawer-leave-to {
+  opacity: 0;
+}
+.drawer-enter-from > div:last-child,
+.drawer-leave-to > div:last-child {
+  transform: translateX(-100%);
+}
+</style>

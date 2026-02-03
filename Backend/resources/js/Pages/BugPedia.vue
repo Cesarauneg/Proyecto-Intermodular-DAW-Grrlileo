@@ -53,6 +53,7 @@ const museumIconUrl = '/icons/museum.png'
 
 const selectedBug = ref(null)
 const availableBugsIds = ref(new Set())
+const drawerOpen = ref(false)
 
 // AUTH
 const page = usePage()
@@ -149,7 +150,12 @@ watch([
 })
 
 // MÉTODOS
-const selectBug = (bug) => { selectedBug.value = bug }
+const selectBug = (bug) => {
+  selectedBug.value = bug
+  drawerOpen.value = false // Cerrar drawer al seleccionar
+}
+const openDrawer = () => { drawerOpen.value = true }
+const closeDrawer = () => { drawerOpen.value = false }
 
 /** Verifica si el bicho seleccionado está disponible ahora */
 const bugAvailability = computed(() => {
@@ -168,10 +174,12 @@ const handleToggle = (id) => {
 
 <template>
   <article
-    class="flex flex-col lg:flex-row h-full bg-gradient-to-br from-green-50 to-blue-50 rounded-xl overflow-hidden"
+    class="relative flex flex-col lg:flex-row h-full bg-gradient-to-br from-green-50 to-blue-50 rounded-xl overflow-hidden"
     aria-label="Catálogo de bichos"
   >
+    <!-- Lista: visible en desktop siempre, en móvil solo cuando no hay selección -->
     <CritterList
+      :class="selectedBug ? 'hidden lg:flex' : 'flex'"
       title="Todos los bichos"
       :items="filteredBugs"
       :selected-item="selectedBug"
@@ -179,7 +187,37 @@ const handleToggle = (id) => {
       @select="selectBug"
     />
 
-    <main class="flex-1 flex items-center justify-center p-4 overflow-y-auto">
+    <!-- Drawer móvil: overlay + lista lateral (dentro del contenedor) -->
+    <Transition name="drawer">
+      <div
+        v-if="drawerOpen"
+        class="lg:hidden absolute inset-0 z-20 flex"
+      >
+        <!-- Backdrop -->
+        <div
+          class="absolute inset-0 bg-black/50"
+          @click="closeDrawer"
+        ></div>
+
+        <!-- Panel del drawer -->
+        <div class="relative w-4/5 max-w-xs h-full bg-white shadow-2xl overflow-hidden">
+          <CritterList
+            title="Todos los bichos"
+            :items="filteredBugs"
+            :selected-item="selectedBug"
+            :available-ids="availableBugsIds"
+            class="h-full"
+            @select="selectBug"
+          />
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Detalle: en móvil ocupa todo cuando hay selección, en desktop parte derecha -->
+    <main :class="[
+      'flex-1 flex items-center justify-center p-4',
+      selectedBug ? 'flex' : 'hidden lg:flex'
+    ]">
       <CritterDetail
         v-if="selectedBug"
         :critter="selectedBug"
@@ -188,8 +226,33 @@ const handleToggle = (id) => {
         :museum-icon-url="museumIconUrl"
         :show-museum-button="isAuthenticated"
         @toggle-museum="handleToggle(selectedBug.id)"
+        @back="openDrawer"
       />
       <EmptyState v-else icon="🦋" title="Selecciona un bicho" />
     </main>
+
   </article>
 </template>
+
+<style scoped>
+/* Transiciones del drawer */
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.drawer-enter-active > div:last-child,
+.drawer-leave-active > div:last-child {
+  transition: transform 0.3s ease;
+}
+
+.drawer-enter-from,
+.drawer-leave-to {
+  opacity: 0;
+}
+
+.drawer-enter-from > div:last-child,
+.drawer-leave-to > div:last-child {
+  transform: translateX(-100%);
+}
+</style>

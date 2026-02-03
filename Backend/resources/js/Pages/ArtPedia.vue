@@ -38,6 +38,7 @@ const { isInMuseum, toggleDonation } = useMuseum('/user/art')
 const museumIconUrl = '/icons/museum.png'
 
 const selectedArt = ref(null)
+const drawerOpen = ref(false)
 
 // AUTH
 const page = usePage()
@@ -84,7 +85,12 @@ watch([() => props.searchQuery, () => props.filterMuseum, () => props.filterHasF
   }
 })
 
-const selectArt = (art) => { selectedArt.value = art }
+const selectArt = (art) => {
+  selectedArt.value = art
+  drawerOpen.value = false
+}
+const openDrawer = () => { drawerOpen.value = true }
+const closeDrawer = () => { drawerOpen.value = false }
 
 const handleToggle = (id) => {
   if (!isAuthenticated.value) return
@@ -94,10 +100,12 @@ const handleToggle = (id) => {
 
 <template>
   <article
-    class="flex flex-col lg:flex-row h-full bg-gradient-to-br from-red-50 to-purple-50 rounded-xl overflow-hidden"
+    class="relative flex flex-col lg:flex-row h-full bg-gradient-to-br from-red-50 to-purple-50 rounded-xl overflow-hidden"
     aria-label="Catálogo de arte"
   >
+    <!-- Lista: visible en desktop siempre, en móvil solo cuando no hay selección -->
     <CritterList
+      :class="selectedArt ? 'hidden lg:flex' : 'flex'"
       title="Todas las obras"
       :items="filteredArts"
       :selected-item="selectedArt"
@@ -105,7 +113,28 @@ const handleToggle = (id) => {
       @select="selectArt"
     />
 
-    <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
+    <!-- Drawer móvil (dentro del contenedor) -->
+    <Transition name="drawer">
+      <div v-if="drawerOpen" class="lg:hidden absolute inset-0 z-20 flex">
+        <div class="absolute inset-0 bg-black/50" @click="closeDrawer"></div>
+        <div class="relative w-4/5 max-w-xs h-full bg-white shadow-2xl overflow-hidden">
+          <CritterList
+            title="Todas las obras"
+            :items="filteredArts"
+            :selected-item="selectedArt"
+            :available-ids="new Set()"
+            class="h-full"
+            @select="selectArt"
+          />
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Detalle -->
+    <main :class="[
+      'flex-1 flex items-center justify-center p-4',
+      selectedArt ? 'flex' : 'hidden lg:flex'
+    ]">
       <CritterDetail
         v-if="selectedArt"
         :critter="selectedArt"
@@ -115,14 +144,28 @@ const handleToggle = (id) => {
         :show-museum-button="isAuthenticated"
         :show-availability="false"
         @toggle-museum="handleToggle(selectedArt.id)"
+        @back="openDrawer"
       />
-
-      <EmptyState
-        v-else
-        icon="🎨"
-        title="Selecciona una obra"
-        subtitle="para ver su información"
-      />
+      <EmptyState v-else icon="🎨" title="Selecciona una obra" />
     </main>
   </article>
 </template>
+
+<style scoped>
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: opacity 0.3s ease;
+}
+.drawer-enter-active > div:last-child,
+.drawer-leave-active > div:last-child {
+  transition: transform 0.3s ease;
+}
+.drawer-enter-from,
+.drawer-leave-to {
+  opacity: 0;
+}
+.drawer-enter-from > div:last-child,
+.drawer-leave-to > div:last-child {
+  transform: translateX(-100%);
+}
+</style>
