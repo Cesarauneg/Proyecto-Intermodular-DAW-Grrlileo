@@ -110,11 +110,10 @@
                         </div>
                     </article>
                 </TransitionGroup>
-            </div>
-
-            <!-- Paginación fuera del scroll -->
-            <div class="mt-6 px-4">
+                <!-- Paginación -->
                 <Pagination
+                    v-if="totalPages > 1"
+                    class="mt-6"
                     :current-page="currentPage"
                     :total-pages="totalPages"
                     @change="handlePageChange"
@@ -150,7 +149,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { capitalize } from '@/Utils/formatters.js'
 import CritterDetail from '@/Components/CritterDetail.vue'
 import CharacterModal from '@/Components/CharacterModal.vue'
@@ -164,7 +163,7 @@ const initialLoading = ref(true)
 const isMobileMenuOpen = ref(false)
 
 // --- PAGINACIÓN ---
-const itemsPerPage = ref(12)
+const ITEMS_PER_PAGE = 12
 const currentPage = ref(1)
 
 // --- CATEGORÍAS ---
@@ -197,14 +196,11 @@ onMounted(async () => {
     initialLoading.value = false
 })
 
-// --- LÓGICA DE CAMBIO DE CATEGORÍA ---
-watch(activeCategory, (newCatId) => {
-    currentPage.value = 1 // Resetear paginación al cambiar de pestaña
-})
-
+// --- SELECCIÓN DE CATEGORÍA ---
 const selectCategory = (categoryId) => {
     activeCategory.value = categoryId
-    isMobileMenuOpen.value = false // Cerrar menú móvil al seleccionar
+    currentPage.value = 1
+    isMobileMenuOpen.value = false
 }
 
 // --- COMPUTADOS ---
@@ -212,14 +208,14 @@ const currentCategory = computed(() => categories.value.find(c => c.id === activ
 const currentItems = computed(() => currentCategory.value?.items || [])
 const totalGeneral = computed(() => categories.value.reduce((acc, c) => acc + (c.count || 0), 0))
 
-// Items filtrados por la página actual
+// Items paginados
 const displayedItems = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage.value
-    const end = start + itemsPerPage.value
+    const start = (currentPage.value - 1) * ITEMS_PER_PAGE
+    const end = start + ITEMS_PER_PAGE
     return currentItems.value.slice(start, end)
 })
 
-const totalPages = computed(() => Math.ceil(currentItems.value.length / itemsPerPage.value))
+const totalPages = computed(() => Math.ceil(currentItems.value.length / ITEMS_PER_PAGE))
 
 // --- MÉTODOS ---
 const handlePageChange = (page) => {
