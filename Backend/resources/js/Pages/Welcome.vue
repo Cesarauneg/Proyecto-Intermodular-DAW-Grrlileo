@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { useClickOutside } from '@/Composables/useClickOutside';
 import { useHourlyMusic } from '@/Composables/useHourlyMusic';
@@ -10,7 +10,6 @@ import EstadisticasSection from './Sections/EstadisticasSection.vue';
 import MuseumSection from './Sections/MuseumSection.vue';   
 import VecinosSection from './Sections/VecinosSection.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
-import { useClickOutside } from '@/Composables/useClickOutside';
 
 
 const props = defineProps({
@@ -68,6 +67,17 @@ function toggleAuthMenu() {
   authMenuOpen.value = !authMenuOpen.value;
 }
 
+// ========== MOBILE NAV ==========
+const isMobileNavOpen = ref(false);
+const mobileNavRef = ref(null);
+
+useClickOutside(mobileNavRef, () => isMobileNavOpen.value = false);
+
+function selectTab(key) {
+  activeTab.value = key;
+  isMobileNavOpen.value = false;
+}
+
 // ========== TABS NAVIGATION ==========
 const tabs = computed(() => {
     const baseTabs = [
@@ -88,7 +98,6 @@ const tabs = computed(() => {
 const activeTab = ref('inicio');
 
 //Si el usuario cierra sesión estando en estadísticas, lo mandamos a inicio
-import { watch } from 'vue';
 watch(user, (newUser) => {
     if (!newUser && activeTab.value === 'estadisticas') {
         activeTab.value = 'inicio';
@@ -203,22 +212,6 @@ function handlePageInteraction() {
     </header>
 
     <!-- ========== NAV TABS ========== -->
-    <nav class="section-nav" role="tablist" aria-label="Secciones del sitio">
-      <button
-        v-for="tab in tabs"
-        :key="tab.key"
-        class="nav-tab"
-        :class="{ active: activeTab === tab.key }"
-        @click="activeTab = tab.key"
-        role="tab"
-        :aria-selected="activeTab === tab.key"
-        :aria-controls="`tabpanel-${tab.key}`"
-        :id="`tab-${tab.key}`"
-      >
-        {{ tab.label }}
-      </button>
-    </nav>
-        <!-- ========== NAV TABS ========== -->
         <div class="section-nav-wrapper" ref="mobileNavRef">
             <!-- Mobile Nav Trigger -->
             <button class="mobile-nav-trigger" @click="isMobileNavOpen = !isMobileNavOpen">
