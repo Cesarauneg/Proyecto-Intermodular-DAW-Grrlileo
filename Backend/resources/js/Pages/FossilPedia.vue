@@ -1,73 +1,77 @@
-<template>
-  <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-amber-50 to-yellow-50">
-    
-    <!-- Lista de fósiles (30% en desktop) -->
-    <CritterList
-      title="Todos los fósiles"
-      icon="🦴"
-      :items="fossils || []"
-      :selected-item="selectedFossil"
-      :available-ids="new Set()"
-      @select="selectFossil"
-    />
-
-    <!-- Detalles del fósil (70% en desktop) -->
-    <div class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
-      
-      <!-- Detalles cuando hay un fósil seleccionado -->
-        <CritterDetail
-          v-if="selectedFossil"
-          :critter="selectedFossil"
-          :is-available="false"
-          :is-in-museum="isInMuseum(selectedFossil.id)"
-          :museum-icon-url="museumIconUrl"
-          :show-museum-button="isAuthenticated"
-          :show-availability="false"
-          @toggle-museum="handleToggle(selectedFossil.id)"
-        />
-
-      <!-- Estado vacío cuando no hay nada seleccionado -->
-      <EmptyState
-        v-else
-        icon="🦴"
-        title="Selecciona un fósil"
-        subtitle="para ver su información"
-      />
-
-    </div>
-  </div>
-</template>
-
+<!--
+  @fileoverview Página de catálogo de fósiles.
+  Usa el composable useCritterpedia y el layout CritterpediaLayout.
+  Nota: Los fósiles no tienen disponibilidad temporal.
+-->
 <script setup>
-import { ref, computed } from 'vue'
-import { usePage } from '@inertiajs/vue3' 
-import { useFetch } from '@/Composables/useFetch.js'
-import { useMuseum } from '@/Composables/useMuseum.js'
-
-import CritterList from '@/Components/CritterList.vue'
+import { computed } from 'vue'
+import { useCritterpedia } from '@/Composables/useCritterpedia.js'
+import CritterpediaLayout from '@/Components/Critterpedia/CritterpediaLayout.vue'
 import CritterDetail from '@/Components/CritterDetail.vue'
-import EmptyState from '@/Components/EmptyState.vue'
 
-// ESTADO Y MUSEO
-const { isInMuseum, toggleDonation } = useMuseum('/user/fossils')
-const museumIconUrl = '/icons/museum.png'
+const props = defineProps({
+  searchQuery: { type: String, default: '' },
+  filterMuseum: { type: String, default: '' }
+})
 
-const selectedFossil = ref(null)
+// Usar composable con configuración específica de fósiles
+const {
+  selectedItem,
+  availableIds,
+  drawerOpen,
+  isAuthenticated,
+  museumIconUrl,
+  createFilteredItems,
+  createSelectionWatcher,
+  selectItem,
+  openDrawer,
+  closeDrawer,
+  handleToggle,
+  isInMuseum
+} = useCritterpedia({
+  apiEndpoint: '/api/fossils',
+  availableEndpoint: null, // Los fósiles no tienen disponibilidad
+  museumEndpoint: '/user/fossils',
+  museumType: 'fossils'
+})
 
-// AUTH 
-const page = usePage()
-const isAuthenticated = computed(() => page.props.auth?.user !== null)
+// Filtrado específico (solo búsqueda y museo)
+const filteredFossils = createFilteredItems(props)
 
-// FETCH DE DATOS 
-const { data: fossils } = useFetch('/api/fossils')
-
-// MÉTODOS 
-const selectFossil = (fossil) => {
-  selectedFossil.value = fossil
-}
-
-const handleToggle = (id) => {
-  if (!isAuthenticated.value) return
-  toggleDonation(id, 'fossils') 
-}
+// Limpiar selección cuando cambian los filtros
+const filterProps = computed(() => [
+  props.searchQuery,
+  props.filterMuseum
+])
+createSelectionWatcher(filteredFossils, filterProps)
 </script>
+
+<template>
+  <CritterpediaLayout
+    list-title="Todos los fósiles"
+    :filtered-items="filteredFossils"
+    :selected-item="selectedItem"
+    :available-ids="availableIds"
+    :drawer-open="drawerOpen"
+    background-class="from-amber-50 to-yellow-50"
+    aria-label="Catálogo de fósiles"
+    empty-icon="🦴"
+    empty-title="Selecciona un fósil"
+    @select="selectItem"
+    @close-drawer="closeDrawer"
+  >
+    <template #detail>
+      <CritterDetail
+        :critter="selectedItem"
+        :is-available="false"
+        :is-in-museum="isInMuseum(selectedItem.id)"
+        :museum-icon-url="museumIconUrl"
+        :show-museum-button="isAuthenticated"
+        :show-availability="false"
+        item-type="fósiles"
+        @toggle-museum="handleToggle(selectedItem.id)"
+        @back="openDrawer"
+      />
+    </template>
+  </CritterpediaLayout>
+</template>

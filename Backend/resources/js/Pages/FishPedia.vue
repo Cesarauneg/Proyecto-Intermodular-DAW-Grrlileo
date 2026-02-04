@@ -1,79 +1,95 @@
-<template>
-  <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
-
-    <CritterList
-      title="Todos los peces"
-      :items="fish || []"
-      :selected-item="selectedFish"
-      :available-ids="availableFishIds"
-      @select="selectFish"
-    />
-
-    <div class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
-
-      <CritterDetail
-        v-if="selectedFish"
-        :critter="selectedFish"
-        :is-available="fishAvailability"
-        :is-in-museum="isInMuseum(selectedFish.id)"
-        :museum-icon-url="museumIconUrl"
-        :show-museum-button="isAuthenticated"
-        @toggle-museum="handleToggle(selectedFish.id)"
-      />
-
-      <EmptyState
-        v-else
-        icon="🐟"
-        title="Selecciona un pez"
-        subtitle="para ver su información"
-      />
-    </div>
-  </div>
-</template>
-
+<!--
+  @fileoverview Página de catálogo de peces.
+  Usa el composable useCritterpedia y el layout CritterpediaLayout.
+-->
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { usePage } from '@inertiajs/vue3'
-import { useFetch } from '@/Composables/useFetch.js'
-import { useMuseum } from '@/Composables/useMuseum.js'
-
-import CritterList from '@/Components/CritterList.vue'
+import { watch, computed } from 'vue'
+import { useCritterpedia } from '@/Composables/useCritterpedia.js'
+import CritterpediaLayout from '@/Components/Critterpedia/CritterpediaLayout.vue'
 import CritterDetail from '@/Components/CritterDetail.vue'
-import EmptyState from '@/Components/EmptyState.vue'
 
-// ESTADO Y MUSEO
-const { isInMuseum, toggleDonation } = useMuseum('/user/fish')
-const museumIconUrl = '/icons/museum.png'
-
-const selectedFish = ref(null)
-const availableFishIds = ref(new Set())
-
-// AUTH
-const page = usePage()
-const isAuthenticated = computed(() => page.props.auth?.user !== null)
-
-// FETCH DE DATOS
-const { data: fish } = useFetch('/api/fish')
-const { data: availableFishData } = useFetch('/api/fish/available?hemisphere=north')
-
-// WATCHERS 
-watch(availableFishData, (newData) => {
-  if (Array.isArray(newData)) {
-    availableFishIds.value = new Set(newData.map(f => f.id))
-  }
-}, { immediate: true })
-
-// MÉTODOS 
-const selectFish = (fishItem) => {
-  selectedFish.value = fishItem
-}
-
-const fishAvailability = computed(() => {
-  return selectedFish.value ? availableFishIds.value.has(selectedFish.value.id) : false
+const props = defineProps({
+  searchQuery: { type: String, default: '' },
+  filterAvailable: { type: String, default: '' },
+  filterMuseum: { type: String, default: '' },
+  filterLocation: { type: String, default: '' },
+  filterRarity: { type: String, default: '' },
+  filterPrice: { type: String, default: '' }
 })
 
-const handleToggle = (id) => {
-  if (!isAuthenticated.value) return
-  toggleDonation(id, 'fish') 
-}
+const emit = defineEmits(['update:fish-locations'])
+
+// Usar composable con configuración específica de peces
+const {
+  items: fish,
+  selectedItem,
+  availableIds,
+  drawerOpen,
+  isAuthenticated,
+  museumIconUrl,
+  createFilteredItems,
+  createSelectionWatcher,
+  selectItem,
+  openDrawer,
+  closeDrawer,
+  handleToggle,
+  isInMuseum,
+  itemAvailability
+} = useCritterpedia({
+  apiEndpoint: '/api/fish',
+  availableEndpoint: '/api/fish/available?hemisphere=north',
+  museumEndpoint: '/user/fish',
+  museumType: 'fish'
+})
+
+// Filtrado específico
+const filteredFish = createFilteredItems(props)
+
+// Limpiar selección cuando cambian los filtros
+const filterProps = computed(() => [
+  props.searchQuery,
+  props.filterAvailable,
+  props.filterMuseum,
+  props.filterLocation,
+  props.filterRarity,
+  props.filterPrice
+])
+createSelectionWatcher(filteredFish, filterProps)
+
+// Emitir ubicaciones únicas
+watch(fish, (data) => {
+  if (data) {
+    const locations = [...new Set(data.map(f => f.location).filter(Boolean))].sort()
+    emit('update:fish-locations', locations)
+  }
+}, { immediate: true })
 </script>
+
+<template>
+  <CritterpediaLayout
+    list-title="Todos los peces"
+    :filtered-items="filteredFish"
+    :selected-item="selectedItem"
+    :available-ids="availableIds"
+    :drawer-open="drawerOpen"
+    background-class="from-blue-50 to-cyan-50"
+    aria-label="Catálogo de peces"
+    empty-icon="🐟"
+    empty-title="Selecciona un pez"
+    @select="selectItem"
+    @close-drawer="closeDrawer"
+  >
+    <template #detail>
+      <CritterDetail
+        :critter="selectedItem"
+        :is-available="itemAvailability"
+        :is-in-museum="isInMuseum(selectedItem.id)"
+        :museum-icon-url="museumIconUrl"
+        :show-museum-button="isAuthenticated"
+        item-type="peces"
+        @toggle-museum="handleToggle(selectedItem.id)"
+        @back="openDrawer"
+      />
+    </template>
+  </CritterpediaLayout>
+</template>

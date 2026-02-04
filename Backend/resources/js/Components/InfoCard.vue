@@ -1,7 +1,7 @@
 <template>
-  <div 
+  <div
     :class="[
-      'rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 shadow-lg transform hover:scale-105 transition-transform',
+      'rounded-lg sm:rounded-xl p-1.5 sm:p-2.5 border-2 shadow-md transform hover:scale-[1.02] transition-transform',
       colorClasses
     ]"
   >

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Componentes Critterpedia */
+@import './components/critterpedia.css';
+
 :root {
     /* === Animal Crossing Theme === */
 

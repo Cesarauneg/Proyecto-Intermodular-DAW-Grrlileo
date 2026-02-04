@@ -1,68 +1,79 @@
-<template>
-  <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-red-50 to-purple-50">
-    
-    <CritterList
-      title="Todas las obras"
-      :items="arts || []"
-      :selected-item="selectedArt"
-      :available-ids="new Set()"
-      @select="selectArt"
-    />
-
-    <div class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
-      
-      <CritterDetail
-          v-if="selectedArt"
-          :critter="selectedArt"
-          :is-available="false"
-          :is-in-museum="isInMuseum(selectedArt.id)"
-          :museum-icon-url="museumIconUrl"
-          :show-museum-button="isAuthenticated"
-          :show-availability="false"
-          @toggle-museum="handleToggle(selectedArt.id)"
-        />
-
-      <EmptyState
-        v-else
-        icon="🎨"
-        title="Selecciona una obra"
-        subtitle="para ver su información"
-      />
-
-    </div>
-  </div>
-</template>
-
+<!--
+  @fileoverview Página de catálogo de arte.
+  Usa el composable useCritterpedia y el layout CritterpediaLayout.
+  Nota: El arte no tiene disponibilidad temporal.
+-->
 <script setup>
-import { ref, computed } from 'vue' 
-import { usePage } from '@inertiajs/vue3' 
-import { useFetch } from '@/Composables/useFetch.js'
-import { useMuseum } from '@/Composables/useMuseum.js'
-
-import CritterList from '@/Components/CritterList.vue'
+import { computed } from 'vue'
+import { useCritterpedia } from '@/Composables/useCritterpedia.js'
+import CritterpediaLayout from '@/Components/Critterpedia/CritterpediaLayout.vue'
 import CritterDetail from '@/Components/CritterDetail.vue'
-import EmptyState from '@/Components/EmptyState.vue'
 
-// ESTADO Y MUSEO
-const { isInMuseum, toggleDonation } = useMuseum('/user/art')
-const museumIconUrl = '/icons/museum.png'
+const props = defineProps({
+  searchQuery: { type: String, default: '' },
+  filterMuseum: { type: String, default: '' },
+  filterHasFake: { type: String, default: '' }
+})
 
-const selectedArt = ref(null)
+// Usar composable con configuración específica de arte
+const {
+  selectedItem,
+  availableIds,
+  drawerOpen,
+  isAuthenticated,
+  museumIconUrl,
+  createFilteredItems,
+  createSelectionWatcher,
+  selectItem,
+  openDrawer,
+  closeDrawer,
+  handleToggle,
+  isInMuseum
+} = useCritterpedia({
+  apiEndpoint: '/api/art',
+  availableEndpoint: null, // El arte no tiene disponibilidad
+  museumEndpoint: '/user/art',
+  museumType: 'art'
+})
 
-// AUTH 
-const page = usePage()
-const isAuthenticated = computed(() => page.props.auth?.user !== null)
+// Filtrado específico (búsqueda, museo y falsificación)
+const filteredArts = createFilteredItems(props)
 
-// FETCH DE DATOS 
-const { data: arts } = useFetch('/api/art')
-
-// MÉTODOS 
-const selectArt = (art) => {
-  selectedArt.value = art
-}
-
-const handleToggle = (id) => {
-  if (!isAuthenticated.value) return
-  toggleDonation(id, 'art') 
-}
+// Limpiar selección cuando cambian los filtros
+const filterProps = computed(() => [
+  props.searchQuery,
+  props.filterMuseum,
+  props.filterHasFake
+])
+createSelectionWatcher(filteredArts, filterProps)
 </script>
+
+<template>
+  <CritterpediaLayout
+    list-title="Todas las obras"
+    :filtered-items="filteredArts"
+    :selected-item="selectedItem"
+    :available-ids="availableIds"
+    :drawer-open="drawerOpen"
+    background-class="from-red-50 to-purple-50"
+    aria-label="Catálogo de arte"
+    empty-icon="🎨"
+    empty-title="Selecciona una obra"
+    @select="selectItem"
+    @close-drawer="closeDrawer"
+  >
+    <template #detail>
+      <CritterDetail
+        :critter="selectedItem"
+        :is-available="false"
+        :is-in-museum="isInMuseum(selectedItem.id)"
+        :museum-icon-url="museumIconUrl"
+        :show-museum-button="isAuthenticated"
+        :show-availability="false"
+        item-type="obras de arte"
+        @toggle-museum="handleToggle(selectedItem.id)"
+        @back="openDrawer"
+      />
+    </template>
+  </CritterpediaLayout>
+</template>

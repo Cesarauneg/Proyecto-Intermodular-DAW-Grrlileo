@@ -1,66 +1,95 @@
+<!--
+  @fileoverview Página de catálogo de bichos.
+  Usa el composable useCritterpedia y el layout CritterpediaLayout.
+-->
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { usePage } from '@inertiajs/vue3' 
-import { useFetch } from '@/Composables/useFetch.js'
-import { useMuseum } from '@/Composables/useMuseum.js'
-
-import CritterList from '@/Components/CritterList.vue'
+import { watch, computed } from 'vue'
+import { useCritterpedia } from '@/Composables/useCritterpedia.js'
+import CritterpediaLayout from '@/Components/Critterpedia/CritterpediaLayout.vue'
 import CritterDetail from '@/Components/CritterDetail.vue'
-import EmptyState from '@/Components/EmptyState.vue'
 
-// ESTADO Y MUSEO 
-const { isInMuseum, toggleDonation } = useMuseum('/user/bugs')
-const museumIconUrl = '/icons/museum.png'
-
-const selectedBug = ref(null)
-const availableBugsIds = ref(new Set())
-
-// AUTH 
-const page = usePage()
-const isAuthenticated = computed(() => page.props.auth?.user !== null)
-
-// FETCH DE DATOS 
-const { data: bugs } = useFetch('/api/bugs')
-const { data: availableBugsData } = useFetch('/api/bugs/available?hemisphere=north')
-
-// WATCHERS 
-watch(availableBugsData, (newData) => {
-  if (newData) availableBugsIds.value = new Set(newData.map(bug => bug.id))
-}, { immediate: true })
-
-// MÉTODOS 
-const selectBug = (bug) => { selectedBug.value = bug }
-
-const bugAvailability = computed(() => {
-  return selectedBug.value ? availableBugsIds.value.has(selectedBug.value.id) : false
+const props = defineProps({
+  searchQuery: { type: String, default: '' },
+  filterAvailable: { type: String, default: '' },
+  filterMuseum: { type: String, default: '' },
+  filterLocation: { type: String, default: '' },
+  filterRarity: { type: String, default: '' },
+  filterPrice: { type: String, default: '' }
 })
 
-const handleToggle = (id) => {
-  if (!isAuthenticated.value) return
-  toggleDonation(id, 'bugs') 
-}
+const emit = defineEmits(['update:bug-locations'])
+
+// Usar composable con configuración específica de bichos
+const {
+  items: bugs,
+  selectedItem,
+  availableIds,
+  drawerOpen,
+  isAuthenticated,
+  museumIconUrl,
+  createFilteredItems,
+  createSelectionWatcher,
+  selectItem,
+  openDrawer,
+  closeDrawer,
+  handleToggle,
+  isInMuseum,
+  itemAvailability
+} = useCritterpedia({
+  apiEndpoint: '/api/bugs',
+  availableEndpoint: '/api/bugs/available?hemisphere=north',
+  museumEndpoint: '/user/bugs',
+  museumType: 'bugs'
+})
+
+// Filtrado específico
+const filteredBugs = createFilteredItems(props)
+
+// Limpiar selección cuando cambian los filtros
+const filterProps = computed(() => [
+  props.searchQuery,
+  props.filterAvailable,
+  props.filterMuseum,
+  props.filterLocation,
+  props.filterRarity,
+  props.filterPrice
+])
+createSelectionWatcher(filteredBugs, filterProps)
+
+// Emitir ubicaciones únicas
+watch(bugs, (data) => {
+  if (data) {
+    const locations = [...new Set(data.map(b => b.location).filter(Boolean))].sort()
+    emit('update:bug-locations', locations)
+  }
+}, { immediate: true })
 </script>
 
 <template>
-  <div class="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-green-50 to-blue-50">
-    <CritterList
-      :items="bugs || []"
-      :selected-item="selectedBug"
-      :available-ids="availableBugsIds"
-      @select="selectBug"
-    />
-
-    <div class="flex-1 flex items-center justify-center p-4 overflow-y-auto">
+  <CritterpediaLayout
+    list-title="Todos los bichos"
+    :filtered-items="filteredBugs"
+    :selected-item="selectedItem"
+    :available-ids="availableIds"
+    :drawer-open="drawerOpen"
+    background-class="from-green-50 to-blue-50"
+    aria-label="Catálogo de bichos"
+    empty-icon="🦋"
+    empty-title="Selecciona un bicho"
+    @select="selectItem"
+    @close-drawer="closeDrawer"
+  >
+    <template #detail>
       <CritterDetail
-        v-if="selectedBug"
-        :critter="selectedBug"
-        :is-available="bugAvailability"
-        :is-in-museum="isInMuseum(selectedBug.id)"
+        :critter="selectedItem"
+        :is-available="itemAvailability"
+        :is-in-museum="isInMuseum(selectedItem.id)"
         :museum-icon-url="museumIconUrl"
         :show-museum-button="isAuthenticated"
-        @toggle-museum="handleToggle(selectedBug.id)"
+        item-type="bichos"
+        @toggle-museum="handleToggle(selectedItem.id)"
+        @back="openDrawer"
       />
-      <EmptyState v-else icon="🦋" title="Selecciona un bicho" />
-    </div>
-  </div>
+    </template>
+  </CritterpediaLayout>
 </template>
