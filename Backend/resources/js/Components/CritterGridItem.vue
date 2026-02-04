@@ -20,7 +20,7 @@
     <!-- Imagen miniatura -->
     <img
       :src="item.icon || item.image"
-      :alt=""
+      :alt="item.name"
       aria-hidden="true"
       class="w-full h-12 sm:h-14 lg:h-16 object-contain mb-1"
       loading="lazy"
