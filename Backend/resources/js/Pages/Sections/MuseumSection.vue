@@ -1,23 +1,20 @@
 <template>
-    <div class="space-y-8 animate-fade-in">
-        <div class="ac-card bg-[var(--ac-bg-secondary)] border-b-4 border-[var(--ac-green)]">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>
-                    <h2 class="text-3xl font-black text-[var(--ac-text-secondary)] flex items-center gap-3">
-                        <span class="text-4xl">🏛️</span> Mi Museo Personal
-                    </h2>
-                    <p class="text-[var(--ac-text-light)] font-bold uppercase text-xs tracking-widest mt-1">
-                        Exhibición privada de hallazgos y residentes
-                    </p>
-                </div>
-                <div class="flex gap-2">
-                    <div class="bg-white px-4 py-2 rounded-2xl border-2 border-[var(--ac-border)] shadow-sm">
-                        <span class="text-[var(--ac-text-light)] text-xs font-black uppercase block">Total Donado</span>
-                        <span class="text-xl font-black text-[var(--ac-green-dark)]">{{ totalGeneral }}</span>
-                    </div>
-                </div>
+    <section class="w-full animate-fade-in" aria-labelledby="museo-title">
+        <!-- Header -->
+        <header class="text-center py-6 px-4 relative">
+            <!-- Contador en esquina superior derecha -->
+            <div class="absolute top-2 right-4 bg-white px-3 py-1 rounded-xl border border-[var(--ac-border)] shadow-sm">
+                <span class="text-[var(--ac-text-light)] text-[10px] font-bold uppercase block">Total</span>
+                <span class="text-sm font-black text-[var(--ac-green-dark)]">{{ totalGeneral }}</span>
             </div>
-        </div>
+
+            <h2 id="museo-title" class="text-4xl font-extrabold text-green-800">
+                Mi Museo
+            </h2>
+            <p class="text-gray-500 mt-2">
+                Tu colección personal de hallazgos y residentes
+            </p>
+        </header>
 
         <nav class="flex gap-2 overflow-x-auto pb-4 scrollbar-hide">
             <button v-for="category in categories" :key="category.id" 
@@ -116,7 +113,7 @@
                 </div>
             </Transition>
         </Teleport>
-    </div>
+    </section>
 </template>
 
 <script setup>
