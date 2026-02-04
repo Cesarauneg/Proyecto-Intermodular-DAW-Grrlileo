@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full px-4 py-6" aria-labelledby="temporada-title">
+  <section class="w-full px-4 py-6 flex flex-col h-full" aria-labelledby="temporada-title">
     <!-- Header -->
     <header class="text-center mb-8">
       <h2 id="temporada-title" class="text-4xl font-extrabold text-green-800">
@@ -82,17 +82,19 @@
       :id="`panel-${activeTimeTab}`"
       role="tabpanel"
       :aria-labelledby="`tab-${activeTimeTab}`"
+      class="flex flex-col flex-1"
     >
       <!-- Grid de criaturas -->
       <ul
         v-if="filteredCritters.length > 0"
-        class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]"
+        class="grid gap-6 flex-1 overflow-y-auto py-4 px-4 max-h-[calc(100vh_-_350px)] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]"
         role="list"
         aria-label="Lista de criaturas"
       >
         <li
           v-for="critter in filteredCritters"
           :key="`${critter.type}-${critter.id}`"
+          style="max-width: 350px;"
         >
           <CritterCard
             :critter="critter"
@@ -105,7 +107,7 @@
       <!-- Estado vacio -->
       <div
         v-else
-        class="text-center py-16"
+        class="text-center py-16 overflow-y-auto px-4 max-h-[calc(100vh_-_350px)]"
         role="status"
         aria-live="polite"
       >

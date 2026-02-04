@@ -1,7 +1,7 @@
 <template>
   <section class="w-full px-4 py-6 flex flex-col" aria-labelledby="villagers-title">
     <header class="text-center mb-8">
-      <h2 id="villagers-title" class="text-4xl font-extrabold">Catálogo de Aldeanos</h2>
+      <h2 id="villagers-title" class="text-4xl font-extrabold text-green-800">Aldeanos</h2>
       <p class="text-gray-500 mt-2">
         Explora todos los personajes y descubre sus personalidades
       </p>
