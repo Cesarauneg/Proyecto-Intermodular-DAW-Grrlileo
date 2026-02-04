@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-Route::get('/', WelcomeController::class);
+Route::get('/', WelcomeController::class)->name('welcome');
 
 Route::get('/art', function () {
     return Inertia::render('ArtPedia');

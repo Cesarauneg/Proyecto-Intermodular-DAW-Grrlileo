@@ -1,6 +1,6 @@
 <script setup>
 /**
- * Welcome.vue - Página principal de ACpedia
+ * Welcome.vue - Página principal de Canela`s Desk
  *
  * Integra el sistema de música horaria:
  * - Recibe `hourlyMusic` desde Inertia (datos de tabla `hourly_music`)
@@ -131,7 +131,7 @@ function handlePageInteraction() {
         <div class="logo">
           <img
             src="/images/logos/logo.png"
-            alt="ACpedia"
+            alt="Canela`s Desk"
             class="logo-img"
             width="160"
             height="90"
@@ -277,7 +277,40 @@ function handlePageInteraction() {
 
     <!-- ========== FOOTER ========== -->
     <footer class="landing-footer">
-      <p>&copy; {{ new Date().getFullYear() }} Canela's Desk. Todos los derechos reservados.</p>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Canela`s Desk</h3>
+          <p>Tu guía completa de Animal Crossing</p>
+          <p>Contactanos:</p>
+          <div class="social-links">
+            <a href="mailto:info@canelasdesk.com" class="social-icon" aria-label="Email"><i class="far fa-envelope"></i></a>
+            <a href="https://twitter.com/canelasdesk" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/canelasdesk" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://facebook.com/canelasdesk" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          </div>
+        </div>
+
+        <nav class="footer-section">
+          <h3>Navegación</h3>
+          <ul>
+            <li><Link :href="route('welcome')" class="footer-link">Inicio</Link></li>
+            <li><Link :href="route('dashboard')" class="footer-link">Dashboard</Link></li>
+            <li><Link :href="route('catalogo')" class="footer-link">Colección</Link></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-section">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#" class="footer-link">Política de Privacidad</a></li>
+            <li><a href="#" class="footer-link">Términos de Servicio</a></li>
+            <li><a href="#" class="footer-link">Política de Cookies</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; {{ new Date().getFullYear() }} Canela`s Desk. Todos los derechos reservados.</p>
+      </div>
     </footer>
   </div>
 </template>

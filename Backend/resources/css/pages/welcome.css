@@ -223,16 +223,101 @@
 
 /* ---- Footer ---- */
 .landing-footer {
-    padding: 1.5rem;
-    text-align: center;
+    padding: 2.5rem 1.5rem 1.5rem; /* Ajustar padding superior */
     background-color: var(--ac-green-dark);
     color: #fff;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
 }
-.landing-footer p {
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    gap: 1.5rem;
+}
+
+.footer-section {
+    min-width: 200px;
+    margin-bottom: 1rem;
+}
+
+.footer-section h3 {
+    color: var(--ac-gold-bright);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.footer-section p {
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
     margin: 0;
 }
 
-/* Fade transition */
+.footer-section ul li {
+    margin-bottom: 0.6rem;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
+    color: var(--ac-gold-bright);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-icon {
+    color: #fff;
+    font-size: 1.5rem;
+    transition: color 0.2s;
+}
+
+.social-icon:hover {
+    color: var(--ac-gold-bright);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-section {
+        min-width: unset;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+}
+
 .fade-enter-active, .fade-leave-active { transition: opacity 0.2s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
