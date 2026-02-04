@@ -24,6 +24,7 @@ import PecesSection from './Sections/PecesSection.vue';
 import BichosSection from './Sections/BichosSection.vue';
 import TemporadaSection from './Sections/TemporadaSection.vue';
 import EstadisticasSection from './Sections/EstadisticasSection.vue';
+import MuseumSection from './Sections/MuseumSection.vue';   
 import VecinosSection from './Sections/VecinosSection.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
 
@@ -91,9 +92,10 @@ const tabs = computed(() => {
         { key: 'temporada', label: 'Temporada' },
     ];
 
-    // Solo añadimos Estadísticas si el usuario existe
+    // Solo añadimos Estadísticas y museo si el usuario existe
     if (user.value) {
         baseTabs.push({ key: 'estadisticas', label: 'Estadísticas' });
+        baseTabs.push({ key: 'museo', label: 'Mi museo' });
     }
 
     baseTabs.push({ key: 'vecinos', label: 'Vecinos' });
@@ -116,6 +118,7 @@ const sectionComponents = {
   peces: PecesSection,
   bichos: BichosSection,
   temporada: TemporadaSection,
+  museo: MuseumSection,
   estadisticas: EstadisticasSection,
   vecinos: VecinosSection,
 };
