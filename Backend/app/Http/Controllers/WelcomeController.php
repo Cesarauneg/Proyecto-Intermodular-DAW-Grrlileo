@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Hourly_Music;
 use App\Models\Villager;
+use App\Models\Fish;
+use App\Models\Bug;
+use App\Models\Sea_Creature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,6 +40,9 @@ class WelcomeController extends Controller
             'randomVillagers' => Villager::inRandomOrder()->limit(15)->get(),
             'birthdayVillagers' => $birthdayVillagers,
             'hourlyMusic' => $hourlyMusic,
+            'fish' => Fish::all(),
+            'bugs' => Bug::all(),
+            'seaCreatures' => Sea_Creature::all(),
         ]);
     }
 
