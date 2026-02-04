@@ -1,31 +1,35 @@
 <template>
-  <div v-if="totalPages > 1" class="flex justify-center mt-6 space-x-2">
+  <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-8 pb-4">
     <button
       @click="emitPage(currentPage - 1)"
       :disabled="currentPage <= 1"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+      class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-[var(--ac-border)] text-[var(--ac-text-secondary)] hover:border-[var(--ac-green)] hover:text-[var(--ac-green)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
     >
-      « Anterior
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
     </button>
 
-    <button
-      v-for="p in visiblePages"
-      :key="p"
-      @click="emitPage(p)"
-      :class="[
-        'px-3 py-1 rounded',
-        currentPage === p ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
-      ]"
-    >
-      {{ p }}
-    </button>
+    <div class="flex items-center gap-1 bg-white/50 p-1 rounded-2xl border-2 border-[var(--ac-bg-secondary)]">
+      <button
+        v-for="p in visiblePages"
+        :key="p"
+        @click="emitPage(p)"
+        :class="[
+          'w-10 h-10 rounded-xl font-black transition-all',
+          currentPage === p 
+            ? 'bg-[var(--ac-green)] text-white shadow-sm scale-105' 
+            : 'text-[var(--ac-text-light)] hover:bg-[var(--ac-bg-primary)]'
+        ]"
+      >
+        {{ p }}
+      </button>
+    </div>
 
     <button
       @click="emitPage(currentPage + 1)"
       :disabled="currentPage >= totalPages"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+      class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-[var(--ac-border)] text-[var(--ac-text-secondary)] hover:border-[var(--ac-green)] hover:text-[var(--ac-green)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
     >
-      Siguiente »
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
     </button>
   </div>
 </template>
@@ -43,6 +47,8 @@ const emit = defineEmits(['change'])
 const emitPage = (p) => {
   if (p >= 1 && p <= props.totalPages) {
     emit('change', p)
+    // Scroll suave hacia arriba al cambiar de página
+    window.scrollTo({ top: 200, behavior: 'smooth' });
   }
 }
 
@@ -50,7 +56,6 @@ const visiblePages = computed(() => {
   const range = 2
   const start = Math.max(1, props.currentPage - range)
   const end = Math.min(props.totalPages, props.currentPage + range)
-
   return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 })
 </script>

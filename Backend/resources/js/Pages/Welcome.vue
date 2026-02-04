@@ -6,6 +6,8 @@ import { useHourlyMusic } from '@/Composables/useHourlyMusic';
 import InicioSection from './Sections/InicioSection.vue';
 import CritterpediaSection from './Sections/CritterpediaSection.vue';
 import TemporadaSection from './Sections/TemporadaSection.vue';
+import EstadisticasSection from './Sections/EstadisticasSection.vue';
+import MuseumSection from './Sections/MuseumSection.vue';   
 import VecinosSection from './Sections/VecinosSection.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
 import { useClickOutside } from '@/Composables/useClickOutside';
@@ -34,6 +36,14 @@ const props = defineProps({
         type: Array,
         default: () => []
     },
+    stats: {
+        type: Object,
+          default: () => ({})
+    },
+    maximos: {
+        type: Object,
+        default: () => ({})
+    },
   /**
    * Música horaria agrupada por hora (0-23).
    * Cada hora contiene 3 variantes de clima.
@@ -59,20 +69,40 @@ function toggleAuthMenu() {
 }
 
 // ========== TABS NAVIGATION ==========
-const tabs = [
-    { key: 'inicio', label: 'Inicio' },
-    { key: 'critterpedia', label: 'Critterpedia' },
-    { key: 'temporada', label: 'Temporada' },
-    { key: 'vecinos', label: 'Vecinos' },
-];
+const tabs = computed(() => {
+    const baseTabs = [
+        { key: 'inicio', label: 'Inicio' },
+        { key: 'critterpedia', label: 'Critterpedia' },
+        { key: 'temporada', label: 'Temporada' },
+        { key: 'vecinos', label: 'Vecinos' },
+    ];
+
+    // Solo añadimos Estadísticas y museo si el usuario existe
+    if (user.value) {
+        baseTabs.push({ key: 'estadisticas', label: 'Estadísticas' });
+        baseTabs.push({ key: 'museo', label: 'Mi museo' });
+    }
+    return baseTabs;
+});
 
 const activeTab = ref('inicio');
+
+//Si el usuario cierra sesión estando en estadísticas, lo mandamos a inicio
+import { watch } from 'vue';
+watch(user, (newUser) => {
+    if (!newUser && activeTab.value === 'estadisticas') {
+        activeTab.value = 'inicio';
+    }
+});
 
 const sectionComponents = {
     inicio: InicioSection,
     critterpedia: CritterpediaSection,
     temporada: TemporadaSection,
     vecinos: VecinosSection,
+    museo: MuseumSection,
+    estadisticas: EstadisticasSection,
+
 };
 
 // ========== HOURLY MUSIC ==========
@@ -231,6 +261,8 @@ function handlePageInteraction() {
             :fish="props.fish"
             :bugs="props.bugs"
             :sea-creatures="props.seaCreatures"
+            :stats="props.stats"
+            :maximos="props.maximos"
           />
         </section>
       </Transition>
