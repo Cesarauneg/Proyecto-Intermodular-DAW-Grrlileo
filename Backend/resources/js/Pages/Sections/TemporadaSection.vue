@@ -46,24 +46,44 @@
       </div>
     </nav>
 
+    <!-- Botón móvil para filtros de tipo -->
+    <div class="flex justify-center mb-4 lg:hidden">
+      <BackButton
+        :label="currentTypeFilter.label"
+        :icon="currentTypeFilter.icon"
+        variant="amber"
+        aria-label="Abrir filtros de tipo"
+        @click="isMobileFilterOpen = !isMobileFilterOpen"
+      />
+    </div>
+
     <!-- Filtros por tipo de criatura -->
-    <fieldset class="flex justify-center gap-2 mb-8 flex-wrap border-0">
-      <legend class="sr-only">Filtrar por tipo de criatura</legend>
-      <button
-        v-for="filter in typeFilters"
-        :key="filter.key"
-        :aria-pressed="activeTypeFilter === filter.key"
-        :class="[
-          'px-4 py-2 rounded-[20px] text-sm font-semibold transition-all duration-200 border-3',
-          'focus:outline-none focus:ring-2 focus:ring-[#8b6914] focus:ring-offset-2',
-          filterButtonClasses(filter.key)
-        ]"
-        @click="activeTypeFilter = filter.key"
-      >
-        <span class="mr-1" aria-hidden="true">{{ filter.icon }}</span>
-        {{ filter.label }}
-      </button>
-    </fieldset>
+    <nav
+      :class="[
+        'justify-center mb-6 px-4',
+        isMobileFilterOpen ? 'flex' : 'hidden lg:flex'
+      ]"
+      aria-label="Filtros por tipo de criatura"
+    >
+      <div class="inline-flex flex-wrap justify-center gap-2 rounded-xl bg-[#faf8ef] p-2 shadow-[0_4px_0_#5c4a1f] border-3 border-[#8b6914]">
+        <button
+          v-for="filter in typeFilters"
+          :key="filter.key"
+          :aria-pressed="activeTypeFilter === filter.key"
+          :class="[
+            'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200',
+            'focus:outline-none focus:ring-2 focus:ring-[#8b6914] focus:ring-offset-2',
+            activeTypeFilter === filter.key
+              ? 'bg-[#8b6914] text-white shadow-md'
+              : 'text-[#8b6914] hover:bg-[#8b6914]/10'
+          ]"
+          @click="selectTypeFilter(filter.key)"
+        >
+          <span class="mr-1" aria-hidden="true">{{ filter.icon }}</span>
+          {{ filter.label }}
+        </button>
+      </div>
+    </nav>
 
     <!-- Mensaje informativo para "Ultima Oportunidad" -->
     <aside
@@ -156,6 +176,7 @@
 
 import { ref, computed } from 'vue'
 import CritterCard from '@/Components/CritterCard.vue'
+import BackButton from '@/Components/Base/BackButton.vue'
 
 /**
  * @typedef {Object} Critter
@@ -205,6 +226,7 @@ const monthName = monthNames[currentMonth - 1]
 // Estado reactivo
 const activeTimeTab = ref('available')
 const activeTypeFilter = ref('all')
+const isMobileFilterOpen = ref(false)
 
 // Configuracion de pestanas
 const timeTabs = [
@@ -219,6 +241,17 @@ const typeFilters = [
   { key: 'bugs', label: 'Bichos', icon: '🦋' },
   { key: 'sea', label: 'Criaturas marinas', icon: '🦑' }
 ]
+
+// Filtro de tipo actual
+const currentTypeFilter = computed(() =>
+  typeFilters.find(f => f.key === activeTypeFilter.value) || typeFilters[0]
+)
+
+// Seleccionar filtro de tipo
+const selectTypeFilter = (filterKey) => {
+  activeTypeFilter.value = filterKey
+  isMobileFilterOpen.value = false
+}
 
 /**
  * Navega entre tabs con las flechas del teclado
@@ -239,17 +272,6 @@ const timeTabClasses = (tabKey) => {
   return activeTimeTab.value === tabKey
     ? 'bg-white text-green-700 shadow-md'
     : 'text-green-600 hover:text-green-800 hover:bg-green-50'
-}
-
-/**
- * Genera las clases CSS para los botones de filtro de tipo
- * @param {string} filterKey - Clave del filtro
- * @returns {string} Clases de Tailwind
- */
-const filterButtonClasses = (filterKey) => {
-  return activeTypeFilter.value === filterKey
-    ? 'bg-[#8b6914] text-white border-[#8b6914] shadow-[0_4px_0_#5c4a1f]'
-    : 'bg-[#faf8ef] text-[#8b6914] border-[#8b6914] hover:bg-[#f0ebe0] shadow-[0_4px_0_#5c4a1f]'
 }
 
 /**
