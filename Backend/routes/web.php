@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\ArtUserController;
 use App\Http\Controllers\BugUserController;
-use App\Http\Controllers\FishUserController;
 use App\Http\Controllers\FossilUserController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ArtUserController;
 use App\Http\Controllers\SeaCreatureUserController;
+use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\FishUserController;
+use App\Http\Controllers\ProfileController;
+use App\Models\Hourly_Music;
 use App\Http\Controllers\VillagerUserController;
 use App\Http\Controllers\DashboardController;
 use App\Models\Villager;
@@ -15,21 +17,8 @@ use App\Models\Sea_Creature;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-                                               // Obtener aldeanos que cumplen años hoy (formato: día/mes)
-    $today             = now()->format('j/n'); // j = día sin cero, n = mes sin cero
-    $birthdayVillagers = Villager::where('birthday', $today)->get();
 
-    return Inertia::render('Welcome', [
-        'canLogin'          => Route::has('login'),
-        'canRegister'       => Route::has('register'),
-        'randomVillagers'   => Villager::inRandomOrder()->limit(15)->get(),
-        'birthdayVillagers' => $birthdayVillagers,
-        'fish' => Fish::all(),
-        'bugs' => Bug::all(),
-        'seaCreatures' => Sea_Creature::all(),
-    ]);
-});
+Route::get('/', WelcomeController::class);
 
 Route::get('/art', function () {
     return Inertia::render('ArtPedia');

@@ -1,17 +1,40 @@
 <script setup>
+/**
+ * @fileoverview Sección de inicio/bienvenida de ACpedia.
+ *
+ * @description Muestra la mascota Canela con un diálogo de bienvenida,
+ * un regalo interactivo que revela los cumpleaños del día, y un carrusel
+ * de aldeanos aleatorios.
+ *
+ * Datos recibidos desde Laravel vía Inertia (Welcome.vue):
+ * - villagers: Aldeanos aleatorios para el carrusel (VillagerController)
+ * - birthdayVillagers: Aldeanos que cumplen años hoy (filtrado por fecha)
+ */
+
 import { ref, computed, watch, onMounted } from 'vue';
 import confetti from 'canvas-confetti';
 import VillagerMarquee from '@/Components/VillagerMarquee.vue';
 
+/**
+ * @typedef {Object} Villager
+ * @property {number} id - ID único del aldeano
+ * @property {string} name_es - Nombre en español
+ * @property {string} species - Especie
+ * @property {string} icon - Ruta al icono del aldeano
+ * @property {string} image - Ruta a la imagen completa
+ */
+
 const props = defineProps({
-    villagers: {
-        type: Array,
-        default: () => []
-    },
-    birthdayVillagers: {
-        type: Array,
-        default: () => []
-    }
+  /** @type {Villager[]} Aldeanos aleatorios para el carrusel */
+  villagers: {
+    type: Array,
+    default: () => []
+  },
+  /** @type {Villager[]} Aldeanos que cumplen años hoy */
+  birthdayVillagers: {
+    type: Array,
+    default: () => []
+  }
 });
 
 const isVisible = ref(false);
@@ -213,10 +236,14 @@ onMounted(() => {
         </div>
 
         <!-- Carrusel de Aldeanos -->
-        <div v-if="villagers && villagers.length > 0" class="villager-marquee-section">
-            <h2 class="marquee-title">Conoce a tus vecinos</h2>
+        <aside
+          v-if="villagers && villagers.length > 0"
+          class="villager-marquee-section"
+          aria-labelledby="marquee-title"
+        >
+            <h2 id="marquee-title" class="marquee-title">Conoce a tus vecinos</h2>
             <VillagerMarquee :villagers="villagers" />
-        </div>
+        </aside>
     </section>
 </template>
 

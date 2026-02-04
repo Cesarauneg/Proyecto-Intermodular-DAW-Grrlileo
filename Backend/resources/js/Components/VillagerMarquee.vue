@@ -1,63 +1,86 @@
 <script setup>
+/**
+ * @fileoverview Carrusel infinito de aldeanos con efecto marquee.
+ * Muestra tarjetas de aldeanos en un scroll horizontal continuo.
+ *
+ * @description Los datos de aldeanos provienen de Laravel vía Inertia props
+ * en Welcome.vue (prop randomVillagers desde VillagerController).
+ *
+ * Técnica: Se duplica la lista para crear un loop infinito visual.
+ * La segunda copia está marcada con aria-hidden para accesibilidad.
+ */
+
+/**
+ * @typedef {Object} Villager
+ * @property {number} id - ID único del aldeano
+ * @property {string} name_es - Nombre en español
+ * @property {string} species - Especie del aldeano
+ * @property {string} image - URL de la imagen
+ */
+
 defineProps({
-    villagers: {
-        type: Array,
-        default: () => []
-    }
+  /** @type {Villager[]} Lista de aldeanos a mostrar */
+  villagers: {
+    type: Array,
+    default: () => []
+  }
 });
 </script>
 
 <template>
-    <section
-        v-if="villagers && villagers.length > 0"
-        class="marquee-container"
-        aria-label="Carrusel de aldeanos"
-        aria-roledescription="carrusel"
-    >
-        <div class="marquee-track" aria-live="off">
-            <!-- Primera copia de la lista -->
-            <article
-                v-for="villager in villagers"
-                :key="'a-' + villager.id"
-                class="villager-card"
-                :aria-label="`${villager.name_es}, ${villager.species}`"
-            >
-                <div class="card-image-wrapper">
-                    <img
-                        :src="villager.image"
-                        :alt="villager.name_es"
-                        class="card-image"
-                        loading="lazy"
-                    />
-                </div>
-                <div class="card-info">
-                    <h3 class="card-name">{{ villager.name_es }}</h3>
-                    <p class="card-species">{{ villager.species }}</p>
-                </div>
-            </article>
+  <section
+    v-if="villagers && villagers.length > 0"
+    class="marquee-container"
+    aria-label="Carrusel de aldeanos"
+    aria-roledescription="carrusel"
+  >
+    <ul class="marquee-track" role="list" aria-live="off">
+      <!-- Primera copia: visible para lectores de pantalla -->
+      <li
+        v-for="villager in villagers"
+        :key="'a-' + villager.id"
+        class="villager-card"
+      >
+        <article :aria-label="`${villager.name_es}, ${villager.species}`">
+          <figure class="card-image-wrapper">
+            <img
+              :src="villager.image"
+              :alt="`Imagen de ${villager.name_es}`"
+              class="card-image"
+              loading="lazy"
+            />
+          </figure>
+          <div class="card-info">
+            <h3 class="card-name">{{ villager.name_es }}</h3>
+            <p class="card-species">{{ villager.species }}</p>
+          </div>
+        </article>
+      </li>
 
-            <!-- Segunda copia para loop infinito (decorativa) -->
-            <article
-                v-for="villager in villagers"
-                :key="'b-' + villager.id"
-                class="villager-card"
-                aria-hidden="true"
-            >
-                <div class="card-image-wrapper">
-                    <img
-                        :src="villager.image"
-                        alt=""
-                        class="card-image"
-                        loading="lazy"
-                    />
-                </div>
-                <div class="card-info">
-                    <h3 class="card-name">{{ villager.name_es }}</h3>
-                    <p class="card-species">{{ villager.species }}</p>
-                </div>
-            </article>
-        </div>
-    </section>
+      <!-- Segunda copia: decorativa para loop infinito -->
+      <li
+        v-for="villager in villagers"
+        :key="'b-' + villager.id"
+        class="villager-card"
+        aria-hidden="true"
+      >
+        <article>
+          <figure class="card-image-wrapper">
+            <img
+              :src="villager.image"
+              alt=""
+              class="card-image"
+              loading="lazy"
+            />
+          </figure>
+          <div class="card-info">
+            <span class="card-name">{{ villager.name_es }}</span>
+            <span class="card-species">{{ villager.species }}</span>
+          </div>
+        </article>
+      </li>
+    </ul>
+  </section>
 </template>
 
 <style scoped>
@@ -75,6 +98,9 @@ defineProps({
     gap: 1.5rem;
     width: max-content;
     animation: marquee 30s linear infinite;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .marquee-container:hover .marquee-track,
