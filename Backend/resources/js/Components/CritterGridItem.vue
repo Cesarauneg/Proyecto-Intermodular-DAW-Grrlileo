@@ -24,6 +24,7 @@
       aria-hidden="true"
       class="w-full h-12 sm:h-14 lg:h-16 object-contain mb-1"
       loading="lazy"
+      decoding="async"
     />
 
     <!-- Nombre -->

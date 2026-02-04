@@ -46,8 +46,8 @@
       </div>
     </nav>
 
-    <!-- Botón móvil para filtros de tipo -->
-    <div class="flex justify-center mb-4 lg:hidden">
+    <!-- Botón móvil para filtros de tipo (oculto si se controla desde header) -->
+    <div v-if="!props.activeSubSection" class="flex justify-center mb-4 lg:hidden">
       <BackButton
         :label="currentTypeFilter.label"
         :icon="currentTypeFilter.icon"
@@ -57,8 +57,9 @@
       />
     </div>
 
-    <!-- Filtros por tipo de criatura -->
+    <!-- Filtros por tipo de criatura (ocultos si se controla desde header) -->
     <nav
+      v-if="!props.activeSubSection"
       :class="[
         'justify-center mb-6 px-4',
         isMobileFilterOpen ? 'flex' : 'hidden lg:flex'
@@ -107,14 +108,13 @@
       <!-- Grid de criaturas -->
       <ul
         v-if="filteredCritters.length > 0"
-        class="grid gap-6 flex-1 overflow-y-auto py-4 px-4 max-h-[calc(100vh_-_350px)] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]"
+        class="grid gap-4 sm:gap-6 flex-1 overflow-y-auto py-4 px-2 sm:px-4 max-h-[calc(100vh_-_350px)] grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         role="list"
         aria-label="Lista de criaturas"
       >
         <li
           v-for="critter in filteredCritters"
           :key="`${critter.type}-${critter.id}`"
-          style="max-width: 350px;"
         >
           <CritterCard
             :critter="critter"
@@ -150,15 +150,15 @@
       <dl class="flex flex-wrap gap-4 text-sm text-green-700">
         <div class="flex items-center gap-1">
           <dt class="sr-only">Disponibles ahora:</dt>
-          <dd><span aria-hidden="true">🟢</span> Disponibles ahora: {{ availableNow.length }}</dd>
+          <dd><span aria-hidden="true">🟢</span> Disponibles ahora: {{ filteredAvailableNow.length }}</dd>
         </div>
         <div class="flex items-center gap-1">
           <dt class="sr-only">Se van este mes:</dt>
-          <dd><span aria-hidden="true">🔴</span> Se van este mes: {{ leavingThisMonth.length }}</dd>
+          <dd><span aria-hidden="true">🔴</span> Se van este mes: {{ filteredLeavingThisMonth.length }}</dd>
         </div>
         <div class="flex items-center gap-1">
           <dt class="sr-only">Recien llegados:</dt>
-          <dd><span aria-hidden="true">🆕</span> Recien llegados: {{ newArrivals.length }}</dd>
+          <dd><span aria-hidden="true">🆕</span> Recien llegados: {{ filteredNewArrivals.length }}</dd>
         </div>
       </dl>
     </aside>
@@ -174,7 +174,7 @@
  * Laravel y las muestra filtradas por disponibilidad mensual y horaria.
  */
 
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import CritterCard from '@/Components/CritterCard.vue'
 import BackButton from '@/Components/Base/BackButton.vue'
 
@@ -209,6 +209,11 @@ const props = defineProps({
   seaCreatures: {
     type: Array,
     default: () => []
+  },
+  /** Subsección seleccionada desde el header */
+  activeSubSection: {
+    type: String,
+    default: null
   }
 })
 
@@ -225,7 +230,6 @@ const monthName = monthNames[currentMonth - 1]
 
 // Estado reactivo
 const activeTimeTab = ref('available')
-const activeTypeFilter = ref('all')
 const isMobileFilterOpen = ref(false)
 
 // Configuracion de pestanas
@@ -241,6 +245,15 @@ const typeFilters = [
   { key: 'bugs', label: 'Bichos', icon: '🦋' },
   { key: 'sea', label: 'Criaturas marinas', icon: '🦑' }
 ]
+
+const activeTypeFilter = ref(props.activeSubSection || 'all')
+
+// Sincronizar con prop externa (filtro de tipo)
+watch(() => props.activeSubSection, (newVal) => {
+  if (newVal && typeFilters.some(f => f.key === newVal)) {
+    activeTypeFilter.value = newVal
+  }
+})
 
 // Filtro de tipo actual
 const currentTypeFilter = computed(() =>
@@ -334,6 +347,11 @@ const leavingThisMonth = computed(() => allCritters.value.filter(isLeavingThisMo
 /** Criaturas nuevas este mes */
 const newArrivals = computed(() => allCritters.value.filter(isNewThisMonth))
 
+/** Listas filtradas por tipo para los contadores */
+const filteredAvailableNow = computed(() => filterByType(availableNow.value))
+const filteredLeavingThisMonth = computed(() => filterByType(leavingThisMonth.value))
+const filteredNewArrivals = computed(() => filterByType(newArrivals.value))
+
 /**
  * Filtra criaturas por tipo
  * @param {Critter[]} critters - Lista de criaturas
@@ -373,9 +391,9 @@ const filteredCritters = computed(() => {
  */
 const getCountForTab = (tabKey) => {
   switch (tabKey) {
-    case 'available': return availableNow.value.length
-    case 'leaving': return leavingThisMonth.value.length
-    case 'new': return newArrivals.value.length
+    case 'available': return filteredAvailableNow.value.length
+    case 'leaving': return filteredLeavingThisMonth.value.length
+    case 'new': return filteredNewArrivals.value.length
     default: return 0
   }
 }

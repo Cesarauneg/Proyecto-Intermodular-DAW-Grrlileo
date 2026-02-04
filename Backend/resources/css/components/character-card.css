@@ -12,6 +12,9 @@
 
   position: relative;
   cursor: pointer;
+  width: 100%;
+  min-width: 200px;
+  max-width: 240px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -117,7 +120,7 @@
 .ac-card__header {
   background: var(--header-bg);
   border-radius: 10px 10px 0 0;
-  padding: 10px 12px;
+  padding: 8px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -136,7 +139,7 @@
 
 .ac-card__image-container {
   position: relative;
-  margin: 8px 4px;
+  margin: 6px 4px;
   border-radius: 12px;
   overflow: hidden;
   border: 3px solid #c5e1a5;
@@ -155,16 +158,16 @@
 .ac-card__image {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: contain;
-  padding: 10px;
+  padding: 8px;
   filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.15));
 }
 
 .ac-card__footer {
   background: linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%);
   border-radius: 0 0 10px 10px;
-  padding: 10px 12px;
+  padding: 8px 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -198,4 +201,88 @@
 @keyframes ac-card-sway {
   0%, 100% { transform: rotate(-5deg); }
   50% { transform: rotate(5deg); }
+}
+
+/* ---- Responsive Mobile ---- */
+@media (max-width: 480px) {
+  .ac-card__frame {
+    border-width: 3px;
+    padding: 5px;
+    border-radius: 12px;
+  }
+
+  .ac-card__header {
+    padding: 6px 8px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .ac-card__name {
+    font-size: 0.9rem;
+  }
+
+  .ac-card__image-container {
+    margin: 4px 2px;
+    border-radius: 8px;
+    border-width: 2px;
+  }
+
+  .ac-card__image {
+    height: 100px;
+    padding: 5px;
+  }
+
+  .ac-card__footer {
+    padding: 6px 8px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .ac-card__personality,
+  .ac-card__species {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+
+  .ac-card__decoration .leaf {
+    font-size: 1rem;
+  }
+
+  .ac-card:hover,
+  .ac-card:focus-visible {
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .ac-card__frame {
+    padding: 4px;
+  }
+
+  .ac-card__header {
+    padding: 4px 6px;
+  }
+
+  .ac-card__name {
+    font-size: 0.8rem;
+  }
+
+  .ac-card__image {
+    height: 80px;
+    padding: 4px;
+  }
+
+  .ac-card__footer {
+    padding: 4px 6px;
+  }
+
+  .ac-card__personality,
+  .ac-card__species {
+    font-size: 0.65rem;
+    padding: 2px 4px;
+  }
+
+  .ac-card__decoration .leaf {
+    font-size: 0.9rem;
+  }
 }

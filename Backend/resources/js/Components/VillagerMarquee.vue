@@ -48,6 +48,7 @@ defineProps({
               :alt="`Imagen de ${villager.name_es}`"
               class="card-image"
               loading="lazy"
+              decoding="async"
             />
           </figure>
           <div class="card-info">
@@ -71,6 +72,7 @@ defineProps({
               alt=""
               class="card-image"
               loading="lazy"
+              decoding="async"
             />
           </figure>
           <div class="card-info">

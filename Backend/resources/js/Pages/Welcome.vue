@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, usePage, router } from '@inertiajs/vue3';
 import { useClickOutside } from '@/Composables/useClickOutside';
 import { useHourlyMusic } from '@/Composables/useHourlyMusic';
 import InicioSection from './Sections/InicioSection.vue';
@@ -74,33 +74,123 @@ const mobileNavRef = ref(null);
 useClickOutside(mobileNavRef, () => isMobileNavOpen.value = false);
 
 function selectTab(key) {
-  activeTab.value = key;
+  // Si es un item con dropdown, seleccionar el primer hijo automáticamente
+  const item = navItems.value.find(i => i.key === key);
+  if (item?.hasDropdown && item.children?.length > 0) {
+    const firstChild = item.children[0];
+    activeTab.value = firstChild.section;
+    activeSubSection.value = firstChild.key;
+  } else {
+    activeTab.value = key;
+    activeSubSection.value = null;
+  }
   isMobileNavOpen.value = false;
+  activeDropdown.value = null;
+}
+
+const activeDropdown = ref(null);
+const dropdownCloseTimeout = ref(null);
+
+function selectSubSection(child) {
+  activeTab.value = child.section;
+  activeSubSection.value = child.key;
+  isMobileNavOpen.value = false;
+  activeDropdown.value = null;
+  clearDropdownTimeout();
+}
+
+function toggleDropdown(key) {
+  activeDropdown.value = activeDropdown.value === key ? null : key;
+}
+
+function handleDropdownClick(item) {
+  // Toggle del dropdown (tanto en móvil como en desktop)
+  activeDropdown.value = activeDropdown.value === item.key ? null : item.key;
+}
+
+function clearDropdownTimeout() {
+  if (dropdownCloseTimeout.value) {
+    clearTimeout(dropdownCloseTimeout.value);
+    dropdownCloseTimeout.value = null;
+  }
+}
+
+function handleDropdownEnter(itemKey) {
+  clearDropdownTimeout();
+  activeDropdown.value = itemKey;
+}
+
+function handleDropdownLeave() {
+  clearDropdownTimeout();
+  dropdownCloseTimeout.value = setTimeout(() => {
+    activeDropdown.value = null;
+  }, 300); // 300ms delay antes de cerrar
 }
 
 // ========== TABS NAVIGATION ==========
-const tabs = computed(() => {
-    const baseTabs = [
+const navItems = computed(() => {
+    const items = [
         { key: 'inicio', label: 'Inicio' },
-        { key: 'critterpedia', label: 'Critterpedia' },
-        { key: 'temporada', label: 'Temporada' },
+        {
+            key: 'critterpedia',
+            label: 'Critterpedia',
+            hasDropdown: true,
+            children: [
+                { key: 'bichos', label: 'Bichos', icon: '🦋', section: 'critterpedia' },
+                { key: 'peces', label: 'Peces', icon: '🐟', section: 'critterpedia' },
+                { key: 'marinos', label: 'Criaturas marinas', icon: '🦑', section: 'critterpedia' },
+                { key: 'fosiles', label: 'Fósiles', icon: '🦴', section: 'critterpedia' },
+                { key: 'arte', label: 'Arte', icon: '🎨', section: 'critterpedia' },
+            ]
+        },
+        {
+            key: 'temporada',
+            label: 'Temporada',
+            hasDropdown: true,
+            children: [
+                { key: 'all', label: 'Todos', icon: '🌿', section: 'temporada' },
+                { key: 'fish', label: 'Peces', icon: '🐟', section: 'temporada' },
+                { key: 'bugs', label: 'Bichos', icon: '🦋', section: 'temporada' },
+                { key: 'sea', label: 'Criaturas marinas', icon: '🦑', section: 'temporada' },
+            ]
+        },
         { key: 'vecinos', label: 'Vecinos' },
     ];
 
-    // Solo añadimos Estadísticas y museo si el usuario existe
     if (user.value) {
-        baseTabs.push({ key: 'estadisticas', label: 'Estadísticas' });
-        baseTabs.push({ key: 'museo', label: 'Mi museo' });
+        items.push({ key: 'estadisticas', label: 'Estadísticas' });
+        items.push({
+            key: 'museo',
+            label: 'Mi museo',
+            hasDropdown: true,
+            children: [
+                { key: 'bugs', label: 'Bichos', icon: '🦋', section: 'museo', count: props.stats?.bichos, max: props.maximos?.bichos },
+                { key: 'fish', label: 'Peces', icon: '🐟', section: 'museo', count: props.stats?.peces, max: props.maximos?.peces },
+                { key: 'fossils', label: 'Fósiles', icon: '🦴', section: 'museo', count: props.stats?.fosiles, max: props.maximos?.fosiles },
+                { key: 'sea_creatures', label: 'Mar', icon: '🦑', section: 'museo', count: props.stats?.criaturas, max: props.maximos?.criaturas },
+                { key: 'art', label: 'Arte', icon: '🎨', section: 'museo', count: props.stats?.arte, max: props.maximos?.arte },
+                { key: 'villagers', label: 'Vecinos', icon: '🏠', section: 'museo' },
+            ]
+        });
     }
-    return baseTabs;
+    return items;
 });
 
 const activeTab = ref('inicio');
+const activeSubSection = ref(null);
 
 //Si el usuario cierra sesión estando en estadísticas, lo mandamos a inicio
 watch(user, (newUser) => {
     if (!newUser && activeTab.value === 'estadisticas') {
         activeTab.value = 'inicio';
+    }
+});
+
+// Recargar estadísticas cuando se cambia a la tab de estadísticas o museo
+watch(activeTab, (newTab, oldTab) => {
+    if ((newTab === 'estadisticas' || newTab === 'museo') && user.value) {
+        // Solo recargar stats y maximos para no recargar todo
+        router.reload({ only: ['stats', 'maximos'] });
     }
 });
 
@@ -146,8 +236,8 @@ function handlePageInteraction() {
     <Head title="Inicio" />
 
   <div class="landing" @click.once="handlePageInteraction">
-    <!-- ========== HEADER ========== -->
-    <header class="landing-header">
+    <!-- ========== HEADER UNIFICADO ========== -->
+    <header class="landing-header" ref="mobileNavRef">
       <div class="header-inner">
         <!-- Logo -->
         <div class="logo">
@@ -155,10 +245,73 @@ function handlePageInteraction() {
             src="/images/logos/logo.png"
             alt="Canela`s Desk"
             class="logo-img"
-            width="160"
-            height="90"
+            width="140"
+            height="80"
           />
         </div>
+
+        <!-- Mobile Nav Trigger -->
+        <button type="button" class="mobile-nav-trigger" @click.stop="isMobileNavOpen = !isMobileNavOpen">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+
+        <!-- Nav Tabs -->
+        <nav class="section-nav" :class="{ 'is-open': isMobileNavOpen }" role="navigation" aria-label="Navegación principal">
+          <template v-for="item in navItems" :key="item.key">
+            <!-- Item con dropdown -->
+            <div
+              v-if="item.hasDropdown"
+              class="nav-item-dropdown"
+              :class="{ 'is-active': activeDropdown === item.key }"
+              @mouseenter="!isMobileNavOpen && handleDropdownEnter(item.key)"
+              @mouseleave="!isMobileNavOpen && handleDropdownLeave()"
+            >
+              <button
+                type="button"
+                class="nav-tab has-dropdown"
+                :class="{ active: activeTab === item.key }"
+                @click.stop="handleDropdownClick(item)"
+              >
+                {{ item.label }}
+                <svg class="dropdown-arrow" width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+                  <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <ul class="nav-dropdown">
+                <li v-for="child in item.children" :key="child.key">
+                  <button
+                    type="button"
+                    class="nav-dropdown-item"
+                    :class="{ active: activeTab === child.section && activeSubSection === child.key }"
+                    @click.stop="selectSubSection(child)"
+                  >
+                    <span class="dropdown-icon" aria-hidden="true">{{ child.icon }}</span>
+                    {{ child.label }}
+                    <span
+                      v-if="child.count !== undefined"
+                      class="dropdown-count"
+                      :class="{ 'dropdown-count--complete': child.count === child.max }"
+                    >
+                      {{ child.count }}/{{ child.max }}
+                    </span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <!-- Item simple -->
+            <button
+              v-else
+              type="button"
+              class="nav-tab"
+              :class="{ active: activeTab === item.key }"
+              @click.stop="selectTab(item.key)"
+            >
+              {{ item.label }}
+            </button>
+          </template>
+        </nav>
 
         <!-- Auth -->
         <div class="auth-area" ref="authMenuRef">
@@ -169,10 +322,10 @@ function handlePageInteraction() {
             aria-haspopup="true"
           >
             <template v-if="user">
-              Hola, {{ user.name }}
+                Hola, {{ user.name }}
             </template>
             <template v-else>
-              Identifícate
+                Identifícate
             </template>
             <svg class="chevron" :class="{ open: authMenuOpen }" width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
@@ -192,49 +345,18 @@ function handlePageInteraction() {
               </template>
               <!-- Authenticated menu -->
               <template v-else>
-                  <li role="none">
-                      <Link :href="route('dashboard')" class="dropdown-item" role="menuitem">Dashboard</Link>
-                  </li>
-                  <li role="none">
-                      <Link :href="route('profile.edit')" class="dropdown-item" role="menuitem">Perfil</Link>
-                  </li>
-                  <li role="none">
-                      <Link :href="route('catalogo')" class="dropdown-item" role="menuitem">Colección</Link>
-                  </li>
-                  <li role="none">
-                      <Link :href="route('logout')" method="post" as="button" class="dropdown-item dropdown-item--danger" role="menuitem">Cerrar sesión</Link>
-                  </li>
+                <li role="none">
+                  <Link :href="route('profile.edit')" class="dropdown-item" role="menuitem">Perfil</Link>
+                </li>
+                <li role="none">
+                  <Link :href="route('logout')" method="post" as="button" class="dropdown-item dropdown-item--danger" role="menuitem">Cerrar sesión</Link>
+                </li>
               </template>
             </ul>
           </Transition>
         </div>
       </div>
     </header>
-
-    <!-- ========== NAV TABS ========== -->
-        <div class="section-nav-wrapper" ref="mobileNavRef">
-            <!-- Mobile Nav Trigger -->
-            <button class="mobile-nav-trigger" @click="isMobileNavOpen = !isMobileNavOpen">
-                Menú
-            </button>
-
-            <!-- Nav -->
-            <nav class="section-nav" :class="{ 'is-open': isMobileNavOpen }" role="tablist" aria-label="Secciones del sitio">
-                <button
-                    v-for="tab in tabs"
-                    :key="tab.key"
-                    class="nav-tab"
-                    :class="{ active: activeTab === tab.key }"
-                    @click="selectTab(tab.key)"
-                    role="tab"
-                    :aria-selected="activeTab === tab.key"
-                    :aria-controls="`tabpanel-${tab.key}`"
-                    :id="`tab-${tab.key}`"
-                >
-                    {{ tab.label }}
-                </button>
-            </nav>
-        </div>
 
 
     <!-- ========== CONTENT ========== -->
@@ -256,6 +378,7 @@ function handlePageInteraction() {
             :sea-creatures="props.seaCreatures"
             :stats="props.stats"
             :maximos="props.maximos"
+            :active-sub-section="activeSubSection"
           />
         </section>
       </Transition>
@@ -290,10 +413,7 @@ function handlePageInteraction() {
         </figcaption>
       </figure>
 
-      <!-- Indicador de hora actual -->
-      <span class="hour-indicator" aria-label="Hora actual de la música">
-        {{ String(currentHour).padStart(2, '0') }}:00
-      </span>
+
 
       <!-- Reproductor de audio -->
       <AudioPlayer
@@ -337,4 +457,4 @@ function handlePageInteraction() {
   </div>
 </template>
 
-<style scoped src="@/../css/pages/welcome.css"></style>
+<style src="@/../css/pages/welcome.css"></style>

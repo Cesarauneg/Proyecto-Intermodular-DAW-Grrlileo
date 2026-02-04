@@ -10,8 +10,8 @@
       </p>
     </header>
 
-    <!-- Sub-navegación -->
-    <nav class="flex justify-center mb-6 px-4" role="tablist" aria-label="Categorías de Critterpedia">
+    <!-- Sub-navegación (oculta si se controla desde header) -->
+    <nav v-if="!props.activeSubSection" class="flex justify-center mb-6 px-4" role="tablist" aria-label="Categorías de Critterpedia">
       <div class="inline-flex flex-wrap justify-center gap-2 rounded-xl bg-[#faf8ef] p-2 shadow-[0_4px_0_#5c4a1f] border-3 border-[#8b6914]">
         <button
           v-for="tab in tabs"
@@ -185,7 +185,7 @@
  * - Estado de filtros que se resetean al cambiar de tab
  */
 
-import { ref, reactive, computed, markRaw } from 'vue'
+import { ref, reactive, computed, markRaw, watch } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import SearchBar from '@/Components/SearchBar.vue'
 import BugPedia from '@/Pages/BugPedia.vue'
@@ -193,6 +193,16 @@ import FishPedia from '@/Pages/FishPedia.vue'
 import SeaCreaturePedia from '@/Pages/SeaCreaturePedia.vue'
 import FossilPedia from '@/Pages/FossilPedia.vue'
 import ArtPedia from '@/Pages/ArtPedia.vue'
+
+// =============================================
+// PROPS
+// =============================================
+const props = defineProps({
+  activeSubSection: {
+    type: String,
+    default: null
+  }
+})
 
 // =============================================
 // AUTH
@@ -224,7 +234,7 @@ const tabs = [
 // =============================================
 // ESTADO REACTIVO
 // =============================================
-const activeTab = ref('bichos')
+const activeTab = ref(props.activeSubSection || 'bichos')
 const searchQuery = ref('')
 const bugLocations = ref([])
 const fishLocations = ref([])
@@ -237,6 +247,15 @@ const filters = reactive({
   rarity: '',
   price: '',
   speed: ''
+})
+
+// Sincronizar con prop externa
+watch(() => props.activeSubSection, (newVal) => {
+  if (newVal && tabs.some(t => t.key === newVal)) {
+    activeTab.value = newVal
+    searchQuery.value = ''
+    Object.keys(filters).forEach(key => filters[key] = '')
+  }
 })
 
 // =============================================

@@ -9,6 +9,7 @@ use App\Models\Bug;
 use App\Models\Sea_Creature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class WelcomeController extends Controller
@@ -40,11 +41,11 @@ class WelcomeController extends Controller
          // Stats del museo
 
         $stats = $user ? [
-            'peces'     => $user->fish()->where('donated_to_museum', true)->count(),
-            'bichos'    => $user->bugs()->where('donated_to_museum', true)->count(),
-            'arte'      => $user->art()->where('donated_to_museum', true)->count(),
-            'fosiles'   => $user->fossils()->where('donated_to_museum', true)->count(),
-            'criaturas' => $user->seaCreatures()->where('donated_to_museum', true)->count(),
+            'peces'     => $user->fish()->wherePivot('donated_to_museum', true)->count(),
+            'bichos'    => $user->bugs()->wherePivot('donated_to_museum', true)->count(),
+            'arte'      => $user->art()->wherePivot('donated_to_museum', true)->count(),
+            'fosiles'   => $user->fossils()->wherePivot('donated_to_museum', true)->count(),
+            'criaturas' => $user->seaCreatures()->wherePivot('donated_to_museum', true)->count(),
         ] : null;
 
         $maximos = [
@@ -63,10 +64,16 @@ class WelcomeController extends Controller
             'birthdayVillagers' => $birthdayVillagers,
             'hourlyMusic'       => $hourlyMusic,
 
-            // Colecciones
-            'fish'         => Fish::all(),
-            'bugs'         => Bug::all(),
-            'seaCreatures' => Sea_Creature::all(),
+            // Colecciones con caché (10 minutos)
+            'fish'         => Cache::remember('welcome_fish', 600, fn() =>
+                Fish::select(['id', 'name_es', 'name_en', 'icon', 'price', 'location', 'month_array_northern', 'time_array', 'is_all_day'])->get()
+            ),
+            'bugs'         => Cache::remember('welcome_bugs', 600, fn() =>
+                Bug::select(['id', 'name_es', 'name_en', 'icon', 'price', 'location', 'month_array_northern', 'time_array', 'is_all_day'])->get()
+            ),
+            'seaCreatures' => Cache::remember('welcome_sea_creatures', 600, fn() =>
+                Sea_Creature::select(['id', 'name_es', 'name_en', 'icon', 'price', 'month_array_northern', 'time_array', 'is_all_day'])->get()
+            ),
 
             // Estadisticas del Museo
             'stats'   => $stats,
@@ -98,11 +105,11 @@ class WelcomeController extends Controller
         $user = auth()->user();
 
         $stats = [
-            'peces'     => $user->fish()->where('donated_to_museum', true)->count(),
-            'bichos'    => $user->bugs()->where('donated_to_museum', true)->count(),
-            'arte'      => $user->art()->where('donated_to_museum', true)->count(),
-            'fosiles'   => $user->fossils()->where('donated_to_museum', true)->count(),
-            'criaturas' => $user->seaCreatures()->where('donated_to_museum', true)->count(),
+            'peces'     => $user->fish()->wherePivot('donated_to_museum', true)->count(),
+            'bichos'    => $user->bugs()->wherePivot('donated_to_museum', true)->count(),
+            'arte'      => $user->art()->wherePivot('donated_to_museum', true)->count(),
+            'fosiles'   => $user->fossils()->wherePivot('donated_to_museum', true)->count(),
+            'criaturas' => $user->seaCreatures()->wherePivot('donated_to_museum', true)->count(),
         ];
 
         $totalesMaximos = [

@@ -31,6 +31,7 @@
           :alt="`Imagen de ${character.name_es}, un ${character.species}`"
           class="ac-card__image"
           loading="lazy"
+          decoding="async"
         />
       </figure>
 

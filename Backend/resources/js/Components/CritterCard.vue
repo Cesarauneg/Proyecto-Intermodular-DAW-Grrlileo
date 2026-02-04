@@ -47,6 +47,7 @@
             :alt="`Icono de ${critter.name_es}`"
             class="relative w-20 h-20 object-contain drop-shadow-lg transform hover:scale-110 transition-transform duration-300"
             loading="lazy"
+            decoding="async"
           />
         </div>
         <figcaption class="sr-only">{{ critter.name_es }}</figcaption>

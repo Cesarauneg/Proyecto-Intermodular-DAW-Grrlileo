@@ -58,7 +58,7 @@ class User extends Authenticatable
 
     public function fish()
     {
-        return $this->belongsToMany(Fish::class)
+        return $this->belongsToMany(Fish::class, 'fish_user')
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
@@ -72,14 +72,14 @@ class User extends Authenticatable
 
     public function fossils()
     {
-        return $this->belongsToMany(Fossil::class)
+        return $this->belongsToMany(Fossil::class, 'fossil_user')
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
 
     public function art()
     {
-        return $this->belongsToMany(Art::class)
+        return $this->belongsToMany(Art::class, 'art_user')
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }

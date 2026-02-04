@@ -236,3 +236,139 @@
   0%, 100% { transform: rotate(-10deg); }
   50% { transform: rotate(10deg); }
 }
+
+/* ---- Responsive Mobile ---- */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .ac-modal {
+    max-width: 100%;
+  }
+
+  .ac-modal__frame {
+    border-width: 3px;
+    padding: 6px;
+    border-radius: 16px;
+  }
+
+  .ac-modal__close {
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+
+  .ac-modal__header {
+    padding: 10px 12px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .ac-modal__name {
+    font-size: 1.15rem;
+  }
+
+  .ac-modal__image-container {
+    margin: 6px 4px;
+    border-radius: 10px;
+    border-width: 2px;
+  }
+
+  .ac-modal__image {
+    height: 140px;
+    padding: 10px;
+  }
+
+  .ac-modal__quote {
+    margin: 0 4px 6px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    gap: 8px;
+  }
+
+  .ac-modal__quote-icon {
+    font-size: 1rem;
+  }
+
+  .ac-modal__quote p {
+    font-size: 0.85rem;
+  }
+
+  .ac-modal__info {
+    margin: 0 4px 6px;
+    padding: 8px;
+    border-radius: 10px;
+  }
+
+  .ac-modal__info-row {
+    padding: 6px 0;
+    gap: 8px;
+  }
+
+  .ac-modal__info-icon {
+    font-size: 0.9rem;
+    width: 24px;
+  }
+
+  .ac-modal__info-label {
+    font-size: 0.75rem;
+    width: 90px;
+  }
+
+  .ac-modal__info-value {
+    font-size: 0.8rem;
+  }
+
+  .ac-modal__footer {
+    padding: 8px;
+    gap: 16px;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .ac-modal__footer .leaf {
+    font-size: 1.1rem;
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .modal-overlay {
+    padding: 6px;
+  }
+
+  .ac-modal__frame {
+    padding: 4px;
+  }
+
+  .ac-modal__header {
+    padding: 8px 10px;
+  }
+
+  .ac-modal__name {
+    font-size: 1rem;
+  }
+
+  .ac-modal__image {
+    height: 120px;
+    padding: 8px;
+  }
+
+  .ac-modal__quote {
+    padding: 6px 10px;
+  }
+
+  .ac-modal__quote p {
+    font-size: 0.8rem;
+  }
+
+  .ac-modal__info-label {
+    width: 80px;
+    font-size: 0.7rem;
+  }
+
+  .ac-modal__info-value {
+    font-size: 0.75rem;
+  }
+}

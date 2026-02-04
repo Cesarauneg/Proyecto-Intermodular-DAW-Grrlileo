@@ -16,8 +16,8 @@
             </p>
         </header>
 
-        <!-- Botón móvil para ver categorías -->
-        <div class="flex justify-center mb-4 lg:hidden">
+        <!-- Botón móvil para ver categorías (oculto si se controla desde header) -->
+        <div v-if="!props.activeSubSection" class="flex justify-center mb-4 lg:hidden">
             <BackButton
                 :label="currentCategory.name"
                 :icon="currentCategory.icon"
@@ -27,8 +27,9 @@
             />
         </div>
 
-        <!-- Nav de categorías -->
+        <!-- Nav de categorías (oculto si se controla desde header) -->
         <nav
+            v-if="!props.activeSubSection"
             :class="[
                 'justify-center mb-6 px-4',
                 isMobileMenuOpen ? 'flex' : 'hidden lg:flex'
@@ -77,35 +78,38 @@
                 <p class="text-[var(--ac-text-light)] opacity-70">No has registrado ningún {{ currentCategory.singular }} todavía.</p>
             </div>
 
-            <div v-else class="px-4">
+            <div v-else class="px-1 sm:px-2 md:px-4">
                 <TransitionGroup
                     name="grid-fade"
                     tag="div"
-                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 pb-4"
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 pb-4"
                 >
                     <article v-for="item in displayedItems" :key="item.id"
                         @click="selectedItem = item"
-                        class="ac-card p-0 overflow-hidden group hover:border-[var(--ac-green)] transition-all duration-300 cursor-pointer bg-white"
+                        class="overflow-hidden group transition-all duration-300 cursor-pointer bg-white rounded-lg sm:rounded-xl border border-gray-200 hover:border-green-400 shadow-sm hover:shadow-md"
+                        style="padding: 0; max-width: 100%;"
                     >
-                        <div class="aspect-square p-4 bg-[var(--ac-bg-primary)] flex items-center justify-center relative overflow-hidden">
+                        <div class="aspect-square p-1 sm:p-2 md:p-3 bg-[var(--ac-bg-primary)] flex items-center justify-center relative overflow-hidden">
                             <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-tr from-[var(--ac-green-light)]/20 to-transparent"></div>
                             <img :src="item.icon || item.image"
                                 :alt="item.name_es"
-                                class="w-full h-full object-contain drop-shadow-md transform group-hover:scale-110 transition-transform duration-500" />
+                                class="w-full h-full object-contain drop-shadow-sm transform group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                                decoding="async" />
                         </div>
 
-                        <div class="p-3 text-center border-t-2 border-[var(--ac-bg-secondary)]">
-                            <h3 class="font-black text-xs sm:text-sm text-[var(--ac-text-primary)] truncate uppercase tracking-tight">
+                        <div class="p-1 sm:p-1.5 md:p-2 text-center border-t border-gray-200">
+                            <h3 class="font-bold text-[9px] sm:text-[10px] md:text-xs text-gray-800 truncate uppercase tracking-tight leading-tight">
                                 {{ capitalize(item.name_es || item.name_en || item.name) }}
                             </h3>
-                            
-                            <div v-if="activeCategory === 'villagers'" class="mt-1">
-                                <span class="text-[10px] bg-[var(--ac-blue-light)] text-[var(--ac-blue-dark)] px-2 py-0.5 rounded-full font-bold">
+
+                            <div v-if="activeCategory === 'villagers'" class="mt-0.5">
+                                <span class="text-[7px] sm:text-[8px] bg-blue-100 text-blue-800 px-1 py-0.5 rounded-full font-bold">
                                     {{ item.personality }}
                                 </span>
                             </div>
-                            <div v-else class="flex items-center justify-center gap-1 mt-1 text-[var(--ac-gold-bright)]">
-                                <span class="text-xs font-black">💰 {{ item.price || item.buy_price || 0 }}</span>
+                            <div v-else class="flex items-center justify-center gap-0.5 mt-0.5 text-yellow-600">
+                                <span class="text-[8px] sm:text-[9px] font-bold">💰 {{ item.price || item.buy_price || 0 }}</span>
                             </div>
                         </div>
                     </article>
@@ -123,22 +127,21 @@
 
         <Teleport to="body">
             <Transition name="fade">
-                <div v-if="selectedItem" class="fixed inset-0 bg-[var(--ac-text-primary)]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div class="relative max-w-2xl w-full">
-                        <button @click="selectedItem = null" 
-                            class="absolute -top-12 right-0 text-white font-black flex items-center gap-2 hover:scale-110 transition-transform">
-                            CERRAR ✕
-                        </button>
-                        
-                        <CharacterModal v-if="activeCategory === 'villagers'" 
+                <div
+                    v-if="selectedItem"
+                    class="fixed inset-0 bg-[var(--ac-text-primary)]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    @click="selectedItem = null"
+                >
+                    <div class="relative max-w-2xl w-full" @click.stop>
+                        <CharacterModal v-if="activeCategory === 'villagers'"
                             :character="selectedItem"
                             @close="selectedItem = null" />
 
-                        <CritterDetail v-else 
-                            :critter="selectedItem" 
-                            :is-available="false" 
+                        <CritterDetail v-else
+                            :critter="selectedItem"
+                            :is-available="false"
                             :is-in-museum="true"
-                            :museum-icon-url="'/icons/museum.png'" 
+                            :museum-icon-url="'/icons/museum.png'"
                             :show-museum-button="false"
                             :is-museum-mode="true" />
                     </div>
@@ -149,15 +152,23 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { capitalize } from '@/Utils/formatters.js'
 import CritterDetail from '@/Components/CritterDetail.vue'
 import CharacterModal from '@/Components/CharacterModal.vue'
 import Pagination from '@/Components/Pagination.vue'
 import BackButton from '@/Components/Base/BackButton.vue'
 
+// --- PROPS ---
+const props = defineProps({
+  activeSubSection: {
+    type: String,
+    default: null
+  }
+})
+
 // --- ESTADO ---
-const activeCategory = ref('bugs')
+const activeCategory = ref(props.activeSubSection || 'bugs')
 const selectedItem = ref(null)
 const initialLoading = ref(true)
 const isMobileMenuOpen = ref(false)
@@ -175,6 +186,14 @@ const categories = ref([
     { id: 'art', name: 'Arte', icon: '🎨', emptyIcon: '🎨', singular: 'obra de arte', endpoint: '/user/art', count: 0, items: null },
     { id: 'villagers', name: 'Vecinos', icon: '🏠', emptyIcon: '🏠', singular: 'vecino', endpoint: '/user/villagers', count: 0, items: null }
 ])
+
+// Sincronizar con prop externa
+watch(() => props.activeSubSection, (newVal) => {
+  if (newVal && categories.value.some(c => c.id === newVal)) {
+    activeCategory.value = newVal
+    currentPage.value = 1
+  }
+})
 
 // --- CARGAR TODOS LOS DATOS AL INICIO ---
 const loadCategoryData = async (cat) => {

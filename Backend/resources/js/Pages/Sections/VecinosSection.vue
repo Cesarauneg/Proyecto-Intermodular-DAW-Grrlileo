@@ -55,23 +55,23 @@
     <!-- LOADING -->
     <div
       v-if="loading && !characters.length"
-      class="grid gap-6 overflow-y-auto py-4 max-h-[calc(100vh_-_250px)] px-4"
-      style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"
+      class="grid gap-4 sm:gap-5 md:gap-6 overflow-y-auto py-4 max-h-[calc(100vh_-_250px)] px-2 sm:px-4 justify-center"
+      style="grid-template-columns: repeat(auto-fill, minmax(200px, 240px));"
       aria-busy="true"
       aria-label="Cargando aldeanos"
     >
-      <div v-for="i in 12" :key="i" class="h-64 bg-gray-100 animate-pulse rounded-xl"></div>
+      <div v-for="i in 12" :key="i" class="w-full h-64 bg-gray-100 animate-pulse rounded-xl"></div>
     </div>
 
     <!-- GRID -->
     <ul
       v-else-if="characters.length"
-      class="grid gap-6 overflow-y-auto py-4 max-h-[calc(100vh_-_250px)] px-4"
-      style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"
+      class="grid gap-4 sm:gap-5 md:gap-6 overflow-y-auto py-4 max-h-[calc(100vh_-_250px)] px-2 sm:px-4 justify-center"
+      style="grid-template-columns: repeat(auto-fill, minmax(200px, 240px));"
       role="list"
       aria-label="Lista de aldeanos"
     >
-      <li v-for="char in characters" :key="char.id" style="max-width: 300px;">
+      <li v-for="char in characters" :key="char.id">
         <CharacterCard
           :character="char"
           :is-authenticated="isAuthenticated"

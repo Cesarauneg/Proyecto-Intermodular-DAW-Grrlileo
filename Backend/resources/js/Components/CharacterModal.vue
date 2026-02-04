@@ -34,6 +34,7 @@
             :src="character.image"
             :alt="`Imagen de ${character.name_es}`"
             class="ac-modal__image"
+            decoding="async"
           />
         </figure>
 

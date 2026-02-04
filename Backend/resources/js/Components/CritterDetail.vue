@@ -7,8 +7,9 @@
     class="w-full max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl"
     :aria-labelledby="titleId"
   >
-    <!-- Botón para abrir menú (solo móvil) -->
+    <!-- Botón para abrir menú (solo móvil) - oculto en modo museo -->
     <BackButton
+      v-if="!isMuseumMode"
       class="mb-2"
       :aria-label="`Abrir lista de ${itemType}`"
       @click="$emit('back')"
@@ -225,6 +226,11 @@ const props = defineProps({
   itemType: {
     type: String,
     default: 'criaturas'
+  },
+  /** Si está en modo museo (oculta botón de lista) */
+  isMuseumMode: {
+    type: Boolean,
+    default: false
   }
 })
 
