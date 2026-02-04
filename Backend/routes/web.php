@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\FishUserController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Hourly_Music;
@@ -12,50 +13,7 @@ use App\Http\Controllers\FossilUserController;
 use App\Http\Controllers\ArtUserController;
 use App\Http\Controllers\SeaCreatureUserController;
 
-Route::get('/', function () {
-    // Obtener aldeanos que cumplen años hoy (formato: día/mes)
-    $today = now()->format('j/n'); // j = día sin cero, n = mes sin cero
-    $birthdayVillagers = Villager::where('birthday', $today)->get();
-
-    // Obtener música agrupada por hora
-    // según su hora local
-    $hourlyMusic = Hourly_Music::all()
-        ->groupBy('hour')
-        ->map(fn($songs) => $songs->map(fn($song) => [
-            'id' => $song->id,
-            'titulo' => formatMusicTitle($song->file_name, $song->weather),
-            'autor' => 'Totakeke',
-            'weather' => $song->weather,
-            'src' => asset($song->music_uri),
-        ])->values());
-
-    return Inertia::render('Welcome', [
-        'canLogin'    => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'randomVillagers' => Villager::inRandomOrder()->limit(15)->get(),
-        'birthdayVillagers' => $birthdayVillagers,
-        'hourlyMusic' => $hourlyMusic,
-    ]);
-});
-
-/**
- * Formatea el título de la música horaria.
- * Convierte "BGM_24Hour_00_Rainy" en "00:00 - Lluvioso"
- */
-function formatMusicTitle(string $fileName, ?string $weather): string
-{
-    preg_match('/BGM_24Hour_(\d{2})/', $fileName, $matches);
-    $hour = $matches[1] ?? '00';
-
-    $weatherTranslations = [
-        'Sunny' => 'Soleado',
-        'Rainy' => 'Lluvioso',
-        'Snowy' => 'Nevado',
-    ];
-
-    $weatherEs = $weatherTranslations[$weather] ?? $weather;
-    return "{$hour}:00 - {$weatherEs}";
-}
+Route::get('/', WelcomeController::class);
 
 Route::get('/critterpedia/fish', function () {
     return Inertia::render('FishListView');
