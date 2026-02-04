@@ -10,7 +10,6 @@ use App\Http\Controllers\ProfileController;
 use App\Models\Hourly_Music;
 use App\Http\Controllers\VillagerUserController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MemoryGameController; // ADDED
 use App\Models\Villager;
 use App\Models\Fish;
 use App\Models\Bug;
@@ -24,16 +23,6 @@ Route::get('/', WelcomeController::class)->name('welcome');
 Route::get('/art', function () {
     return Inertia::render('ArtPedia');
 })->name('art.list');
-
-
-
-Route::get('/minijuegos/memoria', [MemoryGameController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('games.memory.index');
-
-Route::post('/minijuegos/memoria/save', [MemoryGameController::class, 'saveScore'])
-    ->middleware(['auth', 'verified'])
-    ->name('games.memory.save');
 
 Route::get('/fish', function () {
     return Inertia::render('FishPedia');

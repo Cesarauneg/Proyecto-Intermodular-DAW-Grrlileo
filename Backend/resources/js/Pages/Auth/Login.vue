@@ -21,35 +21,35 @@ const form = useForm({
     email: '',
     password: '',
     remember: false,
-    // captcha_token: null, // Temporarily disabled 
+    captcha_token: null, 
 });
 
-// onMounted(() => { // Temporarily disabled
-//     if (!window.grecaptcha) {
-//         const script = document.createElement('script');
-//         script.src = "https://www.google.com/recaptcha/api.js";
-//         script.async = true;
-//         script.defer = true;
-//         document.head.appendChild(script);
-//     }
+onMounted(() => {
+    if (!window.grecaptcha) {
+        const script = document.createElement('script');
+        script.src = "https://www.google.com/recaptcha/api.js";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
 
-//     window.onCaptchaSuccess = (token) => {
-//         form.captcha_token = token;
-//     };
+    window.onCaptchaSuccess = (token) => {
+        form.captcha_token = token;
+    };
 
-//     window.onCaptchaExpired = () => {
-//         form.captcha_token = null;
-//     };
-// });
+    window.onCaptchaExpired = () => {
+        form.captcha_token = null;
+    };
+});
 
 const submit = () => {
     form.post(route('login'), {
         onFinish: () => {
             form.reset('password');
-            // if (window.grecaptcha) { // Temporarily disabled
-            //     window.grecaptcha.reset();
-            //     form.captcha_token = null;
-            // }
+            if (window.grecaptcha) {
+                window.grecaptcha.reset();
+                form.captcha_token = null;
+            }
         },
     });
 };
@@ -101,15 +101,16 @@ const submit = () => {
                 </div>
             </div>
 
-                        <!-- <div class="form-group flex flex-col items-center justify-center py-2"> // Temporarily disabled
-                            <div
-                                class="g-recaptcha"
-                                data-sitekey="6LccPF8sAAAAAIfVPHiAQ-go4L6_hTVCKcb4HfXG"
-                                data-callback="onCaptchaSuccess"
-                                data-expired-callback="onCaptchaExpired"
-                            ></div>
-                            <InputError :message="form.errors.captcha_token" />
-                        </div> -->
+            <div class="form-group flex flex-col items-center justify-center py-2">
+                <div 
+                    class="g-recaptcha" 
+                    data-sitekey="6LccPF8sAAAAAIfVPHiAQ-go4L6_hTVCKcb4HfXG" 
+                    data-callback="onCaptchaSuccess"
+                    data-expired-callback="onCaptchaExpired"
+                ></div>
+                <InputError :message="form.errors.captcha_token" />
+            </div>
+
             <div class="form-actions">
                 <Link
                     v-if="canResetPassword"
@@ -122,7 +123,8 @@ const submit = () => {
                 <PrimaryButton
                     type="submit"
                     :class="{ 'opacity-25': form.processing }"
-                                         :disabled="form.processing"                >
+                    :disabled="form.processing || !form.captcha_token"
+                >
                     Iniciar sesión
                 </PrimaryButton>
             </div>
