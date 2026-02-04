@@ -30,21 +30,21 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'captcha_token' => 'required',
-        ]);
+        // $request->validate([ // Temporarily disabled
+        //     'captcha_token' => 'required',
+        // ]);
 
-        $response = Http::withoutVerifying()->asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret'   => env('RECAPTCHA_SECRET_KEY'),
-            'response' => $request->captcha_token,
-            'remoteip' => $request->ip(),
-        ]);
+        // $response = Http::withoutVerifying()->asForm()->post('https://www.google.com/recaptcha/api/siteverify', [ // Temporarily disabled
+        //     'secret'   => env('RECAPTCHA_SECRET_KEY'),
+        //     'response' => $request->captcha_token,
+        //     'remoteip' => $request->ip(),
+        // ]);
 
-        if (! $response->json('success')) {
-            throw ValidationException::withMessages([
-                'captcha_token' => 'Verificación de robot fallida.',
-            ]);
-        }
+        // if (! $response->json('success')) { // Temporarily disabled
+        //     throw ValidationException::withMessages([
+        //         'captcha_token' => 'Verificación de robot fallida.',
+        //     ]);
+        // }
 
         $request->authenticate();
 

@@ -33,24 +33,23 @@ class RegisteredUserController extends Controller
             'name'          => 'required|string|max:255',
             'email'         => 'required|string|email|max:255|unique:users',
             'password'      => 'required|confirmed|min:8', // 'confirmed' valida password_confirmation
-            'captcha_token' => 'required',
+            // 'captcha_token' => 'required', // Temporarily disabled
         ]);
 
-        $response = Http::withoutVerifying()
-            ->asForm() 
-            ->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret'   => env('RECAPTCHA_SECRET_KEY'),
-                'response' => $request->captcha_token,
-                'remoteip' => $request->ip(),
-            ]);
-
-        if (!$response->json('success')) {
-            throw ValidationException::withMessages([
-                'captcha_token' => 'La verificación del Captcha ha fallado. Inténtalo de nuevo.',
-            ]);
-        }
-
-        $user = User::create([
+                // $response = Http::withoutVerifying() // Temporarily disabled
+                //     ->asForm()
+                //     ->post('https://www.google.com/recaptcha/api/siteverify', [
+                //         'secret'   => env('RECAPTCHA_SECRET_KEY'),
+                //         'response' => $request->captcha_token,
+                //         'remoteip' => $request->ip(),
+                //     ]);
+        
+                // if (!$response->json('success')) { // Temporarily disabled
+                //     throw ValidationException::withMessages([
+                //         'captcha_token' => 'La verificación del Captcha ha fallado. Inténtalo de nuevo.',
+                //     ]);
+                // }
+                $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),

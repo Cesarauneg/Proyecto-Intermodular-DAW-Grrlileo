@@ -103,4 +103,12 @@ class User extends Authenticatable
             ->withPivot('is_favorite')
             ->withTimestamps();
     }
+
+    /**
+     * Get the game scores for the user.
+     */
+    public function gameScores()
+    {
+        return $this->hasMany(GameScore::class);
+    }
 }
