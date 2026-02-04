@@ -48,9 +48,12 @@ Route::get('/bugs', function () {
     return Inertia::render('BugPedia');
 })->name('bichos');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+    
 Route::get('/collection', function() {
     return Inertia::render('Collection');
 })->name('collection');

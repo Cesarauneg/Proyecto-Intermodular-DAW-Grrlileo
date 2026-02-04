@@ -19,6 +19,8 @@ class WelcomeController extends Controller
      */
     public function __invoke(Request $request)
     {
+        $user = auth()->user();
+        
         // Obtener aldeanos que cumplen años hoy (formato: día/mes)
         $today = now()->format('j/n'); // j = día sin cero, n = mes sin cero
         $birthdayVillagers = Villager::where('birthday', $today)->get();
@@ -34,15 +36,41 @@ class WelcomeController extends Controller
                 'src' => asset($song->music_uri),
             ])->values());
 
+
+         // Stats del museo
+
+        $stats = $user ? [
+            'peces'     => $user->fish()->where('donated_to_museum', true)->count(),
+            'bichos'    => $user->bugs()->where('donated_to_museum', true)->count(),
+            'arte'      => $user->art()->where('donated_to_museum', true)->count(),
+            'fosiles'   => $user->fossils()->where('donated_to_museum', true)->count(),
+            'criaturas' => $user->seaCreatures()->where('donated_to_museum', true)->count(),
+        ] : null;
+
+        $maximos = [
+            'peces'     => 80,
+            'bichos'    => 80,
+            'arte'      => 43,
+            'fosiles'   => 73,
+            'criaturas' => 40,
+        ];
+
+         // Render
         return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'randomVillagers' => Villager::inRandomOrder()->limit(15)->get(),
+            'canLogin'          => Route::has('login'),
+            'canRegister'       => Route::has('register'),
+            'randomVillagers'   => Villager::inRandomOrder()->limit(15)->get(),
             'birthdayVillagers' => $birthdayVillagers,
-            'hourlyMusic' => $hourlyMusic,
-            'fish' => Fish::all(),
-            'bugs' => Bug::all(),
+            'hourlyMusic'       => $hourlyMusic,
+
+            // Colecciones
+            'fish'         => Fish::all(),
+            'bugs'         => Bug::all(),
             'seaCreatures' => Sea_Creature::all(),
+
+            // Estadisticas del Museo
+            'stats'   => $stats,
+            'maximos'=> $maximos,
         ]);
     }
 
@@ -63,5 +91,31 @@ class WelcomeController extends Controller
 
         $weatherEs = $weatherTranslations[$weather] ?? $weather;
         return "{$hour}:00 - {$weatherEs}";
+    }
+
+     public function index()
+    {
+        $user = auth()->user();
+
+        $stats = [
+            'peces'     => $user->fish()->where('donated_to_museum', true)->count(),
+            'bichos'    => $user->bugs()->where('donated_to_museum', true)->count(),
+            'arte'      => $user->art()->where('donated_to_museum', true)->count(),
+            'fosiles'   => $user->fossils()->where('donated_to_museum', true)->count(),
+            'criaturas' => $user->seaCreatures()->where('donated_to_museum', true)->count(),
+        ];
+
+        $totalesMaximos = [
+            'peces'     => 80, 
+            'bichos'    => 80, 
+            'arte'      => 43, 
+            'fosiles'   => 73, 
+            'criaturas' => 40
+        ];
+
+return Inertia::render('Dashboard', [
+    'stats' => $stats,  
+    'maximos' => $totalesMaximos
+]);
     }
 }
