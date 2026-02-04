@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-7xl mx-auto px-4 py-6" aria-labelledby="villagers-title">
+  <section class="w-full px-4 py-6" aria-labelledby="villagers-title">
     <header class="text-center mb-8">
       <h2 id="villagers-title" class="text-4xl font-extrabold">Catálogo de Aldeanos</h2>
       <p class="text-gray-500 mt-2">
@@ -55,7 +55,8 @@
     <!-- LOADING -->
     <div
       v-if="loading && !characters.length"
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      class="grid gap-6"
+      style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"
       aria-busy="true"
       aria-label="Cargando aldeanos"
     >
@@ -65,7 +66,8 @@
     <!-- GRID -->
     <ul
       v-else-if="characters.length"
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      class="grid gap-6"
+      style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"
       role="list"
       aria-label="Lista de aldeanos"
     >

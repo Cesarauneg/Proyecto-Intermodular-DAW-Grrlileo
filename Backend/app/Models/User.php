@@ -1,12 +1,12 @@
 <?php
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Art;
 use App\Models\Bug;
 use App\Models\Fish;
 use App\Models\Fossil;
 use App\Models\Sea_Creature;
+use App\Models\Villager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -65,7 +65,7 @@ class User extends Authenticatable
 
     public function bugs()
     {
-        return $this->belongsToMany(Bug::class)
+        return $this->belongsToMany(Bug::class, 'bug_user') 
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
@@ -83,15 +83,24 @@ class User extends Authenticatable
             ->withPivot('donated_to_museum')
             ->withTimestamps();
     }
-public function seaCreatures()
-{
-    return $this->belongsToMany(
-        Sea_Creature::class,
-        'sea_creature_user',      
-        'user_id',
-        'sea_creature_id'
-    )
-    ->withPivot('donated_to_museum')
-    ->withTimestamps();
-}
+
+
+    public function seaCreatures()
+    {
+        return $this->belongsToMany(
+            Sea_Creature::class,
+            'sea_creature_user',
+            'user_id',
+            'sea_creature_id'
+        )
+            ->withPivot('donated_to_museum')
+            ->withTimestamps();
+    }
+
+        public function villager()
+    {
+        return $this->belongsToMany(Villager::class)
+            ->withPivot('is_favorite')
+            ->withTimestamps();
+    }
 }

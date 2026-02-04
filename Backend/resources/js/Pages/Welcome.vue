@@ -17,8 +17,8 @@
  */
 import { ref, computed } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import { useClickOutside } from '@/composables/useClickOutside';
-import { useHourlyMusic } from '@/composables/useHourlyMusic';
+import { useClickOutside } from '@/Composables/useClickOutside';
+import { useHourlyMusic } from '@/Composables/useHourlyMusic';
 import InicioSection from './Sections/InicioSection.vue';
 import PecesSection from './Sections/PecesSection.vue';
 import BichosSection from './Sections/BichosSection.vue';
@@ -37,6 +37,18 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+    fish: {
+        type: Array,
+        default: () => []
+    },
+    bugs: {
+        type: Array,
+        default: () => []
+    },
+    seaCreatures: {
+        type: Array,
+        default: () => []
+    },
   /**
    * Música horaria agrupada por hora (0-23).
    * Cada hora contiene 3 variantes de clima.
@@ -109,7 +121,7 @@ function handlePageInteraction() {
 </script>
 
 <template>
-  <Head title="Inicio" />
+    <Head title="Inicio" />
 
   <div class="landing" @click.once="handlePageInteraction">
     <!-- ========== HEADER ========== -->
@@ -158,15 +170,18 @@ function handlePageInteraction() {
               </template>
               <!-- Authenticated menu -->
               <template v-else>
-                <li role="none">
-                  <Link :href="route('profile.edit')" class="dropdown-item" role="menuitem">Perfil</Link>
-                </li>
-                <li role="none">
-                  <Link href="#" class="dropdown-item" role="menuitem">Colección</Link>
-                </li>
-                <li role="none">
-                  <Link :href="route('logout')" method="post" as="button" class="dropdown-item dropdown-item--danger" role="menuitem">Cerrar sesión</Link>
-                </li>
+                  <li role="none">
+                      <Link :href="route('dashboard')" class="dropdown-item" role="menuitem">Dashboard</Link>
+                  </li>
+                  <li role="none">
+                      <Link :href="route('profile.edit')" class="dropdown-item" role="menuitem">Perfil</Link>
+                  </li>
+                  <li role="none">
+                      <Link :href="route('catalogo')" class="dropdown-item" role="menuitem">Colección</Link>
+                  </li>
+                  <li role="none">
+                      <Link :href="route('logout')" method="post" as="button" class="dropdown-item dropdown-item--danger" role="menuitem">Cerrar sesión</Link>
+                  </li>
               </template>
             </ul>
           </Transition>
@@ -205,6 +220,9 @@ function handlePageInteraction() {
             :is="sectionComponents[activeTab]"
             :villagers="randomVillagers"
             :birthday-villagers="birthdayVillagers"
+            :fish="props.fish"
+            :bugs="props.bugs"
+            :sea-creatures="props.seaCreatures"
           />
         </section>
       </Transition>
