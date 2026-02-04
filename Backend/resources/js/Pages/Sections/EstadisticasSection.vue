@@ -8,16 +8,17 @@ defineProps({
 </script>
 
 <template>
-  <div class="space-y-8">
-    <div class="ac-card">
-      <h2 class="text-xl font-bold text-[var(--ac-text-secondary)]">
-        🏛️ Registro del Museo
+  <section class="w-full" aria-labelledby="estadisticas-title">
+    <!-- Header -->
+    <header class="text-center py-6 px-4">
+      <h2 id="estadisticas-title" class="text-4xl font-extrabold text-green-800">
+        Estadísticas
       </h2>
-      <p class="text-sm text-[var(--ac-text-light)] mt-1">
-        Sigue así, Sócrates está muy orgulloso de tus hallazgos.
+      <p class="text-gray-500 mt-2">
+        Sigue así, Sócrates está muy orgulloso de tus hallazgos
       </p>
-    </div>
+    </header>
 
     <MuseumStats v-if="stats && maximos" :stats="stats" :maximos="maximos" />
-  </div>
+  </section>
 </template>
