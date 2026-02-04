@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full px-4 py-6" aria-labelledby="villagers-title">
+  <section class="w-full px-4 py-6 flex flex-col" aria-labelledby="villagers-title">
     <header class="text-center mb-8">
       <h2 id="villagers-title" class="text-4xl font-extrabold">Catálogo de Aldeanos</h2>
       <p class="text-gray-500 mt-2">
@@ -55,7 +55,7 @@
     <!-- LOADING -->
     <div
       v-if="loading && !characters.length"
-      class="grid gap-6"
+      class="grid gap-6 overflow-y-auto py-4 max-h-[calc(100vh_-_250px)] px-4"
       style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"
       aria-busy="true"
       aria-label="Cargando aldeanos"
@@ -66,12 +66,12 @@
     <!-- GRID -->
     <ul
       v-else-if="characters.length"
-      class="grid gap-6"
+      class="grid gap-6 overflow-y-auto py-4 max-h-[calc(100vh_-_250px)] px-4"
       style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"
       role="list"
       aria-label="Lista de aldeanos"
     >
-      <li v-for="char in characters" :key="char.id">
+      <li v-for="char in characters" :key="char.id" style="max-width: 300px;">
         <CharacterCard
           :character="char"
           :is-authenticated="isAuthenticated"
