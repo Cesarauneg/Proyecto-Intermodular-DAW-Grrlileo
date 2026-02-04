@@ -1,0 +1,219 @@
+<template>
+    <div class="space-y-8 animate-fade-in">
+        <div class="ac-card bg-[var(--ac-bg-secondary)] border-b-4 border-[var(--ac-green)]">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-[var(--ac-text-secondary)] flex items-center gap-3">
+                        <span class="text-4xl">🏛️</span> Mi Museo Personal
+                    </h2>
+                    <p class="text-[var(--ac-text-light)] font-bold uppercase text-xs tracking-widest mt-1">
+                        Exhibición privada de hallazgos y residentes
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <div class="bg-white px-4 py-2 rounded-2xl border-2 border-[var(--ac-border)] shadow-sm">
+                        <span class="text-[var(--ac-text-light)] text-xs font-black uppercase block">Total Donado</span>
+                        <span class="text-xl font-black text-[var(--ac-green-dark)]">{{ totalGeneral }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex gap-2 overflow-x-auto pb-4 scrollbar-hide">
+            <button v-for="category in categories" :key="category.id" 
+                @click="activeCategory = category.id"
+                :class="[
+                    'px-6 py-3 rounded-2xl font-black whitespace-nowrap transition-all duration-200 flex items-center gap-2 border-2',
+                    activeCategory === category.id
+                        ? 'bg-[var(--ac-green)] text-white border-[var(--ac-green-dark)] shadow-md transform -translate-y-1'
+                        : 'bg-white text-[var(--ac-text-light)] border-[var(--ac-border)] hover:border-[var(--ac-green-light)]'
+                ]">
+                <span class="text-xl">{{ category.icon }}</span>
+                <span>{{ category.name }}</span>
+                <span v-if="category.count !== null" 
+                    class="ml-1 px-2 py-0.5 rounded-lg text-xs bg-black/10">
+                    {{ category.count }}
+                </span>
+            </button>
+        </nav>
+
+        <div class="relative min-h-[400px]">
+            <div v-if="loading" class="flex flex-col items-center justify-center py-20">
+                <div class="w-16 h-16 border-4 border-[var(--ac-green-light)] border-t-[var(--ac-green)] rounded-full animate-spin"></div>
+                <p class="mt-4 font-bold text-[var(--ac-text-light)]">Consultando los archivos de Sócrates...</p>
+            </div>
+
+            <div v-else-if="!currentItems || currentItems.length === 0" 
+                class="ac-card text-center py-20 bg-white/50 border-dashed border-4">
+                <div class="text-7xl mb-4 grayscale opacity-50">{{ currentCategory.emptyIcon }}</div>
+                <h3 class="text-xl font-black text-[var(--ac-text-light)] mb-2">Galería aún sin inaugurar</h3>
+                <p class="text-[var(--ac-text-light)] opacity-70">No has registrado ningún {{ currentCategory.singular }} todavía.</p>
+            </div>
+
+            <div v-else class="space-y-8">
+                <TransitionGroup 
+                    name="grid-fade" 
+                    tag="div" 
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
+                >
+                    <article v-for="item in displayedItems" :key="item.id"
+                        @click="selectedItem = item"
+                        class="ac-card p-0 overflow-hidden group hover:border-[var(--ac-green)] transition-all duration-300 cursor-pointer bg-white"
+                    >
+                        <div class="aspect-square p-4 bg-[var(--ac-bg-primary)] flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-tr from-[var(--ac-green-light)]/20 to-transparent"></div>
+                            <img :src="item.icon || item.image"
+                                :alt="item.name_es"
+                                class="w-full h-full object-contain drop-shadow-md transform group-hover:scale-110 transition-transform duration-500" />
+                        </div>
+
+                        <div class="p-3 text-center border-t-2 border-[var(--ac-bg-secondary)]">
+                            <h3 class="font-black text-xs sm:text-sm text-[var(--ac-text-primary)] truncate uppercase tracking-tight">
+                                {{ capitalize(item.name_es || item.name_en || item.name) }}
+                            </h3>
+                            
+                            <div v-if="activeCategory === 'villagers'" class="mt-1">
+                                <span class="text-[10px] bg-[var(--ac-blue-light)] text-[var(--ac-blue-dark)] px-2 py-0.5 rounded-full font-bold">
+                                    {{ item.personality }}
+                                </span>
+                            </div>
+                            <div v-else class="flex items-center justify-center gap-1 mt-1 text-[var(--ac-gold-bright)]">
+                                <span class="text-xs font-black">💰 {{ item.price || item.buy_price || 0 }}</span>
+                            </div>
+                        </div>
+                    </article>
+                </TransitionGroup>
+
+                <Pagination 
+                    :current-page="currentPage" 
+                    :total-pages="totalPages" 
+                    @change="handlePageChange"
+                />
+            </div>
+        </div>
+
+        <Teleport to="body">
+            <Transition name="fade">
+                <div v-if="selectedItem" class="fixed inset-0 bg-[var(--ac-text-primary)]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div class="relative max-w-2xl w-full">
+                        <button @click="selectedItem = null" 
+                            class="absolute -top-12 right-0 text-white font-black flex items-center gap-2 hover:scale-110 transition-transform">
+                            CERRAR ✕
+                        </button>
+                        
+                        <CharacterModal v-if="activeCategory === 'villagers'" 
+                            :character="selectedItem"
+                            @close="selectedItem = null" />
+
+                        <CritterDetail v-else 
+                            :critter="selectedItem" 
+                            :is-available="false" 
+                            :is-in-museum="true"
+                            :museum-icon-url="'/icons/museum.png'" 
+                            :show-museum-button="false"
+                            :is-museum-mode="true" />
+                    </div>
+                </div>
+            </Transition>
+        </Teleport>
+    </div>
+</template>
+
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useFetch } from '@/Composables/useFetch.js'
+import { capitalize } from '@/Utils/formatters.js'
+import CritterDetail from '@/Components/CritterDetail.vue'
+import CharacterModal from '@/Components/CharacterModal.vue'
+import Pagination from '@/Components/Pagination.vue'
+
+// --- ESTADO ---
+const activeCategory = ref('bugs')
+const selectedItem = ref(null)
+const loading = ref(false)
+
+// --- PAGINACIÓN ---
+const itemsPerPage = ref(12)
+const currentPage = ref(1)
+
+// --- CATEGORÍAS ---
+const categories = ref([
+    { id: 'bugs', name: 'Bichos', icon: '🦋', emptyIcon: '🦋', singular: 'bicho', endpoint: '/user/bugs', count: 0, items: null },
+    { id: 'fish', name: 'Peces', icon: '🐟', emptyIcon: '🐟', singular: 'pez', endpoint: '/user/fish', count: 0, items: null },
+    { id: 'fossils', name: 'Fósiles', icon: '🦴', emptyIcon: '🦴', singular: 'fósil', endpoint: '/user/fossils', count: 0, items: null },
+    { id: 'sea_creatures', name: 'Mar', icon: '🦑', emptyIcon: '🦑', singular: 'criatura marina', endpoint: '/user/sea_creatures', count: 0, items: null },
+    { id: 'art', name: 'Arte', icon: '🎨', emptyIcon: '🎨', singular: 'obra de arte', endpoint: '/user/art', count: 0, items: null },
+    { id: 'villagers', name: 'Vecinos', icon: '🏠', emptyIcon: '🏠', singular: 'vecino', endpoint: '/user/villagers', count: 0, items: null }
+])
+
+// --- LÓGICA DE CARGA Y FILTRADO ---
+watch(activeCategory, async (newCatId) => {
+    const cat = categories.value.find(c => c.id === newCatId)
+    currentPage.value = 1 // Resetear paginación al cambiar de pestaña
+
+    if (cat.items !== null) return
+
+    loading.value = true
+    try {
+        const { data } = useFetch(cat.endpoint)
+        watch(data, (newData) => {
+            if (newData) {
+                cat.items = newData
+                cat.count = Array.isArray(newData) ? newData.length : 0
+                loading.value = false
+            }
+        }, { immediate: true })
+    } catch (e) {
+        console.error("Error al cargar el museo:", e)
+        loading.value = false
+    }
+}, { immediate: true })
+
+// --- COMPUTADOS ---
+const currentCategory = computed(() => categories.value.find(c => c.id === activeCategory.value))
+const currentItems = computed(() => currentCategory.value?.items || [])
+const totalGeneral = computed(() => categories.value.reduce((acc, c) => acc + (c.count || 0), 0))
+
+// Items filtrados por la página actual
+const displayedItems = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value
+    const end = start + itemsPerPage.value
+    return currentItems.value.slice(start, end)
+})
+
+const totalPages = computed(() => Math.ceil(currentItems.value.length / itemsPerPage.value))
+
+// --- MÉTODOS ---
+const handlePageChange = (page) => {
+    currentPage.value = page
+}
+</script>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Transición para el modal */
+.fade-enter-active, .fade-leave-active { transition: all 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; transform: scale(0.95); }
+
+/* Transición para el grid de items */
+.grid-fade-enter-active, 
+.grid-fade-leave-active { 
+    transition: all 0.3s ease; 
+}
+.grid-fade-enter-from, 
+.grid-fade-leave-to { 
+    opacity: 0; 
+    transform: translateY(10px); 
+}
+</style>
