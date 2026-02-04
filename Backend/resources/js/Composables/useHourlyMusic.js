@@ -261,10 +261,14 @@ export function useHourlyMusic(hourlyMusicData) {
     }
   }
 
-  // Observar cambios en la canción actual para cargarla
-  watch(currentSong, (newSong) => {
-    if (newSong && audioElement.value) {
+  // Observar cambios en la canción actual para cargarla y reproducirla
+  watch(currentSong, (newSong, oldSong) => {
+    if (newSong && audioElement.value && oldSong) {
+      const wasPlaying = isPlaying.value
       loadCurrentSong()
+      if (wasPlaying) {
+        play()
+      }
     }
   })
 

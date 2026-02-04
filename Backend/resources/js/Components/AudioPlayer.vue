@@ -21,6 +21,7 @@
  * />
  */
 import { ref, computed, watch, nextTick, onMounted } from 'vue';
+import { useClickOutside } from '@/Composables/useClickOutside.js';
 
 const props = defineProps({
   /** Canción actualmente seleccionada */
@@ -56,8 +57,14 @@ const emit = defineEmits([
 ]);
 
 const titleRef = ref(null);
+const volumeContainerRef = ref(null);
 const isOverflowing = ref(false);
 const showVolumeSlider = ref(false);
+
+// Cerrar slider de volumen al hacer clic fuera
+useClickOutside(volumeContainerRef, () => {
+  showVolumeSlider.value = false;
+});
 
 /** Título de la canción actual o placeholder */
 const displayTitle = computed(() => props.currentSong?.titulo ?? 'Sin música');
@@ -194,47 +201,49 @@ function handleTogglePlay() {
         </svg>
       </button>
 
-      <!-- Botón volumen -->
-      <button
-        @click="toggleVolumeSlider"
-        class="control-btn volume-btn"
-        type="button"
-        :aria-label="`Volumen: ${Math.round(volume * 100)}%`"
-        :aria-expanded="showVolumeSlider"
-      >
-        <svg v-if="volume === 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM17.78 9.22a.75.75 0 10-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 101.06-1.06L20.56 12l1.72-1.72a.75.75 0 00-1.06-1.06l-1.72 1.72-1.72-1.72z" />
-        </svg>
-        <svg v-else-if="volume < 0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
-        </svg>
-        <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
-          <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
-        </svg>
-      </button>
-    </div>
+      <!-- Contenedor de volumen -->
+      <div ref="volumeContainerRef" class="volume-wrapper">
+        <button
+          @click="toggleVolumeSlider"
+          class="control-btn volume-btn"
+          type="button"
+          :aria-label="`Volumen: ${Math.round(volume * 100)}%`"
+          :aria-expanded="showVolumeSlider"
+        >
+          <svg v-if="volume === 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM17.78 9.22a.75.75 0 10-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 101.06-1.06L20.56 12l1.72-1.72a.75.75 0 00-1.06-1.06l-1.72 1.72-1.72-1.72z" />
+          </svg>
+          <svg v-else-if="volume < 0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+            <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
+          </svg>
+        </button>
 
-    <!-- Slider de volumen (desplegable) -->
-    <Transition name="volume-slide">
-      <div v-if="showVolumeSlider" class="volume-slider-container">
-        <label for="volume-slider" class="sr-only">Ajustar volumen</label>
-        <input
-          id="volume-slider"
-          type="range"
-          min="0"
-          max="1"
-          step="0.05"
-          :value="volume"
-          @input="handleVolumeChange"
-          class="volume-slider"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          :aria-valuenow="Math.round(volume * 100)"
-          aria-valuetext="`${Math.round(volume * 100)}% volumen`"
-        />
+        <!-- Slider de volumen (desplegable) -->
+        <Transition name="volume-slide">
+          <div v-if="showVolumeSlider" class="volume-slider-container">
+            <label for="volume-slider" class="sr-only">Ajustar volumen</label>
+            <input
+              id="volume-slider"
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              :value="volume"
+              @input="handleVolumeChange"
+              class="volume-slider"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              :aria-valuenow="Math.round(volume * 100)"
+              aria-valuetext="`${Math.round(volume * 100)}% volumen`"
+            />
+          </div>
+        </Transition>
       </div>
-    </Transition>
+    </div>
   </article>
 </template>
 
@@ -402,6 +411,10 @@ function handleTogglePlay() {
 }
 
 /* ---- Volume Controls ---- */
+.volume-wrapper {
+  position: relative;
+}
+
 .volume-btn {
   margin-left: 2px;
 }
