@@ -2,10 +2,10 @@
     <section class="w-full animate-fade-in" aria-labelledby="museo-title">
         <!-- Header -->
         <header class="text-center py-6 px-4 relative">
-            <!-- Contador en esquina superior derecha -->
-            <div class="absolute top-2 right-4 bg-white px-3 py-1 rounded-xl border border-[var(--ac-border)] shadow-sm">
-                <span class="text-[var(--ac-text-light)] text-[10px] font-bold uppercase block">Total</span>
-                <span class="text-sm font-black text-[var(--ac-green-dark)]">{{ totalGeneral }}</span>
+            <!-- Contador en esquina superior derecha (responsive) -->
+            <div class="absolute top-2 right-4 bg-white px-3 py-1 md:px-5 md:py-2 lg:px-6 lg:py-3 rounded-xl border border-[var(--ac-border)] shadow-sm transition-all">
+                <span class="text-[var(--ac-text-light)] text-[10px] md:text-xs lg:text-sm font-bold uppercase block">Total</span>
+                <span class="text-sm md:text-xl lg:text-2xl font-black text-[var(--ac-green-dark)]">{{ totalGeneral }}</span>
             </div>
 
             <h2 id="museo-title" class="text-4xl font-extrabold text-green-800">
@@ -16,26 +16,56 @@
             </p>
         </header>
 
-        <nav class="flex gap-2 overflow-x-auto pb-4 scrollbar-hide">
-            <button v-for="category in categories" :key="category.id" 
-                @click="activeCategory = category.id"
-                :class="[
-                    'px-6 py-3 rounded-2xl font-black whitespace-nowrap transition-all duration-200 flex items-center gap-2 border-2',
-                    activeCategory === category.id
-                        ? 'bg-[var(--ac-green)] text-white border-[var(--ac-green-dark)] shadow-md transform -translate-y-1'
-                        : 'bg-white text-[var(--ac-text-light)] border-[var(--ac-border)] hover:border-[var(--ac-green-light)]'
-                ]">
-                <span class="text-xl">{{ category.icon }}</span>
-                <span>{{ category.name }}</span>
-                <span v-if="category.count !== null" 
-                    class="ml-1 px-2 py-0.5 rounded-lg text-xs bg-black/10">
-                    {{ category.count }}
-                </span>
-            </button>
+        <!-- Botón móvil para ver categorías -->
+        <div class="flex justify-center mb-4 lg:hidden">
+            <BackButton
+                :label="currentCategory.name"
+                :icon="currentCategory.icon"
+                variant="amber"
+                aria-label="Abrir menú de categorías"
+                @click="isMobileMenuOpen = !isMobileMenuOpen"
+            />
+        </div>
+
+        <!-- Nav de categorías -->
+        <nav
+            :class="[
+                'justify-center mb-6 px-4',
+                isMobileMenuOpen ? 'flex' : 'hidden lg:flex'
+            ]"
+            role="tablist"
+            aria-label="Categorías del museo"
+        >
+            <div class="inline-flex flex-wrap justify-center gap-2 rounded-xl bg-[#faf8ef] p-2 shadow-[0_4px_0_#5c4a1f] border-3 border-[#8b6914]">
+                <button
+                    v-for="category in categories"
+                    :key="category.id"
+                    role="tab"
+                    :aria-selected="activeCategory === category.id"
+                    :class="[
+                        'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200',
+                        'focus:outline-none focus:ring-2 focus:ring-[#8b6914] focus:ring-offset-2',
+                        activeCategory === category.id
+                            ? 'bg-[#8b6914] text-white shadow-md'
+                            : 'text-[#8b6914] hover:bg-[#8b6914]/10'
+                    ]"
+                    @click="selectCategory(category.id)"
+                >
+                    <span class="mr-1" aria-hidden="true">{{ category.icon }}</span>
+                    {{ category.name }}
+                    <span
+                        v-if="category.count > 0"
+                        class="ml-2 px-2 py-0.5 rounded-full text-xs"
+                        :class="activeCategory === category.id ? 'bg-white/20' : 'bg-[#8b6914]/10'"
+                    >
+                        {{ category.count }}
+                    </span>
+                </button>
+            </div>
         </nav>
 
         <div class="relative min-h-[400px]">
-            <div v-if="loading" class="flex flex-col items-center justify-center py-20">
+            <div v-if="initialLoading" class="flex flex-col items-center justify-center py-20">
                 <div class="w-16 h-16 border-4 border-[var(--ac-green-light)] border-t-[var(--ac-green)] rounded-full animate-spin"></div>
                 <p class="mt-4 font-bold text-[var(--ac-text-light)]">Consultando los archivos de Sócrates...</p>
             </div>
@@ -47,11 +77,11 @@
                 <p class="text-[var(--ac-text-light)] opacity-70">No has registrado ningún {{ currentCategory.singular }} todavía.</p>
             </div>
 
-            <div v-else class="space-y-8">
-                <TransitionGroup 
-                    name="grid-fade" 
-                    tag="div" 
-                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
+            <div v-else class="px-4">
+                <TransitionGroup
+                    name="grid-fade"
+                    tag="div"
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 pb-4"
                 >
                     <article v-for="item in displayedItems" :key="item.id"
                         @click="selectedItem = item"
@@ -80,10 +110,13 @@
                         </div>
                     </article>
                 </TransitionGroup>
+            </div>
 
-                <Pagination 
-                    :current-page="currentPage" 
-                    :total-pages="totalPages" 
+            <!-- Paginación fuera del scroll -->
+            <div class="mt-6 px-4">
+                <Pagination
+                    :current-page="currentPage"
+                    :total-pages="totalPages"
                     @change="handlePageChange"
                 />
             </div>
@@ -117,17 +150,18 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useFetch } from '@/Composables/useFetch.js'
+import { ref, computed, watch, onMounted } from 'vue'
 import { capitalize } from '@/Utils/formatters.js'
 import CritterDetail from '@/Components/CritterDetail.vue'
 import CharacterModal from '@/Components/CharacterModal.vue'
 import Pagination from '@/Components/Pagination.vue'
+import BackButton from '@/Components/Base/BackButton.vue'
 
 // --- ESTADO ---
 const activeCategory = ref('bugs')
 const selectedItem = ref(null)
-const loading = ref(false)
+const initialLoading = ref(true)
+const isMobileMenuOpen = ref(false)
 
 // --- PAGINACIÓN ---
 const itemsPerPage = ref(12)
@@ -143,28 +177,35 @@ const categories = ref([
     { id: 'villagers', name: 'Vecinos', icon: '🏠', emptyIcon: '🏠', singular: 'vecino', endpoint: '/user/villagers', count: 0, items: null }
 ])
 
-// --- LÓGICA DE CARGA Y FILTRADO ---
-watch(activeCategory, async (newCatId) => {
-    const cat = categories.value.find(c => c.id === newCatId)
-    currentPage.value = 1 // Resetear paginación al cambiar de pestaña
-
-    if (cat.items !== null) return
-
-    loading.value = true
+// --- CARGAR TODOS LOS DATOS AL INICIO ---
+const loadCategoryData = async (cat) => {
     try {
-        const { data } = useFetch(cat.endpoint)
-        watch(data, (newData) => {
-            if (newData) {
-                cat.items = newData
-                cat.count = Array.isArray(newData) ? newData.length : 0
-                loading.value = false
-            }
-        }, { immediate: true })
+        const response = await fetch(cat.endpoint)
+        const data = await response.json()
+        cat.items = data
+        cat.count = Array.isArray(data) ? data.length : 0
     } catch (e) {
-        console.error("Error al cargar el museo:", e)
-        loading.value = false
+        console.error(`Error al cargar ${cat.name}:`, e)
+        cat.items = []
+        cat.count = 0
     }
-}, { immediate: true })
+}
+
+onMounted(async () => {
+    // Cargar todas las categorías en paralelo
+    await Promise.all(categories.value.map(cat => loadCategoryData(cat)))
+    initialLoading.value = false
+})
+
+// --- LÓGICA DE CAMBIO DE CATEGORÍA ---
+watch(activeCategory, (newCatId) => {
+    currentPage.value = 1 // Resetear paginación al cambiar de pestaña
+})
+
+const selectCategory = (categoryId) => {
+    activeCategory.value = categoryId
+    isMobileMenuOpen.value = false // Cerrar menú móvil al seleccionar
+}
 
 // --- COMPUTADOS ---
 const currentCategory = computed(() => categories.value.find(c => c.id === activeCategory.value))
@@ -187,9 +228,6 @@ const handlePageChange = (page) => {
 </script>
 
 <style scoped>
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
 .animate-fade-in {
     animation: fadeIn 0.4s ease-out;
 }
