@@ -23,6 +23,7 @@ import InicioSection from './Sections/InicioSection.vue';
 import PecesSection from './Sections/PecesSection.vue';
 import BichosSection from './Sections/BichosSection.vue';
 import TemporadaSection from './Sections/TemporadaSection.vue';
+import EstadisticasSection from './Sections/EstadisticasSection.vue';
 import VecinosSection from './Sections/VecinosSection.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
 
@@ -49,6 +50,14 @@ const props = defineProps({
         type: Array,
         default: () => []
     },
+    stats: {
+        type: Object,
+          default: () => ({})
+    },
+    maximos: {
+        type: Object,
+        default: () => ({})
+    },
   /**
    * Música horaria agrupada por hora (0-23).
    * Cada hora contiene 3 variantes de clima.
@@ -74,21 +83,40 @@ function toggleAuthMenu() {
 }
 
 // ========== TABS NAVIGATION ==========
-const tabs = [
-  { key: 'inicio', label: 'Inicio' },
-  { key: 'peces', label: 'Peces' },
-  { key: 'bichos', label: 'Bichos' },
-  { key: 'temporada', label: 'Temporada' },
-  { key: 'vecinos', label: 'Vecinos' },
-];
+const tabs = computed(() => {
+    const baseTabs = [
+        { key: 'inicio', label: 'Inicio' },
+        { key: 'peces', label: 'Peces' },
+        { key: 'bichos', label: 'Bichos' },
+        { key: 'temporada', label: 'Temporada' },
+    ];
+
+    // Solo añadimos Estadísticas si el usuario existe
+    if (user.value) {
+        baseTabs.push({ key: 'estadisticas', label: 'Estadísticas' });
+    }
+
+    baseTabs.push({ key: 'vecinos', label: 'Vecinos' });
+    
+    return baseTabs;
+});
 
 const activeTab = ref('inicio');
+
+//Si el usuario cierra sesión estando en estadísticas, lo mandamos a inicio
+import { watch } from 'vue';
+watch(user, (newUser) => {
+    if (!newUser && activeTab.value === 'estadisticas') {
+        activeTab.value = 'inicio';
+    }
+});
 
 const sectionComponents = {
   inicio: InicioSection,
   peces: PecesSection,
   bichos: BichosSection,
   temporada: TemporadaSection,
+  estadisticas: EstadisticasSection,
   vecinos: VecinosSection,
 };
 
@@ -223,6 +251,8 @@ function handlePageInteraction() {
             :fish="props.fish"
             :bugs="props.bugs"
             :sea-creatures="props.seaCreatures"
+            :stats="props.stats"
+            :maximos="props.maximos"
           />
         </section>
       </Transition>
