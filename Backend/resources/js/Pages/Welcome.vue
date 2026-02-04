@@ -7,7 +7,7 @@ import InicioSection from './Sections/InicioSection.vue';
 import CritterpediaSection from './Sections/CritterpediaSection.vue';
 import TemporadaSection from './Sections/TemporadaSection.vue';
 import EstadisticasSection from './Sections/EstadisticasSection.vue';
-import MuseumSection from './Sections/MuseumSection.vue';   
+import MuseumSection from './Sections/MuseumSection.vue';
 import VecinosSection from './Sections/VecinosSection.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
 
@@ -320,29 +320,18 @@ function handlePageInteraction() {
             <a href="https://twitter.com/canelasdesk" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
             <a href="https://instagram.com/canelasdesk" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="https://facebook.com/canelasdesk" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://github.com/Cesarauneg/Proyecto-Intermodular-DAW-Grrlileo" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="GitHub"><i class="fab fa-github"></i></a>
           </div>
         </div>
 
-        <nav class="footer-section">
-          <h3>Navegación</h3>
-          <ul>
-            <li><Link :href="route('welcome')" class="footer-link">Inicio</Link></li>
-            <li><Link :href="route('dashboard')" class="footer-link">Dashboard</Link></li>
-            <li><Link :href="route('catalogo')" class="footer-link">Colección</Link></li>
-          </ul>
-        </nav>
-
-        <nav class="footer-section">
-          <h3>Legal</h3>
-          <ul>
-            <li><a href="#" class="footer-link">Política de Privacidad</a></li>
-            <li><a href="#" class="footer-link">Términos de Servicio</a></li>
-            <li><a href="#" class="footer-link">Política de Cookies</a></li>
-          </ul>
-        </nav>
+        <div class="footer-section">
+          <h3>Créditos</h3>
+          <p>Desarrollado por estudiantes de DAW.</p>
+            <p>Datos e imágenes cortesía de la comunidad.</p>
+        </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; {{ new Date().getFullYear() }} Canela`s Desk. Todos los derechos reservados.</p>
+        <p>&copy; {{ new Date().getFullYear() }} Canela`s Desk. Todos los derechos reservados. Animal Crossing es una marca registrada de Nintendo. Esta aplicación no está afiliada ni respaldada por Nintendo. Todos los recursos, nombres e imágenes de personajes son propiedad de sus respectivos dueños.</p>
       </div>
     </footer>
   </div>
