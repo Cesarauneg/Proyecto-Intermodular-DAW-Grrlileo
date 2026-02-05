@@ -137,7 +137,7 @@ function handleTogglePlay() {
       <p
         ref="titleRef"
         class="song-title"
-        :class="{ 'marquee': isOverflowing && !isLoading }"
+        :class="{ 'marquee': !isLoading }"
       >
         <span v-if="isLoading" class="loading-indicator">
           <span class="loading-dot"></span>
@@ -281,16 +281,16 @@ function handleTogglePlay() {
 }
 
 .song-title.marquee {
-  animation: marquee 8s linear infinite;
-  padding-right: 2rem;
+  animation: marquee-rtl 8s linear infinite;
+  padding-left: 2rem;
 }
 
 .song-info:hover .song-title.marquee {
   animation-play-state: paused;
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0%); }
+@keyframes marquee-rtl {
+  0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
 }
 
@@ -473,5 +473,74 @@ function handleTogglePlay() {
 .volume-slide-leave-to {
   opacity: 0;
   transform: translateY(4px);
+}
+
+@media (max-width: 768px) {
+  .audio-player {
+    width: 240px;
+    padding: 10px 12px;
+    gap: 12px;
+  }
+
+  .play-btn {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .audio-player {
+    width: 100%;
+    max-width: 205px;
+    padding: 5px 6px;
+    gap: 5px;
+  }
+
+  .song-title {
+    font-size: 0.74rem;
+  }
+
+  .song-artist {
+    font-size: 0.62rem;
+  }
+
+  .control-btn {
+    width: 17px;
+    height: 17px;
+  }
+
+  .play-btn {
+    width: 24px;
+    height: 24px;
+    padding: 3px;
+  }
+}
+
+@media (max-width: 360px) {
+  .audio-player {
+    max-width: 200px;
+    padding: 5px;
+    gap: 6px;
+  }
+
+  .song-title {
+    font-size: 0.72rem;
+  }
+
+  .song-artist {
+    font-size: 0.6rem;
+  }
+
+  .control-btn {
+    width: 16px;
+    height: 16px;
+  }
+
+  .play-btn {
+    width: 22px;
+    height: 22px;
+    padding: 3px;
+  }
 }
 </style>

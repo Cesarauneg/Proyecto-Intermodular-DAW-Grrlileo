@@ -204,7 +204,7 @@
 /* ---- Responsive ---- */
 @media (max-width: 900px) {
     .inicio-main {
-        padding-bottom: 280px;
+        padding-bottom: 30px;
     }
 
     .welcome-container {
@@ -231,5 +231,17 @@
 
     .canela-img {
         width: 420px;
+    }
+}
+
+@media (max-width: 600px) {
+    .inicio-main {
+        padding-bottom: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inicio-main {
+        padding-bottom: 40px;
     }
 }
