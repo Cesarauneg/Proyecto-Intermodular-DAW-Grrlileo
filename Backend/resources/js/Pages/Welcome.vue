@@ -533,11 +533,13 @@ function handlePageInteraction() {
           </div>
         </div>
 
-        <div class="footer-section">
-          <h3>Créditos</h3>
-          <p>Desarrollado por estudiantes de DAW.</p>
+        <details class="footer-section footer-credits" open>
+          <summary>Créditos</summary>
+          <div class="footer-credits-body">
+            <p>Desarrollado por estudiantes de DAW.</p>
             <p>Datos e imágenes cortesía de la comunidad.</p>
-        </div>
+          </div>
+        </details>
       </div>
       <div class="footer-bottom">
         <p>&copy; {{ new Date().getFullYear() }} Canela`s Desk. Todos los derechos reservados. Animal Crossing es una marca registrada de Nintendo. Esta aplicación no está afiliada ni respaldada por Nintendo. Todos los recursos, nombres e imágenes de personajes son propiedad de sus respectivos dueños.</p>
@@ -547,6 +549,7 @@ function handlePageInteraction() {
 </template>
 
 <style src="@/../css/pages/welcome.css"></style>
+
 
 
 

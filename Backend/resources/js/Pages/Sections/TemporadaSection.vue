@@ -1,11 +1,11 @@
 <template>
-  <section class="w-full px-4 py-6 flex flex-col h-full" aria-labelledby="temporada-title">
+  <section class="w-full px-4 flex flex-col h-full" aria-labelledby="temporada-title">
     <!-- Header -->
-    <header class="text-center mb-8">
-      <h2 id="temporada-title" class="text-4xl font-extrabold text-green-800">
+    <header class="ac-section-header">
+      <h2 id="temporada-title" class="ac-section-title">
         Temporada
       </h2>
-      <p class="text-gray-500 mt-2">
+      <p class="ac-section-subtitle">
         {{ monthName }} {{ currentYear }} - Hemisferio Norte
       </p>
     </header>

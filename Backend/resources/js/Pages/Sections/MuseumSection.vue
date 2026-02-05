@@ -1,17 +1,17 @@
 <template>
     <section class="w-full animate-fade-in" aria-labelledby="museo-title">
         <!-- Header -->
-        <header class="text-center py-6 px-4 relative">
+        <header class="ac-section-header relative">
             <!-- Contador en esquina superior derecha (responsive) -->
             <div class="absolute top-2 right-4 bg-white px-3 py-1 md:px-5 md:py-2 lg:px-6 lg:py-3 rounded-xl border border-[var(--ac-border)] shadow-sm transition-all">
                 <span class="text-[var(--ac-text-light)] text-[10px] md:text-xs lg:text-sm font-bold uppercase block">Total</span>
                 <span class="text-sm md:text-xl lg:text-2xl font-black text-[var(--ac-green-dark)]">{{ totalGeneral }}</span>
             </div>
 
-            <h2 id="museo-title" class="text-4xl font-extrabold text-green-800">
+            <h2 id="museo-title" class="ac-section-title">
                 Mi Museo
             </h2>
-            <p class="text-gray-500 mt-2">
+            <p class="ac-section-subtitle">
                 Tu colección personal de hallazgos y residentes
             </p>
         </header>
@@ -267,3 +267,4 @@ const handlePageChange = (page) => {
     transform: translateY(10px); 
 }
 </style>
+
