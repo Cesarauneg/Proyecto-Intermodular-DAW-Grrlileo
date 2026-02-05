@@ -193,8 +193,8 @@ onBeforeUnmount(() => {
         </template>
 
         <div v-if="embedded" class="flex items-center gap-3">
-            <h2 class="text-lg font-bold text-[color:var(--ac-text-primary)]">Memory de Vecinos</h2>
-            <span class="text-xs text-[color:var(--ac-text-light)]">Nivel {{ level }}</span>
+            <h2 class="ac-section-title">Memory de Vecinos</h2>
+            <span class="ac-section-subtitle">Nivel {{ level }}</span>
         </div>
 
         <section class="space-y-6">
@@ -290,3 +290,4 @@ onBeforeUnmount(() => {
         </section>
     </component>
 </template>
+

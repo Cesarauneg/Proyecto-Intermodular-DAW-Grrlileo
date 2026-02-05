@@ -1,11 +1,11 @@
 <template>
   <section class="w-full" aria-labelledby="critterpedia-title">
     <!-- Header -->
-    <header class="text-center py-6 px-4">
-      <h2 id="critterpedia-title" class="text-4xl font-extrabold text-green-800">
+    <header class="ac-section-header">
+      <h2 id="critterpedia-title" class="ac-section-title">
         Critterpedia
       </h2>
-      <p class="text-gray-500 mt-2">
+      <p class="ac-section-subtitle">
         Explora todas las criaturas y coleccionables del juego
       </p>
     </header>

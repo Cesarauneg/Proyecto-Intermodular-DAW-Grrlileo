@@ -1,8 +1,8 @@
 <template>
-  <section class="w-full px-4 py-6 flex flex-col" aria-labelledby="villagers-title">
-    <header class="text-center mb-8">
-      <h2 id="villagers-title" class="text-4xl font-extrabold text-green-800">Aldeanos</h2>
-      <p class="text-gray-500 mt-2">
+  <section class="w-full px-4 flex flex-col" aria-labelledby="villagers-title">
+    <header class="ac-section-header">
+      <h2 id="villagers-title" class="ac-section-title">Aldeanos</h2>
+      <p class="ac-section-subtitle">
         Explora todos los personajes y descubre sus personalidades
       </p>
     </header>
@@ -55,7 +55,7 @@
     <!-- LOADING -->
     <div
       v-if="loading && !characters.length"
-      class="grid gap-4 sm:gap-5 md:gap-6 overflow-y-auto py-4 max-h-[calc(100vh_-_250px)] px-2 sm:px-4 justify-center"
+      class="grid gap-4 sm:gap-5 md:gap-6 py-4 px-2 sm:px-4 justify-center"
       style="grid-template-columns: repeat(auto-fill, minmax(200px, 240px));"
       aria-busy="true"
       aria-label="Cargando aldeanos"
@@ -66,7 +66,7 @@
     <!-- GRID -->
     <ul
       v-else-if="characters.length"
-      class="grid gap-4 sm:gap-5 md:gap-6 overflow-y-auto py-4 max-h-[calc(100vh_-_250px)] px-2 sm:px-4 justify-center"
+      class="grid gap-4 sm:gap-5 md:gap-6 py-4 px-2 sm:px-4 justify-center"
       style="grid-template-columns: repeat(auto-fill, minmax(200px, 240px));"
       role="list"
       aria-label="Lista de aldeanos"
@@ -151,7 +151,7 @@ const filters = reactive({
   species: '',
   gender: '',
   page: 1,
-  per_page: 20
+  per_page: 10
 })
 
 /**
@@ -242,3 +242,4 @@ onUnmounted(() => {
   document.body.style.overflow = ''
 })
 </script>
+
