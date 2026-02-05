@@ -66,17 +66,17 @@
       ]"
       aria-label="Filtros por tipo de criatura"
     >
-      <div class="inline-flex flex-wrap justify-center gap-2 rounded-xl bg-[#faf8ef] p-2 shadow-[0_4px_0_#5c4a1f] border-3 border-[#8b6914]">
+      <div class="inline-flex flex-wrap justify-center gap-2 rounded-xl bg-ac-nav-cream p-2 shadow-[0_4px_0_theme(colors.ac.nav-brown-shadow)] border-3 border-ac-nav-brown">
         <button
           v-for="filter in typeFilters"
           :key="filter.key"
           :aria-pressed="activeTypeFilter === filter.key"
           :class="[
             'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-[#8b6914] focus:ring-offset-2',
+            'focus:outline-none focus:ring-2 focus:ring-ac-nav-brown focus:ring-offset-2',
             activeTypeFilter === filter.key
-              ? 'bg-[#8b6914] text-white shadow-md'
-              : 'text-[#8b6914] hover:bg-[#8b6914]/10'
+              ? 'bg-ac-nav-brown text-white shadow-md'
+              : 'text-ac-nav-brown hover:bg-ac-nav-brown/10'
           ]"
           @click="selectTypeFilter(filter.key)"
         >

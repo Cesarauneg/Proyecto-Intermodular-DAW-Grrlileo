@@ -31,8 +31,7 @@ const {
   isInMuseum
 } = useCritterpedia({
   apiEndpoint: '/api/art',
-  availableEndpoint: null, // El arte no tiene disponibilidad
-  museumEndpoint: '/user/art',
+  availableEndpoint: null,
   museumType: 'art'
 })
 

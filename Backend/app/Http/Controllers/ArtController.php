@@ -1,31 +1,27 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ArtResource;
 use App\Models\Art;
+use App\Services\CatalogService;
 use Illuminate\Http\Request;
 
 class ArtController extends Controller
 {
-    // Devuelve todas las obras de arte
+    public function __construct(
+        private readonly CatalogService $catalogService,
+    ) {}
+
     public function index()
     {
-        return response()->json(Art::all());
+        return ArtResource::collection($this->catalogService->getAll(Art::class));
     }
 
-    // Filtrado dinámico por si tiene o no una falsificación
     public function filter(Request $request)
     {
-        $query = Art::query();
+        $query = $this->catalogService->applyFilters(Art::class, $request, ['has_fake']);
 
-        if ($request->has('has_fake')) {
-            $query->where('has_fake', $request->has_fake);
-        }
-        // Ordenar por precio
-        if ($request->has('price_order')) {
-            $order = strtolower($request->price_order) === 'desc' ? 'desc' : 'asc';
-            $query->orderBy('price', $order);
-        }
-
-        return response()->json($query->get());
+        return ArtResource::collection($query->get());
     }
 }

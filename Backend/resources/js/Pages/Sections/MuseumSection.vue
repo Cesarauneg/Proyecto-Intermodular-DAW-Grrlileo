@@ -3,7 +3,7 @@
         <!-- Header -->
         <header class="ac-section-header relative">
             <!-- Contador en esquina superior derecha (responsive) -->
-            <div class="absolute top-2 right-4 bg-white px-3 py-1 md:px-5 md:py-2 lg:px-6 lg:py-3 rounded-xl border border-[var(--ac-border)] shadow-sm transition-all">
+            <div class="absolute top-2 right-4 bg-white px-3 py-1 md:px-5 md:py-2 lg:px-6 lg:py-3 rounded-xl border border-ac-border shadow-sm transition-all">
                 <span class="text-[var(--ac-text-light)] text-[10px] md:text-xs lg:text-sm font-bold uppercase block">Total</span>
                 <span class="text-sm md:text-xl lg:text-2xl font-black text-[var(--ac-green-dark)]">{{ totalGeneral }}</span>
             </div>
@@ -37,7 +37,7 @@
             role="tablist"
             aria-label="Categorías del museo"
         >
-            <div class="inline-flex flex-wrap justify-center gap-2 rounded-xl bg-[#faf8ef] p-2 shadow-[0_4px_0_#5c4a1f] border-3 border-[#8b6914]">
+            <div class="inline-flex flex-wrap justify-center gap-2 rounded-xl bg-ac-nav-cream p-2 shadow-[0_4px_0_theme(colors.ac.nav-brown-shadow)] border-3 border-ac-nav-brown">
                 <button
                     v-for="category in categories"
                     :key="category.id"
@@ -45,10 +45,10 @@
                     :aria-selected="activeCategory === category.id"
                     :class="[
                         'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200',
-                        'focus:outline-none focus:ring-2 focus:ring-[#8b6914] focus:ring-offset-2',
+                        'focus:outline-none focus:ring-2 focus:ring-ac-nav-brown focus:ring-offset-2',
                         activeCategory === category.id
-                            ? 'bg-[#8b6914] text-white shadow-md'
-                            : 'text-[#8b6914] hover:bg-[#8b6914]/10'
+                            ? 'bg-ac-nav-brown text-white shadow-md'
+                            : 'text-ac-nav-brown hover:bg-ac-nav-brown/10'
                     ]"
                     @click="selectCategory(category.id)"
                 >
@@ -57,7 +57,7 @@
                     <span
                         v-if="category.count > 0"
                         class="ml-2 px-2 py-0.5 rounded-full text-xs"
-                        :class="activeCategory === category.id ? 'bg-white/20' : 'bg-[#8b6914]/10'"
+                        :class="activeCategory === category.id ? 'bg-white/20' : 'bg-ac-nav-brown/10'"
                     >
                         {{ category.count }}
                     </span>

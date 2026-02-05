@@ -30,8 +30,7 @@ const {
   isInMuseum
 } = useCritterpedia({
   apiEndpoint: '/api/fossils',
-  availableEndpoint: null, // Los fósiles no tienen disponibilidad
-  museumEndpoint: '/user/fossils',
+  availableEndpoint: null,
   museumType: 'fossils'
 })
 

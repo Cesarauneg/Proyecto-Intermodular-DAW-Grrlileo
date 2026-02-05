@@ -1,14 +1,16 @@
 <script setup>
+import AppButton from '@/Components/Base/AppButton.vue'
+
 defineProps({
     type: {
         type: String,
         default: 'button',
     },
-});
+})
 </script>
 
 <template>
-    <button :type="type" class="btn-secondary">
+    <AppButton variant="secondary" :type="type">
         <slot />
-    </button>
+    </AppButton>
 </template>

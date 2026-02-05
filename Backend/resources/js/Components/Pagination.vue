@@ -3,7 +3,7 @@
     <button
       @click="emitPage(currentPage - 1)"
       :disabled="currentPage <= 1"
-      class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-[var(--ac-border)] text-[var(--ac-text-secondary)] hover:border-[var(--ac-green)] hover:text-[var(--ac-green)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+      class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-ac-border text-ac-text-secondary hover:border-ac-green hover:text-ac-green disabled:opacity-30 disabled:cursor-not-allowed transition-all"
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
     </button>
@@ -27,7 +27,7 @@
     <button
       @click="emitPage(currentPage + 1)"
       :disabled="currentPage >= totalPages"
-      class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-[var(--ac-border)] text-[var(--ac-text-secondary)] hover:border-[var(--ac-green)] hover:text-[var(--ac-green)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+      class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border-2 border-ac-border text-ac-text-secondary hover:border-ac-green hover:text-ac-green disabled:opacity-30 disabled:cursor-not-allowed transition-all"
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
     </button>

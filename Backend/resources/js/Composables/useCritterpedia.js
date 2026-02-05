@@ -12,14 +12,12 @@ import { useMuseum } from '@/Composables/useMuseum.js'
  * @param {Object} config - Configuración del composable
  * @param {string} config.apiEndpoint - Endpoint para obtener todos los items
  * @param {string|null} config.availableEndpoint - Endpoint para items disponibles (opcional)
- * @param {string} config.museumEndpoint - Endpoint del museo del usuario
  * @param {string} config.museumType - Tipo de colección ('bugs', 'fish', etc.)
  */
 export function useCritterpedia(config) {
   const {
     apiEndpoint,
     availableEndpoint = null,
-    museumEndpoint,
     museumType
   } = config
 
@@ -39,7 +37,7 @@ export function useCritterpedia(config) {
   // =============================================
   // MUSEO
   // =============================================
-  const { isInMuseum, toggleDonation } = useMuseum(museumEndpoint)
+  const { isInMuseum, toggleDonation } = useMuseum(museumType)
   const museumIconUrl = '/icons/museum.png'
 
   // =============================================
@@ -179,7 +177,7 @@ export function useCritterpedia(config) {
 
   const handleToggle = (id) => {
     if (!isAuthenticated.value) return
-    toggleDonation(id, museumType)
+    toggleDonation(id)
   }
 
   // =============================================

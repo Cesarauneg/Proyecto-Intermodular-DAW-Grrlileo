@@ -1,14 +1,14 @@
-// Composables/useMuseum.js
 import { ref, watch } from 'vue'
 import { useFetch } from '@/Composables/useFetch.js'
+import { API } from '@/Utils/api.js'
 import axios from 'axios'
 
 const museumIds = ref(new Set())
 
-export function useMuseum(apiUrl = '/user/bugs') {
-    const { data: userData, reload } = useFetch(apiUrl)
+export function useMuseum(type = 'bugs') {
+    const apiUrl = API.user.items(type)
+    const { data: userData } = useFetch(apiUrl)
 
-    // Sincronizar el Set con los datos de la DB
     watch(userData, (newData) => {
         if (Array.isArray(newData)) {
             museumIds.value = new Set(newData.map(item => Number(item.id)))
@@ -17,18 +17,18 @@ export function useMuseum(apiUrl = '/user/bugs') {
 
     const isInMuseum = (id) => museumIds.value.has(Number(id))
 
-    const toggleDonation = async (id, type = 'bugs') => {
+    const toggleDonation = async (id) => {
         const numericId = Number(id)
-        
+
         if (museumIds.value.has(numericId)) {
             museumIds.value.delete(numericId)
         } else {
             museumIds.value.add(numericId)
         }
-        museumIds.value = new Set(museumIds.value) 
+        museumIds.value = new Set(museumIds.value)
 
         try {
-            await axios.post(`/${type}/${numericId}/donate`)
+            await axios.post(API.donate(type, numericId))
         } catch (err) {
             if (museumIds.value.has(numericId)) museumIds.value.delete(numericId)
             else museumIds.value.add(numericId)
@@ -41,6 +41,5 @@ export function useMuseum(apiUrl = '/user/bugs') {
         museumIds,
         isInMuseum,
         toggleDonation,
-        reloadMuseum: reload
     }
 }

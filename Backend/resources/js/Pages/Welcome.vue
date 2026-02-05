@@ -296,6 +296,9 @@ function handlePageInteraction() {
     <Head title="Inicio" />
 
   <div class="landing" @click.once="handlePageInteraction">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-ac-nav-brown focus:font-bold focus:rounded-lg focus:shadow-lg focus:top-2 focus:left-2">
+      Saltar al contenido principal
+    </a>
     <!-- ========== HEADER UNIFICADO ========== -->
     <header class="landing-header" ref="mobileNavRef">
       <div class="header-inner">
@@ -430,7 +433,7 @@ function handlePageInteraction() {
 
 
     <!-- ========== CONTENT ========== -->
-    <main class="content-container" aria-live="polite">
+    <main id="main-content" class="content-container" aria-live="polite">
       <Transition name="fade" mode="out-in">
         <section
           :key="activeTab"

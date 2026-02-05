@@ -1,46 +1,34 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BugResource;
 use App\Models\Bug;
+use App\Services\CatalogService;
 use Illuminate\Http\Request;
 
 class BugController extends Controller
 {
-    //Devuelve todos los bugs
+    public function __construct(
+        private readonly CatalogService $catalogService,
+    ) {}
+
     public function index()
     {
-        return response()->json(Bug::all());
+        return BugResource::collection($this->catalogService->getAll(Bug::class));
     }
 
-    //Filtrado dinámico por rarity y location (se pueden agregar mas)
     public function filter(Request $request)
     {
-        $query = Bug::query();
+        $query = $this->catalogService->applyFilters(Bug::class, $request, ['rarity', 'location']);
 
-        if ($request->has('rarity')) {
-            $query->where('rarity', $request->rarity);
-        }
-
-        if ($request->has('location')) {
-            $query->where('location', $request->location);
-        }
-
-        // Ordenar por precio
-        if ($request->has('price_order')) {
-            $order = strtolower($request->price_order) === 'desc' ? 'desc' : 'asc';
-            $query->orderBy('price', $order);
-        }
-
-        return response()->json($query->get());
+        return BugResource::collection($query->get());
     }
 
-    //Bugs disponibles en este momento (hemisferio norte y sur)
     public function available(Request $request)
     {
         $hemisphere = $request->get('hemisphere', 'north');
 
-        return response()->json(
-            Bug::availableNow($hemisphere)->get()
-        );
+        return BugResource::collection($this->catalogService->getAvailable(Bug::class, $hemisphere));
     }
 }

@@ -24,10 +24,11 @@ class AuthenticationTest extends TestCase
         $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',
+            'captcha_token' => 'test-token',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('welcome', absolute: false));
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
@@ -37,6 +38,7 @@ class AuthenticationTest extends TestCase
         $this->post('/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
+            'captcha_token' => 'test-token',
         ]);
 
         $this->assertGuest();

@@ -12,8 +12,25 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                ac: {
+                    gold: 'var(--ac-gold)',
+                    'gold-bright': 'var(--ac-gold-bright)',
+                    green: 'var(--ac-green)',
+                    'green-dark': 'var(--ac-green-dark)',
+                    'green-light': 'var(--ac-green-light)',
+                    blue: 'var(--ac-blue)',
+                    border: 'var(--ac-border)',
+                    text: 'var(--ac-text-primary)',
+                    'text-secondary': 'var(--ac-text-secondary)',
+                    cream: 'var(--ac-cream-light)',
+                    'nav-brown': '#8b6914',
+                    'nav-brown-shadow': '#5c4a1f',
+                    'nav-cream': '#faf8ef',
+                },
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Nunito', 'Figtree', ...defaultTheme.fontFamily.sans],
             },
             animation: {
                 'dance': 'dance 0.5s ease-in-out infinite',

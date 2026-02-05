@@ -38,7 +38,6 @@ const {
 } = useCritterpedia({
   apiEndpoint: '/api/fish',
   availableEndpoint: '/api/fish/available?hemisphere=north',
-  museumEndpoint: '/user/fish',
   museumType: 'fish'
 })
 
