@@ -11,7 +11,6 @@ import { Link } from '@inertiajs/vue3';
                 </Link>
 
                 <div class="auth-nav-links">
-                    <Link :href="route('profile.edit')" class="auth-nav-link">Perfil</Link>
                     <Link :href="route('logout')" method="post" as="button" class="auth-nav-link auth-nav-link--danger">Cerrar sesión</Link>
                 </div>
             </div>

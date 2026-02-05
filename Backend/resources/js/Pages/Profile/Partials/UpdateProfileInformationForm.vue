@@ -55,7 +55,7 @@ const submitForm = () => {
 
                 <div class="flex items-center gap-6">
                     <div class="relative">
-                        <img :src="form.avatar ? `/images/villagers/${form.avatar}` : '/images/default-avatar.png'"
+                        <img :src="form.avatar ? `/images/villagers/${form.avatar}` : '/images/default_avatar.png'"
                             class="w-20 h-20 rounded-full object-cover border-4 border-green-100 shadow-sm"
                             alt="Avatar actual" />
                         <div
