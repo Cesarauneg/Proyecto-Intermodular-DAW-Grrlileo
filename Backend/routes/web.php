@@ -7,6 +7,7 @@ use App\Http\Controllers\SeaCreatureUserController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\FishUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MemoryGameController;
 use App\Models\Hourly_Music;
 use App\Http\Controllers\VillagerUserController;
 use App\Http\Controllers\DashboardController;
@@ -62,6 +63,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/games/memory/{level}', [MemoryGameController::class, 'show'])->name('memory-game.show');
+    Route::get('/games/memory/{level}/data', [MemoryGameController::class, 'data'])->name('memory-game.data');
+    Route::post('/games/memory/score', [MemoryGameController::class, 'store'])->name('memory-game.store');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
