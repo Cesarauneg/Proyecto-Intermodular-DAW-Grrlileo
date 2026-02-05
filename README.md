@@ -131,3 +131,4 @@ Migraciones y seeders ya incluyen:
 - Para cambios de estilos o UI, revisar `Backend/resources/css/` y `Backend/resources/js/`.
 - Si cambias el esquema, recuerda ejecutar migraciones.
 - Si modificas rutas o componentes Inertia, reinicia `npm run dev`.
+fin
