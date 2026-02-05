@@ -32,8 +32,8 @@ const {
   isInMuseum,
   itemAvailability
 } = useCritterpedia({
-  apiEndpoint: '/api/sea_creatures',
-  availableEndpoint: '/api/sea_creatures/available?hemisphere=north',
+  apiEndpoint: 'api/sea_creatures',
+  availableEndpoint: 'api/sea_creatures/available?hemisphere=north',
   museumType: 'sea_creatures'
 })
 
@@ -79,3 +79,4 @@ createSelectionWatcher(filteredCreatures, filterProps)
     </template>
   </CritterpediaLayout>
 </template>
+

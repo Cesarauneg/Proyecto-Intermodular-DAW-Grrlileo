@@ -36,8 +36,8 @@ const {
   isInMuseum,
   itemAvailability
 } = useCritterpedia({
-  apiEndpoint: '/api/bugs',
-  availableEndpoint: '/api/bugs/available?hemisphere=north',
+  apiEndpoint: 'api/bugs',
+  availableEndpoint: 'api/bugs/available?hemisphere=north',
   museumType: 'bugs'
 })
 
@@ -57,7 +57,7 @@ createSelectionWatcher(filteredBugs, filterProps)
 
 // Emitir ubicaciones únicas
 watch(bugs, (data) => {
-  if (data) {
+  if (Array.isArray(data)) {
     const locations = [...new Set(data.map(b => b.location).filter(Boolean))].sort()
     emit('update:bug-locations', locations)
   }
@@ -92,3 +92,4 @@ watch(bugs, (data) => {
     </template>
   </CritterpediaLayout>
 </template>
+

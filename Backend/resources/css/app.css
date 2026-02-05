@@ -60,6 +60,17 @@
 }
 
 /* === Base Styles === */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
 body {
     background-image: url('/images/logos/fondo.png');
     background-size: cover;
@@ -123,6 +134,17 @@ body {
     margin-top: 0.25rem;
     font-size: 0.875rem;
     color: #6b7280;
+}
+
+@media (max-width: 480px) {
+    .ac-section-title {
+        font-size: 1.1rem;
+    }
+
+    .ac-section-subtitle {
+        font-size: 0.75rem;
+        margin-top: 0.2rem;
+    }
 }
 
 .ac-section-header {

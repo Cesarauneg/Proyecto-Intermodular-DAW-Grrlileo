@@ -17,13 +17,14 @@ const props = defineProps({
     villagers: { type: Array, default: () => [] },
 });
 
-    const user = usePage().props.auth.user;
+    const page = usePage();
+    const user = page.props.auth?.user ?? {};
 
     const showGallery = ref(false);
 
     const form = useForm({
-        name: user.name,
-        email: user.email,
+        name: user.name || '',
+        email: user.email || '',
         bio: user.bio || '',
         hemisphere: user.hemisphere || '',
         island_name: user.island_name || '',

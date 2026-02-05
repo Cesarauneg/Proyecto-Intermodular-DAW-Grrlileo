@@ -157,7 +157,7 @@ const museumFossilIds = ref(new Set())
 const isAuthenticated = ref(true) // Cambiar según tu auth
 
 // Traer fósiles
-const { data: fossils } = useFetch('/api/fossils')
+const { data: fossils } = useFetch('api/fossils')
 
 const selectFossil = (fossil) => {
   selectedFossil.value = fossil

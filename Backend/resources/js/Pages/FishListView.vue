@@ -58,7 +58,7 @@ const filters = reactive({
 // 2. Construcción de la URL (Reactiva)
 const url = computed(() => {
   const hasFilters = filters.search || filters.location || filters.rarity;
-  const endpoint = hasFilters ? '/api/fish/filter' : '/api/fish';
+  const endpoint = hasFilters ? 'api/fish/filter' : 'api/fish';
   
   const params = new URLSearchParams({
     page: filters.page,

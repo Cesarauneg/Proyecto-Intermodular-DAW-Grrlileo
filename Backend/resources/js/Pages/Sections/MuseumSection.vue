@@ -82,14 +82,14 @@
                 <TransitionGroup
                     name="grid-fade"
                     tag="div"
-                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 pb-4"
+                    class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4 pb-4"
                 >
                     <article v-for="item in displayedItems" :key="item.id"
                         @click="selectedItem = item"
-                        class="overflow-hidden group transition-all duration-300 cursor-pointer bg-white rounded-lg sm:rounded-xl border border-gray-200 hover:border-green-400 shadow-sm hover:shadow-md"
+                        class="overflow-hidden group transition-all duration-300 cursor-pointer bg-white rounded-md sm:rounded-lg border border-gray-200 hover:border-green-400 shadow-sm hover:shadow-md"
                         style="padding: 0; max-width: 100%;"
                     >
-                        <div class="aspect-square p-1 sm:p-2 md:p-3 bg-[var(--ac-bg-primary)] flex items-center justify-center relative overflow-hidden">
+                        <div class="aspect-square p-1 sm:p-1.5 md:p-2 bg-[var(--ac-bg-primary)] flex items-center justify-center relative overflow-hidden">
                             <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-tr from-[var(--ac-green-light)]/20 to-transparent"></div>
                             <img :src="item.icon || item.image"
                                 :alt="item.name_es"
@@ -99,17 +99,17 @@
                         </div>
 
                         <div class="p-1 sm:p-1.5 md:p-2 text-center border-t border-gray-200">
-                            <h3 class="font-bold text-[9px] sm:text-[10px] md:text-xs text-gray-800 truncate uppercase tracking-tight leading-tight">
+                            <h3 class="font-bold text-[7px] sm:text-[8px] md:text-[10px] text-gray-800 truncate uppercase tracking-tight leading-tight">
                                 {{ capitalize(item.name_es || item.name_en || item.name) }}
                             </h3>
 
                             <div v-if="activeCategory === 'villagers'" class="mt-0.5">
-                                <span class="text-[7px] sm:text-[8px] bg-blue-100 text-blue-800 px-1 py-0.5 rounded-full font-bold">
+                                <span class="text-[6px] sm:text-[7px] bg-blue-100 text-blue-800 px-1 py-0.5 rounded-full font-bold">
                                     {{ item.personality }}
                                 </span>
                             </div>
                             <div v-else class="flex items-center justify-center gap-0.5 mt-0.5 text-yellow-600">
-                                <span class="text-[8px] sm:text-[9px] font-bold">💰 {{ item.price || item.buy_price || 0 }}</span>
+                                <span class="text-[7px] sm:text-[8px] font-bold">💰 {{ item.price || item.buy_price || 0 }}</span>
                             </div>
                         </div>
                     </article>
@@ -267,4 +267,5 @@ const handlePageChange = (page) => {
     transform: translateY(10px); 
 }
 </style>
+
 

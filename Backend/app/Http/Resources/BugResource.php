@@ -13,6 +13,7 @@ class BugResource extends JsonResource
             'id' => $this->id,
             'name_es' => $this->name_es,
             'name_en' => $this->name_en,
+            'image' => $this->image,
             'icon' => $this->icon,
             'price' => $this->price,
             'location' => $this->location,
@@ -22,6 +23,7 @@ class BugResource extends JsonResource
             'time_array' => $this->time_array,
             'is_all_day' => $this->is_all_day,
             'is_all_year' => $this->is_all_year,
+            'catch_phrase_en' => $this->catch_phrase_en,
         ];
     }
 }

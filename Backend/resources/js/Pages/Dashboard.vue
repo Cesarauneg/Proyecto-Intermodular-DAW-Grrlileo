@@ -24,7 +24,9 @@ const props = defineProps({
                 
                 <div class="mb-8 overflow-hidden bg-[#789d4a] shadow-sm sm:rounded-2xl border-b-4 border-[#5d7a39]">
                     <div class="p-8 text-white">
-                        <h3 class="text-2xl font-bold italic text-[#fefae0]">¡Hola, {{ $page.props.auth.user.name }}!</h3>
+                        <h3 class="text-2xl font-bold italic text-[#fefae0]">
+                            ¡Hola, {{ $page.props.auth?.user?.name ?? 'Invitado' }}!
+                        </h3>
                         <p class="mt-2 text-[#fefae0] opacity-90">Sigue así, Sócrates está muy orgulloso de tus hallazgos.</p>
                     </div>
                 </div>

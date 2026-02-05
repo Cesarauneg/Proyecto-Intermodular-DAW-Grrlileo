@@ -1,5 +1,5 @@
 <template>
-  <search class="w-full bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+  <section class="w-full bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6" role="search">
     <form class="flex flex-col gap-4" @submit.prevent role="search">
       <!-- Campo de búsqueda -->
       <div class="w-full">
@@ -22,7 +22,7 @@
         <slot />
       </div>
     </form>
-  </search>
+  </section>
 </template>
 
 <script setup>

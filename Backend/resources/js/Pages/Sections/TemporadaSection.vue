@@ -108,7 +108,7 @@
       <!-- Grid de criaturas -->
       <ul
         v-if="filteredCritters.length > 0"
-        class="grid gap-4 sm:gap-6 flex-1 overflow-y-auto py-4 px-2 sm:px-4 max-h-[calc(100vh_-_350px)] grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        class="grid gap-3 sm:gap-4 flex-1 overflow-y-auto py-3 px-2 sm:px-4 max-h-[calc(100vh_-_350px)] grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         role="list"
         aria-label="Lista de criaturas"
       >

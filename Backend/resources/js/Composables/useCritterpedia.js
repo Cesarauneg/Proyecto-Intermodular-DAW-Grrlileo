@@ -43,18 +43,28 @@ export function useCritterpedia(config) {
   // =============================================
   // FETCH DE DATOS
   // =============================================
-  const { data: items } = useFetch(apiEndpoint)
+  const { data: itemsRaw } = useFetch(apiEndpoint)
   const { data: availableData } = availableEndpoint
     ? useFetch(availableEndpoint)
     : { data: ref(null) }
+
+  const items = computed(() => {
+    const value = itemsRaw.value
+    if (Array.isArray(value)) return value
+    if (Array.isArray(value?.data)) return value.data
+    return []
+  })
 
   // =============================================
   // WATCHERS
   // =============================================
   watch(availableData, (newData) => {
-    if (Array.isArray(newData)) {
-      availableIds.value = new Set(newData.map(item => item.id))
-    }
+    const list = Array.isArray(newData)
+      ? newData
+      : Array.isArray(newData?.data)
+        ? newData.data
+        : []
+    availableIds.value = new Set(list.map(item => item.id))
   }, { immediate: true })
 
   // =============================================
@@ -74,7 +84,6 @@ export function useCritterpedia(config) {
     } = options
 
     return computed(() => {
-      if (!items.value) return []
       let result = [...items.value]
 
       // Búsqueda por nombre

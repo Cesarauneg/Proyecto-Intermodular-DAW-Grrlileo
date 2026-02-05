@@ -36,8 +36,8 @@ const {
   isInMuseum,
   itemAvailability
 } = useCritterpedia({
-  apiEndpoint: '/api/fish',
-  availableEndpoint: '/api/fish/available?hemisphere=north',
+  apiEndpoint: 'api/fish',
+  availableEndpoint: 'api/fish/available?hemisphere=north',
   museumType: 'fish'
 })
 
@@ -57,7 +57,7 @@ createSelectionWatcher(filteredFish, filterProps)
 
 // Emitir ubicaciones únicas
 watch(fish, (data) => {
-  if (data) {
+  if (Array.isArray(data)) {
     const locations = [...new Set(data.map(f => f.location).filter(Boolean))].sort()
     emit('update:fish-locations', locations)
   }
@@ -92,3 +92,4 @@ watch(fish, (data) => {
     </template>
   </CritterpediaLayout>
 </template>
+

@@ -168,7 +168,7 @@ const filterOptions = ref({
 // Cargar opciones de filtros al montar el componente
 onMounted(async () => {
   try {
-    const res = await axios.get('/api/villagers/filters')
+    const res = await axios.get('api/villagers/filters')
     filterOptions.value = res.data
   } catch (e) {
     console.error('Error cargando filtros:', e)
@@ -181,7 +181,7 @@ onMounted(async () => {
  */
 const url = computed(() => {
   const hasFilters = filters.search || filters.personality || filters.species || filters.gender
-  const endpoint = hasFilters ? '/api/villagers/filter' : '/api/villagers'
+  const endpoint = hasFilters ? 'api/villagers/filter' : 'api/villagers'
 
   const params = new URLSearchParams({
     page: filters.page,
@@ -242,4 +242,5 @@ onUnmounted(() => {
   document.body.style.overflow = ''
 })
 </script>
+
 

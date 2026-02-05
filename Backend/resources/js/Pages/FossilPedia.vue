@@ -29,7 +29,7 @@ const {
   handleToggle,
   isInMuseum
 } = useCritterpedia({
-  apiEndpoint: '/api/fossils',
+  apiEndpoint: 'api/fossils',
   availableEndpoint: null,
   museumType: 'fossils'
 })
@@ -74,3 +74,4 @@ createSelectionWatcher(filteredFossils, filterProps)
     </template>
   </CritterpediaLayout>
 </template>
+

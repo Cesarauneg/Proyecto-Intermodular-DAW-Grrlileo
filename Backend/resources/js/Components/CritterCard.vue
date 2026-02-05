@@ -9,11 +9,11 @@
     @keydown.space.prevent="$emit('select', critter)"
   >
     <!-- Header con gradiente -->
-    <header class="bg-gradient-to-r from-green-400 to-blue-400 px-4 py-3 text-center relative">
+    <header class="bg-gradient-to-r from-green-400 to-blue-400 px-2.5 sm:px-3 lg:px-4 py-2 sm:py-2.5 lg:py-3 text-center relative">
       <!-- Badge de urgencia -->
       <span
         v-if="urgent"
-        class="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white animate-pulse shadow-lg"
+        class="absolute top-2 left-2 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-red-500 text-white animate-pulse shadow-lg"
         role="status"
         aria-live="polite"
       >
@@ -22,21 +22,21 @@
 
       <!-- Badge de tipo -->
       <span
-        class="absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-semibold bg-white/90 shadow"
+        class="absolute top-2 right-2 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/90 shadow"
         aria-label="Tipo de criatura"
       >
         {{ typeLabel }}
       </span>
 
-      <h3 class="font-bold text-white text-lg drop-shadow-md pt-4">
+      <h3 class="font-bold text-white text-xs sm:text-sm lg:text-lg drop-shadow-md pt-2 sm:pt-3">
         {{ capitalize(critter.name_es) }}
       </h3>
     </header>
 
     <!-- Contenido principal -->
-    <div class="p-4">
+    <div class="p-2.5 sm:p-3 lg:p-4">
       <!-- Imagen centrada -->
-      <figure class="flex justify-center mb-4">
+      <figure class="flex justify-center mb-2 sm:mb-3 lg:mb-4">
         <div class="relative">
           <div
             class="absolute inset-0 bg-green-200 rounded-full blur-xl opacity-50"
@@ -45,7 +45,7 @@
           <img
             :src="critter.icon"
             :alt="`Icono de ${critter.name_es}`"
-            class="relative w-20 h-20 object-contain drop-shadow-lg transform hover:scale-110 transition-transform duration-300"
+            class="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 object-contain drop-shadow-lg transform hover:scale-110 transition-transform duration-300"
             loading="lazy"
             decoding="async"
           />
@@ -54,31 +54,31 @@
       </figure>
 
       <!-- Info cards con lista de definiciones -->
-      <dl class="space-y-2">
+      <dl class="space-y-1.5 sm:space-y-2">
         <!-- Precio -->
-        <div class="flex items-center justify-between bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg px-3 py-2 border border-yellow-200">
-          <dt class="text-sm font-semibold text-yellow-800">
+        <div class="flex items-center justify-between bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-yellow-200">
+          <dt class="text-[10px] sm:text-xs lg:text-sm font-semibold text-yellow-800">
             <span aria-hidden="true">💰</span> Precio
           </dt>
-          <dd class="font-bold text-yellow-900">{{ formatPrice(critter.price) }}</dd>
+          <dd class="font-bold text-[10px] sm:text-xs lg:text-sm text-yellow-900">{{ formatPrice(critter.price) }}</dd>
         </div>
 
         <!-- Ubicacion -->
-        <div class="flex items-center justify-between bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg px-3 py-2 border border-blue-200">
-          <dt class="text-sm font-semibold text-blue-800">
+        <div class="flex items-center justify-between bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-blue-200">
+          <dt class="text-[10px] sm:text-xs lg:text-sm font-semibold text-blue-800">
             <span aria-hidden="true">📍</span> Ubicacion
           </dt>
-          <dd class="font-medium text-blue-900 text-right text-sm truncate max-w-[140px]">
+          <dd class="font-medium text-blue-900 text-right text-[10px] sm:text-xs lg:text-sm truncate max-w-[110px] sm:max-w-[140px] lg:max-w-[180px]">
             {{ critter.location || defaultLocation }}
           </dd>
         </div>
 
         <!-- Horario -->
-        <div class="flex items-center justify-between bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg px-3 py-2 border border-purple-200">
-          <dt class="text-sm font-semibold text-purple-800">
+        <div class="flex items-center justify-between bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-purple-200">
+          <dt class="text-[10px] sm:text-xs lg:text-sm font-semibold text-purple-800">
             <span aria-hidden="true">🕐</span> Horario
           </dt>
-          <dd class="font-medium text-purple-900 text-sm">{{ timeDisplay }}</dd>
+          <dd class="font-medium text-purple-900 text-[10px] sm:text-xs lg:text-sm">{{ timeDisplay }}</dd>
         </div>
       </dl>
     </div>
@@ -229,3 +229,5 @@ const formatTimeRange = (timeArray) => {
   return `${formatHour(min)} - ${formatHour((max + 1) % 24)}`
 }
 </script>
+
+
