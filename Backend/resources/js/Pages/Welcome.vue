@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { Head, Link, usePage, router } from '@inertiajs/vue3';
+import axios from 'axios';
 import { useClickOutside } from '@/Composables/useClickOutside';
 import { useHourlyMusic } from '@/Composables/useHourlyMusic';
 import InicioSection from './Sections/InicioSection.vue';
@@ -9,6 +10,7 @@ import TemporadaSection from './Sections/TemporadaSection.vue';
 import EstadisticasSection from './Sections/EstadisticasSection.vue';
 import MuseumSection from './Sections/MuseumSection.vue';
 import VecinosSection from './Sections/VecinosSection.vue';
+import MemoryGame from './Games/MemoryGame.vue';
 import AudioPlayer from '@/Components/AudioPlayer.vue';
 
 
@@ -92,6 +94,15 @@ const activeDropdown = ref(null);
 const dropdownCloseTimeout = ref(null);
 
 function selectSubSection(child) {
+  if (child.section === 'memory') {
+    activeTab.value = 'memory';
+    activeSubSection.value = child.key;
+    loadMemoryLevel(child.level);
+    isMobileNavOpen.value = false;
+    activeDropdown.value = null;
+    clearDropdownTimeout();
+    return;
+  }
   activeTab.value = child.section;
   activeSubSection.value = child.key;
   isMobileNavOpen.value = false;
@@ -172,6 +183,18 @@ const navItems = computed(() => {
                 { key: 'villagers', label: 'Vecinos', icon: '🏠', section: 'museo' },
             ]
         });
+        items.push({
+            key: 'juegos',
+            label: 'Juegos',
+            hasDropdown: true,
+            children: [1, 2, 3, 4, 5].map((level) => ({
+                key: 'memory-' + level,
+                label: 'Memory nivel ' + level,
+                icon: '🧠',
+                section: 'memory',
+                level,
+            })),
+        });
     }
     return items;
 });
@@ -181,7 +204,7 @@ const activeSubSection = ref(null);
 
 //Si el usuario cierra sesión estando en estadísticas, lo mandamos a inicio
 watch(user, (newUser) => {
-    if (!newUser && activeTab.value === 'estadisticas') {
+    if (!newUser && (activeTab.value === 'estadisticas' || activeTab.value === 'memory')) {
         activeTab.value = 'inicio';
     }
 });
@@ -201,8 +224,45 @@ const sectionComponents = {
     vecinos: VecinosSection,
     museo: MuseumSection,
     estadisticas: EstadisticasSection,
+    memory: MemoryGame,
 
 };
+
+const memoryLevel = ref(1);
+const memoryData = ref(null);
+const memoryLoading = ref(false);
+const memoryError = ref(null);
+
+const loadMemoryLevel = async (level) => {
+  if (!user.value) return;
+  if (memoryData.value?.level === level && Array.isArray(memoryData.value?.cards) && memoryData.value.cards.length > 0) {
+    memoryLevel.value = level;
+    return;
+  }
+  memoryLevel.value = level;
+  memoryLoading.value = true;
+  memoryError.value = null;
+
+  try {
+    const response = await axios.get(route('memory-game.data', level));
+    memoryData.value = response.data;
+  } catch (error) {
+    console.error('Error cargando el memory', error);
+    memoryError.value = 'No se pudo cargar el memory.';
+  } finally {
+    memoryLoading.value = false;
+  }
+};
+
+watch(
+  user,
+  (newUser) => {
+    if (newUser) {
+      loadMemoryLevel(1);
+    }
+  },
+  { immediate: true }
+);
 
 // ========== HOURLY MUSIC ==========
 /**
@@ -281,7 +341,17 @@ function handlePageInteraction() {
               </button>
               <ul class="nav-dropdown">
                 <li v-for="child in item.children" :key="child.key">
+                  <Link
+                    v-if="child.href"
+                    :href="child.href"
+                    class="nav-dropdown-item"
+                    role="menuitem"
+                  >
+                    <span class="dropdown-icon" aria-hidden="true">{{ child.icon }}</span>
+                    {{ child.label }}
+                  </Link>
                   <button
+                    v-else
                     type="button"
                     class="nav-dropdown-item"
                     :class="{ active: activeTab === child.section && activeSubSection === child.key }"
@@ -369,7 +439,26 @@ function handlePageInteraction() {
           :aria-labelledby="`tab-${activeTab}`"
           class="tabpanel"
         >
+          <div v-if="activeTab === 'memory'" class="space-y-4">
+            <div v-if="memoryLoading" class="rounded-2xl border border-[color:var(--ac-border)] bg-white/80 p-6 text-center text-sm">
+              Cargando memory...
+            </div>
+            <div v-else-if="memoryError" class="rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-600">
+              {{ memoryError }}
+            </div>
+            <MemoryGame
+              v-else
+              embedded
+              :level="memoryData?.level ?? memoryLevel"
+              :pairs="memoryData?.pairs ?? 0"
+              :cards="memoryData?.cards ?? []"
+              :best-time="memoryData?.bestTime ?? null"
+              :best-moves="memoryData?.bestMoves ?? null"
+              :memorize-seconds="memoryData?.memorizeSeconds ?? 3"
+            />
+          </div>
           <component
+            v-else
             :is="sectionComponents[activeTab]"
             :villagers="randomVillagers"
             :birthday-villagers="birthdayVillagers"
@@ -458,3 +547,6 @@ function handlePageInteraction() {
 </template>
 
 <style src="@/../css/pages/welcome.css"></style>
+
+
+
