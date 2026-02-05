@@ -93,4 +93,4 @@ const { isFavorite, toggleFavorite } = useFavorites()
 
 </script>
 
-<style src="@/../css/components/character-card.css"></style>
+<style scoped src="@/../css/components/character-card.css"></style>
