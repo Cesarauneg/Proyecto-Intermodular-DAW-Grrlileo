@@ -1,0 +1,288 @@
+/**
+ * Estilos para CharacterCard.vue
+ * Tarjeta de aldeano con estilo Animal Crossing / Pokemon
+ */
+
+.ac-card {
+  --card-bg: #fffef5;
+  --card-border: #8bc49e;
+  --card-shadow: #5a9a6e;
+  --header-bg: linear-gradient(135deg, #a8e6cf 0%, #7ec8a3 100%);
+  --image-bg: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  min-width: 200px;
+  max-width: 240px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Botón de favorito */
+.ac-card__favorite {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid var(--card-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #ccc;
+}
+
+.ac-card__favorite:hover {
+  transform: scale(1.1);
+  border-color: #e57373;
+  color: #e57373;
+}
+
+.ac-card__favorite:focus-visible {
+  outline: 2px solid #e57373;
+  outline-offset: 2px;
+}
+
+.ac-card__favorite:active {
+  transform: scale(0.95);
+}
+
+.ac-card__favorite--active {
+  color: #e53935;
+  border-color: #e53935;
+  background: #ffebee;
+}
+
+.ac-card__favorite--active:hover {
+  color: #c62828;
+  border-color: #c62828;
+}
+
+.ac-card__favorite-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+}
+
+.ac-card__favorite--active .ac-card__favorite-icon {
+  animation: ac-card-heart-pop 0.3s ease;
+}
+
+@keyframes ac-card-heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.ac-card:hover,
+.ac-card:focus-visible {
+  transform: translateY(-8px) scale(1.02);
+  outline: 3px solid var(--card-shadow);
+  outline-offset: 2px;
+}
+
+.ac-card:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+.ac-card__frame {
+  background: var(--card-bg);
+  border: 4px solid var(--card-border);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow:
+    0 4px 0 var(--card-shadow),
+    0 8px 20px rgba(90, 154, 110, 0.3),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.ac-card__frame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(168, 230, 207, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 236, 179, 0.3) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.ac-card__header {
+  background: var(--header-bg);
+  border-radius: 10px 10px 0 0;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+.ac-card__name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #2d5a3d;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.ac-card__image-container {
+  position: relative;
+  margin: 6px 4px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #c5e1a5;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.ac-card__image-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--image-bg);
+  background-image:
+    radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.4) 0%, transparent 40%),
+    radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 40%);
+}
+
+.ac-card__image {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  padding: 8px;
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.15));
+}
+
+.ac-card__footer {
+  background: linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%);
+  border-radius: 0 0 10px 10px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 3px solid rgba(255, 255, 255, 0.6);
+}
+
+.ac-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ac-card__personality,
+.ac-card__species {
+  font-size: 0.85rem;
+  color: #6d4c41;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 4px 10px;
+  border-radius: 8px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.ac-card__decoration .leaf {
+  font-size: 1.4rem;
+  animation: ac-card-sway 2s ease-in-out infinite;
+}
+
+@keyframes ac-card-sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+/* ---- Responsive Mobile ---- */
+@media (max-width: 480px) {
+  .ac-card__frame {
+    border-width: 3px;
+    padding: 5px;
+    border-radius: 12px;
+  }
+
+  .ac-card__header {
+    padding: 6px 8px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .ac-card__name {
+    font-size: 0.9rem;
+  }
+
+  .ac-card__image-container {
+    margin: 4px 2px;
+    border-radius: 8px;
+    border-width: 2px;
+  }
+
+  .ac-card__image {
+    height: 100px;
+    padding: 5px;
+  }
+
+  .ac-card__footer {
+    padding: 6px 8px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .ac-card__personality,
+  .ac-card__species {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+
+  .ac-card__decoration .leaf {
+    font-size: 1rem;
+  }
+
+  .ac-card:hover,
+  .ac-card:focus-visible {
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .ac-card__frame {
+    padding: 4px;
+  }
+
+  .ac-card__header {
+    padding: 4px 6px;
+  }
+
+  .ac-card__name {
+    font-size: 0.8rem;
+  }
+
+  .ac-card__image {
+    height: 80px;
+    padding: 4px;
+  }
+
+  .ac-card__footer {
+    padding: 4px 6px;
+  }
+
+  .ac-card__personality,
+  .ac-card__species {
+    font-size: 0.65rem;
+    padding: 2px 4px;
+  }
+
+  .ac-card__decoration .leaf {
+    font-size: 0.9rem;
+  }
+}
